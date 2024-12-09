@@ -26,6 +26,7 @@ export default function BestSellers() {
   const products = productList.map((product: any) => ({
     _id: product._id,
     name: product.name,
+    discount: product.discount,
     to: "/",
     image: product.image[0] || "default.jpg",
     category: categoryLookup.get(product.categoryId), // Look
@@ -36,7 +37,7 @@ export default function BestSellers() {
   return (
     <MaxWidthWrapper className="my-10 flex flex-col gap-4">
       <div className="flex w-full items-center justify-between">
-        <h1 className="text-3xl font-bold">Best Sellers</h1>
+        <h1 className="text-3xl font-semibold">Popular Products</h1>
         <Link
           to="/"
           className="group flex items-center gap-1 rounded-full bg-primary/20 px-4 md:mt-2"
@@ -48,6 +49,7 @@ export default function BestSellers() {
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
         {products.map((item, index) => (
           <ProductCard
+            discount={item.discount}
             _id={item._id}
             key={index}
             category={item.category}

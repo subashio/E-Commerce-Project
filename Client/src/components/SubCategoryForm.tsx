@@ -103,10 +103,7 @@ export default function SubCategoryForm({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Product Category</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
+                    <Select onValueChange={field.onChange}>
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Product Category" />

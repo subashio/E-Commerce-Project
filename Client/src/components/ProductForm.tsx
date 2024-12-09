@@ -55,6 +55,7 @@ export default function ProductForm({ initialData, id }: ProductProps) {
   const SubcategoryList = useSelector(
     (state: RootState) => state.product.subcategoryList,
   );
+
   const form = useForm<z.infer<typeof ProductSchema>>({
     resolver: zodResolver(ProductSchema),
     defaultValues: initialData
@@ -65,7 +66,7 @@ export default function ProductForm({ initialData, id }: ProductProps) {
           description: initialData.description,
           status: initialData.status,
           categoryId: initialData.categoryId,
-          sub_categoryId: initialData?.sub_categoryId,
+          sub_categoryId: initialData.sub_categoryId,
           discount: initialData.discount,
           price: initialData.price,
           salePrice: initialData.salePrice,

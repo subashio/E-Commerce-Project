@@ -3,7 +3,7 @@ import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { RootState } from "@/store/store";
-import { ShoppingCartIcon, Trash2, X } from "lucide-react";
+import { ShoppingBag, Trash2, X } from "lucide-react";
 import React, { ReactNode } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -21,23 +21,23 @@ import { ScrollArea } from "./ui/scroll-area";
 const cartItems = [
   {
     name: "Haldiram's Sev Bhijia dadsadsaddsad ",
-    price: "$200",
+    price: "₹200",
     image: "/category-1.jpg",
   },
-  { name: "Haldiram's Sev ", price: "$200", image: "/category-2.jpg" },
+  { name: "Haldiram's Sev ", price: "₹200", image: "/category-2.jpg" },
   {
     name: "Haldiram's Sev Bhijia dadsadsaddsad ",
-    price: "$200",
+    price: "₹200",
     image: "/category-3.jpg",
   },
   {
     name: "Haldiram's Sev Bhijia  ",
-    price: "$200",
+    price: "₹200",
     image: "/category-6.jpg",
   },
   {
     name: "Haldiram's Sev Bhijia  ",
-    price: "$200",
+    price: "₹200",
     image: "/category-6.jpg",
   },
 ];
@@ -46,6 +46,10 @@ export default function CartDrawer({ button }: { button: ReactNode }) {
   const [quantity, setQuantity] = React.useState(1);
   const [isDrawerOpen, isSetDrawerOpen] = React.useState(false);
   const user = useSelector((state: RootState) => state.user);
+  const cartList = useSelector((state: RootState) => state.product.cartList);
+  const productList = useSelector(
+    (state: RootState) => state.product.productList,
+  );
   const { toast } = useToast();
   const isLoggedIn = user?._id;
   const handleIncrement = () => {
@@ -57,7 +61,17 @@ export default function CartDrawer({ button }: { button: ReactNode }) {
       setQuantity((prev) => prev - 1);
     }
   };
-  const cartList = useSelector((state: RootState) => state.product.cartList);
+
+  const productLookup = new Map(
+    productList.map((product) => [
+      product._id,
+      {
+        ...product,
+        price: product.price.toString(), // Ensure price is a string
+      },
+    ]),
+  );
+
   const handleToast = () => {
     if (!isLoggedIn) {
       toast({
@@ -79,65 +93,69 @@ export default function CartDrawer({ button }: { button: ReactNode }) {
           <CardHeader className="mb-auto flex justify-between border-b">
             <CardTitle className="flex items-center justify-between">
               <span className="flex items-center gap-2">
-                Shopping Cart <ShoppingCartIcon />
+                Shopping Cart <ShoppingBag />
               </span>
               <X
                 onClick={() => isSetDrawerOpen(false)}
                 className="cursor-pointer"
               />
             </CardTitle>
-            <CardDescription>Total Price: $32133</CardDescription>
+            <CardDescription>Total Price: ₹32133</CardDescription>
           </CardHeader>
           <CardContent>
             <Table className="mx-auto">
               <ScrollArea className="h-[500px] w-full">
                 <TableBody>
-                  {cartItems.map((item, index) => (
-                    <TableRow
-                      key={index}
-                      className="flex h-32 w-full items-center justify-evenly py-10"
-                    >
-                      <TableCell className="table-cell">
-                        <img
-                          alt="Product image"
-                          className="w-20 object-cover"
-                          src={item.image}
-                        />
-                      </TableCell>
-                      <TableCell className="text-md my-auto mr-auto flex h-full flex-col items-start justify-center gap-2 p-0 font-semibold">
-                        {item.name}
-                        <Button
-                          variant="link"
-                          className="flex items-center p-0 text-xs text-secondary !no-underline"
-                        >
-                          <Trash2 className="text-destructive" /> Remove
-                        </Button>
-                      </TableCell>
+                  {cartList.map((item, index) => {
+                    const product = productLookup.get(item.productId);
+                    console.log("product:", product);
+                    return (
+                      <TableRow
+                        key={index}
+                        className="flex h-32 w-full items-center justify-evenly py-10"
+                      >
+                        <TableCell className="table-cell">
+                          <img
+                            alt="Product image"
+                            className="w-20 object-cover"
+                            src="/ds"
+                          />
+                        </TableCell>
+                        <TableCell className="text-md my-auto mr-auto flex h-full flex-col items-start justify-center gap-2 p-0 font-semibold">
+                          {product?.name}
+                          <Button
+                            variant="link"
+                            className="flex items-center p-0 text-xs text-secondary !no-underline"
+                          >
+                            <Trash2 className="text-destructive" /> Remove
+                          </Button>
+                        </TableCell>
 
-                      <TableCell className="table-cell">
-                        <div className="flex items-center">
-                          <button
-                            onClick={handleDecrement}
-                            className="rounded-l-md border-b border-l border-t px-3 py-1"
-                          >
-                            -
-                          </button>
-                          <p className="border px-2 py-1 text-sm font-medium">
-                            {quantity}
-                          </p>
-                          <button
-                            onClick={handleIncrement}
-                            className="rounded-r-md border-b border-r border-t px-3 py-1"
-                          >
-                            +
-                          </button>
-                        </div>
-                      </TableCell>
-                      <TableCell className="table-cell font-bold">
-                        {item.price}
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                        <TableCell className="table-cell">
+                          <div className="flex items-center">
+                            <button
+                              onClick={handleDecrement}
+                              className="rounded-l-md border-b border-l border-t px-3 py-1"
+                            >
+                              -
+                            </button>
+                            <p className="border px-2 py-1 text-sm font-medium">
+                              {quantity}
+                            </p>
+                            <button
+                              onClick={handleIncrement}
+                              className="rounded-r-md border-b border-r border-t px-3 py-1"
+                            >
+                              +
+                            </button>
+                          </div>
+                        </TableCell>
+                        <TableCell className="table-cell font-bold">
+                          {product?.price}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
                 </TableBody>
               </ScrollArea>
             </Table>

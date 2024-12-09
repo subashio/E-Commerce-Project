@@ -66,7 +66,7 @@ export default function DashboardHeader() {
           <SheetContent side="left" className="flex !w-72 flex-col p-0">
             <nav className="text-lg font-medium">
               <Link to="/">
-                <img src="/logo.png" className="h-20" alt="Shopme-logo" />
+                <img src="/logo.png" className="h-20" alt="Globo-green logo" />
               </Link>
               <div className="flex w-full flex-col px-2.5">
                 <Link
@@ -76,7 +76,7 @@ export default function DashboardHeader() {
                     "mb-4 flex w-full items-center gap-3 rounded-lg p-4 text-sm transition-all",
                     location.pathname === "/dashboard-page"
                       ? "bg-primary/20"
-                      : "hover:bg-accent",
+                      : "hover:bg-accent dark:hover:bg-primary/20",
                   )}
                 >
                   <House className="h-4 w-4" />
@@ -94,7 +94,7 @@ export default function DashboardHeader() {
                       "flex w-full items-center gap-3 rounded-lg p-4 text-sm transition-all",
                       location.pathname === item.to
                         ? "bg-primary/20"
-                        : "hover:bg-accent",
+                        : "hover:bg-accent dark:hover:bg-primary/20",
                     )}
                   >
                     {item.logo}

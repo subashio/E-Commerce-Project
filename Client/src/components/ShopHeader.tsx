@@ -58,7 +58,7 @@ export default function ShopHeader() {
           <SheetContent side="left" className="flex flex-col p-0">
             <nav className="text-lg font-medium">
               <Link to="/">
-                <img src="/logo.png" className="h-20" alt="Shopme-logo" />
+                <img src="/logo.png" className="h-20" alt="Globo-green logo" />
               </Link>
               <div className="flex w-full flex-col px-2.5">
                 <p className="p-4 text-sm text-secondary/70"></p>

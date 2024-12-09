@@ -1,5 +1,4 @@
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-
 import { ReactNode } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button, buttonVariants } from "./ui/button";
@@ -51,10 +50,10 @@ export default function MobileNav({ button }: { button: ReactNode }) {
 
   return (
     <Sheet open={isSheetOpen} onOpenChange={(isOpen) => setIsSheetOpen(isOpen)}>
-      <SheetTrigger>{button}</SheetTrigger>
+      <SheetTrigger className="block md:hidden">{button}</SheetTrigger>
       <SheetContent className="!w-full pt-0">
         <Link to="/">
-          <img src="/logo.png" className="h-20" alt="Shopme-logo" />
+          <img src="/logo.png" className="h-16" alt="Globo-green logo" />
         </Link>
         <Separator />
         <h1 className="my-4 w-full px-1 text-2xl font-semibold tracking-wide">

@@ -9,7 +9,6 @@ import { RootState } from "@/store/store";
 import React, { ReactNode } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-//this is main branch
 // Define type for the context
 type GlobleContextType = {
   fetchAddress: () => Promise<void>;
@@ -66,7 +65,7 @@ const GlobleProvider = ({ children }: { children: ReactNode }) => {
       if (responseData) {
         dispatch(setCart(responseData.data));
         console.log(response.data);
-        console.log(responseData);
+        // console.log(responseData);
       }
     } catch (error) {
       console.error(error);

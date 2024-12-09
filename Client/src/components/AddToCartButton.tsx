@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "./ui/button";
-import { Minus, Plus } from "lucide-react";
+import { Minus, Plus, ShoppingBag } from "lucide-react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { useGlobleContext } from "@/context/GlobleContextProvider";
@@ -41,7 +41,7 @@ export default function AddToCartButton({ id }: ProductCartProps) {
       console.error(error);
     }
   }
-  const cart = cartList.map((item) => console.log(item.productId));
+  // const cart = cartList.map((item) => console.log(item.productId));
 
   React.useEffect(() => {
     const checkCartItem = cartList.some((item) => item.productId === id);
@@ -62,9 +62,9 @@ export default function AddToCartButton({ id }: ProductCartProps) {
           <Plus className="h-7 w-7 p-2" />
         </div>
       ) : (
-        <Button size="sm" onClick={() => AddtoCart()}>
-          Add
-          <Plus />
+        <Button className="w-full" onClick={() => AddtoCart()}>
+          Add to Cart
+          <ShoppingBag />
         </Button>
       )}
     </>
