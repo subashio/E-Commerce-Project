@@ -13,9 +13,6 @@ export default function BestSellers() {
     (state: RootState) => state.product.categoryList,
   );
 
-  // const CartList = useSelector((state: RootState) => state.product.cartList);
-  // const [cartState, setCartState] = React.useState<Record<string, boolean>>({});
-
   const categoryLookup = new Map(
     categoryList.map((category: { _id: string; name: string }) => [
       category._id,
@@ -35,11 +32,11 @@ export default function BestSellers() {
   }));
 
   return (
-    <MaxWidthWrapper className="my-10 flex flex-col gap-4">
+    <MaxWidthWrapper className="my-40 flex flex-col gap-4">
       <div className="flex w-full items-center justify-between">
         <h1 className="text-3xl font-semibold">Popular Products</h1>
         <Link
-          to="/"
+          to="/shop"
           className="group flex items-center gap-1 rounded-full bg-primary/20 px-4 md:mt-2"
         >
           See More{" "}

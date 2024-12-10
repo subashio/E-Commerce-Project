@@ -105,6 +105,10 @@ export const SummaryApi = {
     url: "/api/product/create",
     method: "post",
   },
+  get_product: {
+    url: "/api/product/get",
+    method: "get",
+  },
   fileter_product: {
     url: "/api/product/filter",
     method: "get",
@@ -128,5 +132,13 @@ export const SummaryApi = {
   get_cart: {
     url: "api/cart/get",
     method: "get",
+  },
+  update_cart: {
+    url: "api/cart/update",
+    method: "put",
+  },
+  delete_cart: {
+    url: "api/cart/delete",
+    method: "delete",
   },
 };

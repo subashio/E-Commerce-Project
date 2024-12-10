@@ -5,8 +5,12 @@ import Side from "@/components/Side";
 import { Outlet } from "react-router-dom";
 import GlobleContextProvider from "@/context/GlobleContextProvider";
 import { ThemeProvider } from "@/context/theme-provider";
+import React from "react";
 
 export default function Profile() {
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <GlobleContextProvider>
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">

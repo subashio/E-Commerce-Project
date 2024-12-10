@@ -2,9 +2,13 @@ import DashboardHeader from "@/components/DashboardHeder";
 import DashboardSide from "@/components/DashboardSide";
 import GlobleContextProvider from "@/context/GlobleContextProvider";
 import { ThemeProvider } from "@/context/theme-provider";
+import React from "react";
 import { Outlet } from "react-router-dom";
 
 export default function Dasboard() {
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <GlobleContextProvider>
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">

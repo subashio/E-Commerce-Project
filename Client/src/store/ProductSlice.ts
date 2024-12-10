@@ -15,7 +15,7 @@ interface SubCategoryProps {
 interface Products {
   _id: string;
   name: string;
-  image: Array<any> | undefined;
+  image: Array<any>;
   categoryId: string;
   sub_categoryId: string;
   unit: string;
@@ -28,7 +28,8 @@ interface Products {
 }
 interface Cart {
   _id: string;
-  productId: string;
+  productId: string | Products;
+  quantity: number;
   userId: string;
 }
 

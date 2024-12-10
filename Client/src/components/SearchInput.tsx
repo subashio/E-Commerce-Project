@@ -4,13 +4,16 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
 
 const categories = [
-  "Milk",
-  "Bread",
-  "Sugar",
-  "Paneer",
-  "Chocolate",
-  "Atta",
-  "Dal",
+  "Smartphones",
+  "Laptops",
+  "Tablets",
+  "Smartwatches",
+  "Headphones",
+  "Bluetooth Speakers",
+  "Digital Cameras",
+  "Gaming Consoles",
+  "Smart TVs",
+  "Home Automation Devices",
 ];
 
 export default function SearchInput() {

@@ -116,7 +116,7 @@ export async function updateCartQuantityController(req, res) {
 export async function deleteCartController(req, res) {
   try {
     const userId = req.userId;
-    const { _id } = req._id;
+    const { _id } = req.body;
 
     if (!_id) {
       return res.status(400).json({

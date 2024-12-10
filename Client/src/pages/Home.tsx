@@ -12,7 +12,7 @@ const banners = [
   {
     title: "Unlock the Best Deals on Smartphones",
     offer: "Get Upto 20% offer",
-    to: "/",
+    to: "/shop",
     image: "/banner.jpeg",
   },
 ];

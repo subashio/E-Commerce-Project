@@ -111,6 +111,8 @@
   }
   body {
     @apply bg-background text-foreground;
+    @apply scroll-smooth;
+    @apply scroll-mt-52;
   }
 }
 

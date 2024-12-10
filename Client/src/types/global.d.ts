@@ -13,6 +13,16 @@ declare global {
     discount: number;
     description: string;
   }
+
+  interface ProductCartProps {
+    _id: string;
+    name: string;
+    image: string;
+    category: string | undefined;
+    discount: number | undefined;
+    price: number;
+    salePrice: number;
+  }
 }
 
 export {};

@@ -4,7 +4,7 @@ import { SummaryApi } from "@/constants/SummaryApi";
 import { useToast } from "@/hooks/use-toast";
 import Axios from "@/lib/Axios";
 import { handleAddAddress } from "@/store/addressSlice";
-import { setCart } from "@/store/ProductSlice";
+import { setCart, setProduct } from "@/store/ProductSlice";
 import { RootState } from "@/store/store";
 import React, { ReactNode } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,7 +13,11 @@ import { useDispatch, useSelector } from "react-redux";
 type GlobleContextType = {
   fetchAddress: () => Promise<void>;
   fetchCartItem: () => Promise<void>;
+  fetchAllProduct: () => Promise<void>;
   addToCart: (product: any) => void;
+  updateCartItem: (id: string, qty: any) => Promise<void>;
+  deleteCartItem: (cartId: string) => Promise<void>;
+  // fetchProductByCategory: (id: string, setProduct?: any) => Promise<void>;
 };
 
 // Creating the context
@@ -64,14 +68,47 @@ const GlobleProvider = ({ children }: { children: ReactNode }) => {
       const { data: responseData } = response;
       if (responseData) {
         dispatch(setCart(responseData.data));
-        console.log(response.data);
-        // console.log(responseData);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  // //fetching products by category
+  // const fetchProductByCategory = async (id: string, setProduct?: any) => {
+  //   try {
+  //     const response = await Axios({
+  //       ...SummaryApi.filter_product_by_category,
+  //       params: {
+  //         id: id, // Make sure this is correctly passed
+  //       },
+  //     });
+
+  //     if (response.data?.data) {
+  //       setProduct(response.data.data);
+  //       console.log("this is the filter data : ", response.data);
+  //     }
+  //   } catch (error) {
+  //     console.error("error fetching product by categoryId");
+  //   }
+  // };
+
+  // fetching the all the product
+  const fetchAllProduct = async () => {
+    try {
+      const response = await Axios({
+        ...SummaryApi.get_product,
+      });
+
+      if (response.data.data) {
+        dispatch(setProduct(response.data.data));
+        console.log("this is products:", response.data);
       }
     } catch (error) {
       console.error(error);
     }
   };
 
+  //fetching the address
   const fetchAddress = async () => {
     try {
       const response = await Axios({
@@ -87,14 +124,55 @@ const GlobleProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const updateCartItem = async (id: string, qty: any) => {
+    try {
+      const response = await Axios({
+        ...SummaryApi.update_cart,
+        data: {
+          _id: id,
+          qty: qty,
+        },
+      });
+      const { data: responseData } = response;
+
+      if (responseData) {
+        fetchCartItem();
+        return responseData;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const deleteCartItem = async (cartId: string) => {
+    try {
+      const response = await Axios({
+        ...SummaryApi.delete_cart,
+        data: {
+          _id: cartId,
+        },
+      });
+      const { data: responseData } = response;
+      if (responseData.success) {
+        dispatch(setCart([]));
+        fetchCartItem();
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   React.useEffect(() => {
     fetchAddress();
     fetchCartItem();
+    fetchAllProduct();
   }, [user]);
 
   const value = {
     fetchCartItem,
     fetchAddress,
+    fetchAllProduct,
+    updateCartItem,
+    deleteCartItem,
     addToCart,
   };
 

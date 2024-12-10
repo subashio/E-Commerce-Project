@@ -12,7 +12,7 @@ export default function DashboardSide() {
           <Link to="/" className="">
             <img
               src="/logo.png"
-              className="my-3 h-14 w-52"
+              className="my-3 ml-6 h-12 w-52"
               alt="Globo-green logo"
             />
           </Link>

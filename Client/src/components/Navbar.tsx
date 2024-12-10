@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import CartDrawer from "./CartDrawer";
+import CartDrawer from "./CartSheet";
 import MaxWidthWrapper from "./MaxWidthWrapper";
 import MobileNav from "./MobileNav";
 import SearchInput from "./SearchInput";
@@ -35,6 +35,7 @@ import { useTheme } from "@/context/theme-provider";
 
 export default function Navbar() {
   const user = useSelector((state: RootState) => state.user);
+  const cartList = useSelector((state: RootState) => state.product.cartList);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { setTheme } = useTheme();
@@ -201,7 +202,7 @@ export default function Navbar() {
                       className="absolute -right-1 -top-0 p-0.5 px-1.5"
                       variant="secondary"
                     >
-                      0
+                      {cartList.length}
                     </Badge>
                   </button>
                 }

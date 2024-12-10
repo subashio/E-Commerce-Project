@@ -3,9 +3,13 @@ import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
 import GlobleContextProvider from "./context/GlobleContextProvider";
 import { ThemeProvider } from "./context/theme-provider";
+import React from "react";
 
 export default function () {
   const location = useLocation();
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <GlobleContextProvider>

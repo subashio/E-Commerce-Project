@@ -83,20 +83,21 @@ export default function DashboardPage() {
   return (
     <section className="mt-10 px-5">
       <div
-        className="relative h-[25vh] rounded-lg bg-cover bg-center bg-no-repeat sm:h-[30vh]"
-        style={{ backgroundImage: "url(/dash-image.jpg)" }}
+        className="relative h-[26vh] rounded-lg bg-cover bg-left bg-no-repeat sm:h-[30vh]"
+        style={{ backgroundImage: "url(/dash-banner.jpg)" }}
       >
         <div className="flex h-full w-full flex-col justify-center gap-y-3 px-5 sm:gap-y-6 md:px-14">
-          <h1 className="max-w-2xl text-2xl font-semibold sm:text-4xl">
-            Welcome To Shopme Dashboard!
+          <h1 className="max-w-2xl text-2xl font-semibold sm:text-2xl">
+            Welcome to the Admin Dashboard!
           </h1>
-          <p className="max-w-xs text-sm font-medium text-secondary/60 sm:text-lg md:max-w-md">
-            Shopme is simple & clean design for developer and designer
+          <p className="max-w-xs text-sm font-medium text-secondary/60 sm:text-sm md:max-w-sm">
+            Manage products, orders, and customer data in one place. Monitor
+            performance and track sales easily
           </p>
           <Link
             className={cn(
               "group mr-auto flex items-center gap-2 transition-all duration-300",
-              buttonVariants({ variant: "default" }),
+              buttonVariants({ variant: "secondary" }),
             )}
             to="/dashboard-page/products"
           >
