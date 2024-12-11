@@ -52,24 +52,11 @@ export default function Products() {
       subCategory.name,
     ]),
   );
-  // const selectedProduct = productList.find((product) => {
-  //   return (
-  //     product._id === selectedId &&
-  //     categoryLookup.has(product.categoryId) &&
-  //     subCategoryLookup.has(product.sub_categoryId)
-  //   );
-  // });
 
   const selectedProduct = productList.find((product) => {
     const isMatch = product._id === selectedId;
     const hasCategory = categoryLookup.has(product.categoryId);
     const hasSubCategory = subCategoryLookup.has(product.sub_categoryId);
-
-    console.log("Checking Product:", product);
-    console.log("isMatch:", isMatch);
-    console.log("hasCategory:", hasCategory);
-    console.log("hasSubCategory:", hasSubCategory);
-
     return isMatch && hasCategory && hasSubCategory;
   });
 

@@ -108,81 +108,153 @@ export async function verifyEmailController(req, res) {
 }
 
 //user login
-export async function LoginController(req, res) {
+// export async function LoginController(req, res) {
+//   try {
+//     const { email, password } = req.body;
+
+//     if (!email || !password) {
+//       return res.status(400).json({
+//         message: "Provide email and password",
+//         error: true,
+//         success: false,
+//       });
+//     }
+
+//     //user  not registered excist
+//     const user = await userModel.findOne({ email });
+
+//     if (!user) {
+//       return res.status(400).json({
+//         message: "Email is not Registered",
+//         success: false,
+//         error: true,
+//       });
+//     }
+//     if (user.status !== "Active") {
+//       return res.status(400).json({
+//         message: "Contact Admin for access",
+//         success: false,
+//         error: true,
+//       });
+//     }
+
+//     const checkPassword = await bcrypt.compare(password, user.password);
+
+//     if (!checkPassword) {
+//       return res.status(400).json({
+//         message: "Check Your password",
+//         success: false,
+//         error: true,
+//       });
+//     }
+
+//     //genrating token
+//     const accessToken = await generateAccessToken(user._id);
+//     const refreshToken = await generateRefreshtoken(user._id);
+
+//     //updating user-model
+//     const updateUser = userModel.findByIdAndUpdate(user._id, {
+//       last_login_date: new Date(),
+//     });
+
+//     const cookieOptions = {
+//       httpOnly: true,
+//       secure: process.env.NODE_ENV === "production", // Set to true in production (HTTPS)
+//       sameSite: process.env.NODE_ENV === "production" ? "Strict" : "Lax",
+//     };
+
+//     res.cookie("accessToken", accessToken, {
+//       ...cookieOptions,
+//       maxAge: 15 * 60 * 1000,
+//     }); //15 mins
+//     res.cookie("refreshToken", refreshToken, {
+//       ...cookieOptions,
+//       maxAge: 7 * 24 * 60 * 60 * 1000,
+//     }); // 7 days
+
+//     return res.json({
+//       message: " Login Successfull",
+//       status: true,
+//       error: false,
+//       data: {
+//         accessToken,
+//         refreshToken,
+//       },
+//     });
+//   } catch (error) {
+//     return res.status(500).json({
+//       message: error.message || error,
+//       error: true,
+//       success: false,
+//     });
+//   }
+// }
+export async function LoginController(request, response) {
   try {
-    const { email, password } = req.body;
+    const { email, password } = request.body;
 
     if (!email || !password) {
-      return res.status(400).json({
-        message: "Provide email and password",
+      return response.status(400).json({
+        message: "provide email, password",
         error: true,
         success: false,
       });
     }
 
-    //user  not registered excist
     const user = await userModel.findOne({ email });
 
     if (!user) {
-      return res.status(400).json({
-        message: "Email is not Registered",
-        success: false,
+      return response.status(400).json({
+        message: "User not register",
         error: true,
+        success: false,
       });
     }
+
     if (user.status !== "Active") {
-      return res.status(400).json({
-        message: "Contact Admin for access",
-        success: false,
+      return response.status(400).json({
+        message: "Contact to Admin",
         error: true,
+        success: false,
       });
     }
 
     const checkPassword = await bcrypt.compare(password, user.password);
 
     if (!checkPassword) {
-      return res.status(400).json({
-        message: "Check Your password",
-        success: false,
+      return response.status(400).json({
+        message: "Check your password",
         error: true,
+        success: false,
       });
     }
 
-    //genrating token
-    const accessToken = await generateAccessToken(user._id);
+    const accesstoken = await generateAccessToken(user._id);
     const refreshToken = await generateRefreshtoken(user._id);
 
-    //updating user-model
-    const updateUser = userModel.findByIdAndUpdate(user._id, {
+    const updateUser = await userModel.findByIdAndUpdate(user?._id, {
       last_login_date: new Date(),
     });
 
-    const cookieOptions = {
+    const cookiesOption = {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // Set to true in production (HTTPS)
-      sameSite: process.env.NODE_ENV === "production" ? "Strict" : "Lax",
+      secure: true,
+      sameSite: "None",
     };
+    response.cookie("accessToken", accesstoken, cookiesOption);
+    response.cookie("refreshToken", refreshToken, cookiesOption);
 
-    res.cookie("accessToken", accessToken, {
-      ...cookieOptions,
-      maxAge: 15 * 60 * 1000,
-    }); //15 mins
-    res.cookie("refreshToken", refreshToken, {
-      ...cookieOptions,
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    }); // 7 days
-
-    return res.json({
-      message: " Login Successfull",
-      status: true,
+    return response.json({
+      message: "Login successfully",
       error: false,
+      success: true,
       data: {
-        accessToken,
+        accesstoken,
         refreshToken,
       },
     });
   } catch (error) {
-    return res.status(500).json({
+    return response.status(500).json({
       message: error.message || error,
       error: true,
       success: false,
