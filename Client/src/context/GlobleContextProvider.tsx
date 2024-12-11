@@ -4,6 +4,7 @@ import { SummaryApi } from "@/constants/SummaryApi";
 import { useToast } from "@/hooks/use-toast";
 import Axios from "@/lib/Axios";
 import { handleAddAddress } from "@/store/addressSlice";
+import { setOrder } from "@/store/orderSlice";
 import { setCart, setProduct } from "@/store/ProductSlice";
 import { RootState } from "@/store/store";
 import React, { ReactNode } from "react";
@@ -14,6 +15,7 @@ type GlobleContextType = {
   fetchAddress: () => Promise<void>;
   fetchCartItem: () => Promise<void>;
   fetchAllProduct: () => Promise<void>;
+  fetchOrder: () => Promise<void>;
   addToCart: (product: any) => void;
   updateCartItem: (id: string, qty: any) => Promise<void>;
   deleteCartItem: (cartId: string) => Promise<void>;
@@ -107,7 +109,19 @@ const GlobleProvider = ({ children }: { children: ReactNode }) => {
       console.error(error);
     }
   };
-
+  const fetchOrder = async () => {
+    try {
+      const response = await Axios({
+        ...SummaryApi.get_orderDetails,
+      });
+      const { data: responseData } = response;
+      if (responseData) {
+        dispatch(setOrder(responseData.data));
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
   //fetching the address
   const fetchAddress = async () => {
     try {
@@ -164,6 +178,7 @@ const GlobleProvider = ({ children }: { children: ReactNode }) => {
   React.useEffect(() => {
     fetchAddress();
     fetchCartItem();
+    fetchOrder();
     fetchAllProduct();
   }, [user]);
 
@@ -173,6 +188,7 @@ const GlobleProvider = ({ children }: { children: ReactNode }) => {
     fetchAllProduct,
     updateCartItem,
     deleteCartItem,
+    fetchOrder,
     addToCart,
   };
 

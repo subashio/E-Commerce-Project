@@ -9,7 +9,7 @@ import {
 import React from "react";
 
 interface Column {
-  header: string;
+  header?: string;
   key: string;
   render?: (value: any, row: any) => React.ReactNode;
 }
@@ -24,9 +24,10 @@ const GenericTable = ({ columns, data, actions }: TableProps) => {
     <Table>
       <TableHeader>
         <TableRow className="w-full bg-secondary/10 hover:bg-secondary/10">
-          {columns.map((col) => (
-            <TableHead key={col.key}>{col.header}</TableHead>
-          ))}
+          {columns.map(
+            (col) =>
+              col.header && <TableHead key={col.key}>{col.header}</TableHead>,
+          )}
           {actions && <TableHead>Actions</TableHead>}
         </TableRow>
       </TableHeader>
@@ -34,7 +35,10 @@ const GenericTable = ({ columns, data, actions }: TableProps) => {
         {data.map((row, rowIndex) => (
           <TableRow key={rowIndex}>
             {columns.map((col) => (
-              <TableCell key={col.key}>
+              <TableCell
+                className="max-w-xs overflow-hidden text-ellipsis"
+                key={col.key}
+              >
                 {col.render ? col.render(row[col.key], row) : row[col.key]}
               </TableCell>
             ))}

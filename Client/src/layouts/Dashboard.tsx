@@ -18,7 +18,7 @@ export default function Dasboard() {
               <DashboardSide />
             </div>
             <div className="flex w-full flex-col">
-              <div className="flex h-16 items-center justify-center border-b px-5 xl:items-start xl:px-5">
+              <div className="sticky top-0 z-50 flex h-16 items-center justify-center border-b bg-background px-5 transition-all duration-200 xl:items-start xl:px-5">
                 <DashboardHeader />
               </div>
               <div className="px-5">

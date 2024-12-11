@@ -34,10 +34,10 @@ export default function Header() {
           onOpenChange={(isOpen) => isSetSheetOpen(isOpen)}
         >
           <SheetTrigger asChild>
-            <AlignRight className="h-7 w-7 cursor-pointer" />
+            <AlignRight className="mr-4 h-7 w-7 cursor-pointer" />
           </SheetTrigger>
           <SheetContent side="left" className="flex !w-full flex-col p-0">
-            <nav className="mx-10 mt-3 grid gap-2 text-lg font-medium">
+            <nav className="mt-3 grid gap-2 px-10 text-lg font-medium">
               <h1 className="mb-4 border-b py-4 text-xl font-semibold">
                 Account Settings
               </h1>

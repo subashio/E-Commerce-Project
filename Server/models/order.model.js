@@ -8,22 +8,29 @@ const orderSchema = new mongoose.Schema(
     },
     orderId: {
       type: String,
+      required: [true, "Provide orderId"],
+      unique: true,
+    },
+    productId: {
+      type: mongoose.Schema.ObjectId,
+      ref: "product",
     },
     product_details: {
-      type: String,
+      name: String,
+      image: Array,
+      price: Number,
+      status: Boolean,
+      quantity: Number,
     },
-    payment_id: {
+    paymentId: {
       type: String,
     },
     payment_status: {
       type: String,
     },
     delivery_address: {
-      type: Object,
-      default: {},
-    },
-    delivery_status: {
-      type: String,
+      type: mongoose.Schema.ObjectId,
+      ref: "address",
     },
     subTotalAmt: {
       type: Number,

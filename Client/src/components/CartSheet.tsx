@@ -172,13 +172,12 @@ export default function CartSheet({ button }: { button: ReactNode }) {
         return acc;
       }, {});
       setItemQuantities(initialQuantities);
-    }
-    if (cartList.length === 0) {
-      setTotalPrice(0);
+      setTotalPrice(calculateTotalPrice(cartList, initialQuantities)); // Use initialQuantities here
     } else {
-      setTotalPrice(calculateTotalPrice(cartList, itemQuantities));
+      setItemQuantities({});
+      setTotalPrice(0);
     }
-  }, [cartList, itemQuantities]);
+  }, [cartList]);
 
   return (
     <Sheet
@@ -196,12 +195,12 @@ export default function CartSheet({ button }: { button: ReactNode }) {
             </CardTitle>
             <CardDescription>Total Price: ₹{totalPrice}</CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="mx-auto">
-              <ScrollArea className="h-[500px] w-full">
-                <div>
-                  {cartList.length > 0 ? (
-                    cartList.map((item) => {
+          {cartList.length > 0 ? (
+            <CardContent>
+              <div className="mx-auto">
+                <ScrollArea className="h-[500px] w-full">
+                  <div>
+                    {cartList.map((item: any) => {
                       const product =
                         typeof item.productId === "object"
                           ? item.productId
@@ -217,7 +216,7 @@ export default function CartSheet({ button }: { button: ReactNode }) {
                       return (
                         <div
                           key={item._id}
-                          className="flex h-32 w-full flex-wrap items-center justify-evenly gap-4 py-4"
+                          className="flex h-auto w-full flex-wrap items-center gap-4 border-b py-4"
                         >
                           <div>
                             <img
@@ -226,12 +225,12 @@ export default function CartSheet({ button }: { button: ReactNode }) {
                               src={product?.image[0] || "/default_image.png"} // Use product.image if available
                             />
                           </div>
-                          <div className="my-auto mr-auto flex h-full flex-col items-start justify-center gap-2 text-sm font-semibold">
+                          <div className="my-auto mr-auto flex h-full max-w-60 flex-col items-start justify-center gap-2 text-sm font-semibold sm:max-w-xs">
                             {product?.name}
                             <div className="font-bold">
                               ₹{product?.price}
                               {product?.salePrice && (
-                                <del className="ml-1 text-secondary/50">
+                                <del className="ml-1 text-secondary/50 dark:text-secondary-foreground/70">
                                   ₹{product?.salePrice}
                                 </del>
                               )}
@@ -263,7 +262,7 @@ export default function CartSheet({ button }: { button: ReactNode }) {
                             </div>
                             <button
                               onClick={(e) => handleDeleteCart(e, item._id)}
-                              className="flex items-center gap-1 !p-0 text-xs text-secondary !no-underline"
+                              className="flex items-center gap-1 !p-0 text-xs text-secondary !no-underline dark:text-secondary-foreground"
                             >
                               <Trash2 className="w-3.5 text-destructive" />{" "}
                               Remove
@@ -271,30 +270,42 @@ export default function CartSheet({ button }: { button: ReactNode }) {
                           </div>
                         </div>
                       );
-                    })
-                  ) : (
-                    <div>Your cart is empty.</div>
-                  )}
-                </div>
-              </ScrollArea>
-            </div>
-            <CardFooter className="mt-2 flex w-full flex-row items-center justify-between p-0">
-              <Button
-                variant="outline"
-                onClick={() => isSetSheetOpen(false)}
-                className="rounded-lg"
-              >
-                Continue Shopping
-              </Button>
+                    })}
+                  </div>
+                </ScrollArea>
+              </div>
+              <CardFooter className="mt-2 flex w-full flex-row items-center justify-between p-0">
+                <Button
+                  variant="outline"
+                  onClick={() => isSetSheetOpen(false)}
+                  className="rounded-lg"
+                >
+                  Continue Shopping
+                </Button>
+                <Link
+                  to={isLoggedIn ? "/shop/checkout" : "/login"}
+                  onClick={() => isSetSheetOpen(false)}
+                  className={cn(buttonVariants({ variant: "default" }))}
+                >
+                  Proceed To Checkout
+                </Link>
+              </CardFooter>
+            </CardContent>
+          ) : (
+            <div className="flex h-[80vh] w-full flex-col items-center justify-center gap-2">
+              <h1 className="text-3xl font-bold text-secondary/70 dark:text-secondary-foreground/70">
+                Opps!
+              </h1>
+              <p>Your cart is empty.</p>
               <Link
-                to={isLoggedIn ? "/cart" : "/login"}
+                to="/shop"
                 onClick={() => isSetSheetOpen(false)}
                 className={cn(buttonVariants({ variant: "default" }))}
               >
-                Proceed To Checkout
+                Shop Now
               </Link>
-            </CardFooter>
-          </CardContent>
+            </div>
+          )}
         </Card>
       </SheetContent>
     </Sheet>

@@ -6,7 +6,7 @@ import { dashboardLinks } from "./DashboardHeder";
 export default function DashboardSide() {
   const location = useLocation();
   return (
-    <aside className="hidden max-h-screen w-full flex-col gap-2 md:flex">
+    <aside className="sticky top-0 z-50 hidden max-h-screen w-full flex-col gap-2 border-b bg-background transition-all duration-200 md:flex">
       <div className=" ">
         <nav className="text-lg font-medium">
           <Link to="/" className="">
@@ -16,7 +16,7 @@ export default function DashboardSide() {
               alt="Globo-green logo"
             />
           </Link>
-          <div className="flex w-full flex-col px-2.5">
+          <div className="my-8 flex w-full flex-col px-2.5">
             <Link
               to="/dashboard-page"
               className={cn(

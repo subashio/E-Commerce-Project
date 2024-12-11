@@ -28,13 +28,13 @@ export default function ProductCard({
                 stock
               </span>
             </h1>
-            <h1 className="text-md font-semibold">{name}</h1>
+            <h1 className="text-md max-w-44 truncate font-semibold">{name}</h1>
           </div>
         </div>
         <div className="mt-4 flex w-full items-center justify-between gap-2">
           <p className="flex w-full flex-col font-bold">
             ₹{price}
-            <del className="text-xs text-secondary/50 dark:text-secondary-foreground/50">
+            <del className="text-xs text-secondary/50 dark:text-secondary-foreground/70">
               ₹{salePrice}
             </del>
           </p>

@@ -18,6 +18,7 @@ import { persist, RootState } from "@/store/store";
 import { logout } from "@/store/userSlice";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { LayoutGrid } from "lucide-react";
 
 export default function MobileNav({ button }: { button: ReactNode }) {
   const [isSheetOpen, setIsSheetOpen] = React.useState<boolean>(false);
@@ -51,18 +52,22 @@ export default function MobileNav({ button }: { button: ReactNode }) {
   return (
     <Sheet open={isSheetOpen} onOpenChange={(isOpen) => setIsSheetOpen(isOpen)}>
       <SheetTrigger className="block md:hidden">{button}</SheetTrigger>
-      <SheetContent className="!w-full pt-0">
+      <SheetContent side="left" className="p-2 pt-0">
         <Link to="/">
-          <img src="/logo.png" className="h-16" alt="Globo-green logo" />
+          <img
+            src="/logo.png"
+            className="my-3 ml-2 h-12 w-52"
+            alt="Globo-green logo"
+          />
         </Link>
         <Separator />
-        <h1 className="my-4 w-full px-1 text-2xl font-semibold tracking-wide">
-          Hello! {user.name}
-        </h1>
         <Accordion type="single" collapsible>
           <AccordionItem className="!border-none" value="item-1 ">
             <AccordionTrigger className="hover:no-underline">
-              <Button className="w-full">All categories</Button>
+              <Button className="w-full">
+                {" "}
+                <LayoutGrid /> All categories
+              </Button>
             </AccordionTrigger>
             <AccordionContent className="flex flex-col rounded-md border">
               {categoryList.map((_item, _index) => (

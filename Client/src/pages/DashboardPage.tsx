@@ -83,7 +83,7 @@ export default function DashboardPage() {
   return (
     <section className="mt-10 px-5">
       <div
-        className="relative h-[26vh] rounded-lg bg-cover bg-left bg-no-repeat sm:h-[30vh]"
+        className="relative h-[26vh] rounded-lg bg-cover bg-left bg-no-repeat sm:h-[30vh] xl:h-[40vh]"
         style={{ backgroundImage: "url(/dash-banner.jpg)" }}
       >
         <div className="flex h-full w-full flex-col justify-center gap-y-3 px-5 sm:gap-y-6 md:px-14">

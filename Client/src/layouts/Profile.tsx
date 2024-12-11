@@ -19,8 +19,8 @@ export default function Profile() {
             <div className="hidden justify-center rounded-lg border-r md:flex md:min-h-screen">
               <Side />
             </div>
-            <div className="flex w-full flex-col md:px-4">
-              <div className="flex h-20 items-center gap-4 rounded-lg border-b md:hidden">
+            <div className="flex w-full flex-col">
+              <div className="flex h-20 items-center gap-4 overflow-hidden rounded-lg border-b md:hidden">
                 <Header />
               </div>
               <div className="md:mt-10">

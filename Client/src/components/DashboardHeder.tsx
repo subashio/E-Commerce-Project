@@ -63,12 +63,16 @@ export default function DashboardHeader() {
           <SheetTrigger asChild>
             <AlignLeft className="h-6 w-6 cursor-pointer xl:hidden" />
           </SheetTrigger>
-          <SheetContent side="left" className="flex !w-72 flex-col p-0">
+          <SheetContent side="left" className="flex !w-80 flex-col p-0 pt-3">
             <nav className="text-lg font-medium">
-              <Link to="/">
-                <img src="/logo.png" className="h-20" alt="Globo-green logo" />
+              <Link to="/" className="w-full">
+                <img
+                  src="/logo.png"
+                  className="my-3 ml-6 h-12 w-52"
+                  alt="Globo-green logo"
+                />
               </Link>
-              <div className="flex w-full flex-col px-2.5">
+              <div className="my-6 flex w-full flex-col px-2.5">
                 <Link
                   to="/dashboard-page"
                   onClick={() => isSetSheetOpen(false)}

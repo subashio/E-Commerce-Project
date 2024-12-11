@@ -72,7 +72,7 @@ export default function Footer() {
                 </nav>
               </div>
               <div>
-                <p className="text-base font-semibold tracking-wide text-gray-900">
+                <p className="mb-6 text-sm font-semibold uppercase text-gray-900 dark:text-white">
                   MOBILE APP IS AVAILABLE ON
                 </p>
                 <div className="flex items-center gap-1">

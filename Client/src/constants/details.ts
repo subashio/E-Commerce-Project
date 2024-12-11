@@ -26,34 +26,6 @@ export const Links = [
   { id: 3, name: "Products", to: "/shop" },
 ];
 
-// export const Links3: TNav[] = [
-//   { id: 1, name: "Privacy Policy", to: "#" },
-//   { id: 2, name: "Licensing", to: "#" },
-//   { id: 3, name: "Terms", to: "#" },
-// ];
-export const Categories = [
-  { id: 1, name: "Pumps", to: "#" },
-  { id: 2, name: "Pneumatics", to: "#" },
-  { id: 3, name: "Dewatering", to: "#" },
-  { id: 4, name: "Hose Management", to: "#" },
-  { id: 5, name: "Filtration System", to: "#" },
-  { id: 6, name: "Valves & Actuators", to: "#" },
-  {
-    id: 8,
-    name: "Electrical & Mechanical Spares",
-    to: "#",
-  },
-];
-export const Services = [
-  { id: 1, name: "Hydraulics", to: "#" },
-  { id: 2, name: "Welding Solution", to: "#" },
-  { id: 3, name: "Pipeline Flushing", to: "" },
-  { id: 4, name: "Environment Services", to: "#" },
-  { id: 5, name: "Refiners Oil & Gas", to: "#" },
-  { id: 6, name: "Water & Waste Water", to: "#" },
-  { id: 7, name: "Chemical & Process", to: "#" },
-];
-
 export const footerSvg = [
   {
     id: 1,

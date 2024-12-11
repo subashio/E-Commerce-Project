@@ -3,8 +3,8 @@ import Dashboard from "@/layouts/Dashboard";
 import Profile from "@/layouts/Profile";
 import Shop from "@/layouts/shop";
 import AddressPage from "@/pages/AddressPage";
-import CartPage from "@/pages/CartPage";
 import Category from "@/pages/Category";
+import CheckoutPage from "@/pages/CheckoutPage";
 import Customers from "@/pages/Customers";
 import DashboardPage from "@/pages/DashboardPage";
 import ForgotPassword from "@/pages/ForgotPassword";
@@ -31,7 +31,7 @@ const router = createBrowserRouter(
       children: [
         { path: "", element: <Home /> },
         { path: "search", element: <SearchPage /> },
-        { path: "cart", element: <CartPage /> },
+        { path: "shop/checkout", element: <CheckoutPage /> },
         { path: "login", element: <Login /> },
         { path: "register", element: <Register /> },
         { path: "forgot-password", element: <ForgotPassword /> },

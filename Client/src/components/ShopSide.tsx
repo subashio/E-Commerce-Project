@@ -217,20 +217,3 @@ export default function ShopSide() {
     </aside>
   );
 }
-
-{
-  /* {categoryList.map((item, index) => (
-              <Link
-                key={index}
-                to={`/shop/${item._id}`}
-                className={cn(
-                  "flex items-center gap-3 rounded-lg p-4 text-sm transition-all duration-300",
-                  location.pathname === `/shop/${item._id}`
-                    ? "bg-primary/20"
-                    : "hover:bg-accent",
-                )}
-              >
-                {item.name}
-              </Link>
-            ))} */
-}

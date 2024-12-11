@@ -141,4 +141,12 @@ export const SummaryApi = {
     url: "api/cart/delete",
     method: "delete",
   },
+  order_CashOnDelivery: {
+    url: "api/order/cash-on-delivery",
+    method: "post",
+  },
+  get_orderDetails: {
+    url: "api/order/order-list",
+    method: "get",
+  },
 };
