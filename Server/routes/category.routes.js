@@ -6,7 +6,7 @@ import {
   getCategoryController,
   updateCategoryController,
 } from "../controllers/category.controller.js";
-import { admin } from "../middleware/Admin.js";
+import { admin } from "../middleware/admin.js";
 import auth from "../middleware/auth.js";
 
 const categoryRouter = Router();

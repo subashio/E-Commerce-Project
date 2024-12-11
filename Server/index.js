@@ -18,7 +18,7 @@ dotenv.config();
 dotenv.config();
 
 const app = express();
-const Port = process.env.PORT || 3000; // Fallback port in case process.env.PORT is undefined
+const Port = process.env.PORT; // Fallback port in case process.env.PORT is undefined
 
 app.use(
   cors({
