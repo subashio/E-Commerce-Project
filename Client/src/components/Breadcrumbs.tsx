@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -8,6 +9,8 @@ import {
 
 type DashboardBreadcrumbProps = {
   path: string;
+  path2?: string;
+  pathName2?: string;
   finalPathName?: string;
   className?: string;
   pathName?: string;
@@ -15,28 +18,37 @@ type DashboardBreadcrumbProps = {
 export default function Breadcrumbs({
   pathName,
   path,
+  path2,
+  pathName2,
   finalPathName,
   className,
 }: DashboardBreadcrumbProps) {
   return (
-    <Breadcrumb className={className}>
+    <Breadcrumb className={cn("text-md font-medium", className)}>
       <BreadcrumbList>
         <BreadcrumbItem>
-          <BreadcrumbLink href="/" className="text-md font-medium">
+          <BreadcrumbLink href="/" className="">
             Home
           </BreadcrumbLink>
         </BreadcrumbItem>
-        <BreadcrumbSeparator>/</BreadcrumbSeparator>
+
         <BreadcrumbItem>
-          <BreadcrumbLink href={path} className="text-md font-medium">
-            {pathName}
+          <BreadcrumbLink href={path} className="">
+            <BreadcrumbSeparator>/ {pathName}</BreadcrumbSeparator>
           </BreadcrumbLink>
         </BreadcrumbItem>
-        <>
-          <BreadcrumbSeparator>/</BreadcrumbSeparator>
-
+        {path2 && (
           <BreadcrumbItem>
-            <BreadcrumbLink>{finalPathName}</BreadcrumbLink>
+            <BreadcrumbLink href={path2} className="">
+              <BreadcrumbSeparator>/ {pathName2}</BreadcrumbSeparator>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+        )}
+        <>
+          <BreadcrumbItem>
+            <BreadcrumbLink>
+              <BreadcrumbSeparator>/ {finalPathName}</BreadcrumbSeparator>
+            </BreadcrumbLink>
           </BreadcrumbItem>
         </>
       </BreadcrumbList>

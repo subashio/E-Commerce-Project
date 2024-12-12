@@ -23,7 +23,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { Card, CardContent, CardHeader } from "../components/ui/card";
 
-export default function Products() {
+export default function ProductList() {
   const location = useLocation();
   const { id: selectedId } = useParams();
   const dispatch = useDispatch();

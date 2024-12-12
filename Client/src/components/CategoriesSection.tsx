@@ -5,11 +5,11 @@ import MaxWidthWrapper from "./MaxWidthWrapper";
 import { Card } from "./ui/card";
 
 export default function CategoriesSection() {
-  const categoryylist = useSelector(
+  const categorylist = useSelector(
     (state: RootState) => state.product.categoryList,
   );
 
-  const categories = categoryylist.map((category) => ({
+  const categories = categorylist.map((category) => ({
     name: category.name,
     to: `/shop/${category._id}`,
     image: category.image,

@@ -8,6 +8,8 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { Button, buttonVariants } from "./ui/button";
 
+import { useGlobleContext } from "@/context/GlobleContextProvider";
+import CartItem from "./CartItem";
 import {
   Card,
   CardContent,
@@ -17,8 +19,6 @@ import {
   CardTitle,
 } from "./ui/card";
 import { ScrollArea } from "./ui/scroll-area";
-import { useGlobleContext } from "@/context/GlobleContextProvider";
-import CartItem from "./CartItem";
 
 export default function CartSheet({ button }: { button: ReactNode }) {
   const [isSheetOpen, isSetSheetOpen] = React.useState(false);

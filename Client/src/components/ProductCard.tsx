@@ -14,7 +14,7 @@ export default function ProductCard({
   salePrice,
 }: ProductCartProps) {
   return (
-    <Link to="#" className=" ">
+    <Link to={`/shop/product/${_id}`} className=" ">
       <Card className="group relative mt-6 border-none p-4 hover:shadow-2xl">
         <Badge className="absolute right-3 top-3 bg-red-600 px-4 hover:bg-red-500">
           {discount}%
