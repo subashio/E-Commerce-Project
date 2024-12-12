@@ -26,19 +26,12 @@ export default function CartSheet({ button }: { button: ReactNode }) {
   const cartList = useSelector((state: RootState) => state.product.cartList);
   const { toast } = useToast();
   const [totalPrice, setTotalPrice] = React.useState(0);
-  const { updateCartItem, deleteCartItem, fetchCartItem } = useGlobleContext();
+  const { updateCartItem, deleteCartItem, fetchCartItem, handleToast } =
+    useGlobleContext();
   const [itemQuantities, setItemQuantities] = React.useState<any>({});
   const isLoggedIn = user?._id;
 
-  const handleToast = () => {
-    if (!isLoggedIn) {
-      toast({
-        variant: "destructive",
-        description: "We couldn't able to access cart. Please Sign In.",
-      });
-    }
-  };
-
+  // calculating total Price
   const calculateTotalPrice = (cartList: any, quantities: any) => {
     return cartList.reduce((total: number, item: any) => {
       const product =

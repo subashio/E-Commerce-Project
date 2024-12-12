@@ -9,13 +9,11 @@ import {
   LogOut,
   SearchIcon,
   ShoppingBag,
-  // ShoppingCartIcon,
   User,
 } from "lucide-react";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import CartDrawer from "./CartSheet";
 import MaxWidthWrapper from "./MaxWidthWrapper";
 import MobileNav from "./MobileNav";
 import SearchInput from "./SearchInput";
@@ -29,6 +27,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import CartSheet from "./CartSheet";
 
 export default function Navbar() {
   const user = useSelector((state: RootState) => state.user);
@@ -59,7 +58,6 @@ export default function Navbar() {
     };
 
     window.addEventListener("scroll", handleScroll);
-
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
@@ -194,7 +192,7 @@ export default function Navbar() {
                 </Link>
               )}
 
-              <CartDrawer
+              <CartSheet
                 button={
                   <button className="relative flex items-center gap-4 text-primary">
                     <ShoppingBag className="h-10 w-10 p-2" />

@@ -10,11 +10,7 @@ export default function DashboardSide() {
       <div className=" ">
         <nav className="text-lg font-medium">
           <Link to="/" className="">
-            <img
-              src="/logo.png"
-              className="my-3 ml-6 h-12 w-52"
-              alt="Globo-green logo"
-            />
+            <img src="/logo.png" alt="Globo-green logo" />
           </Link>
           <div className="my-8 flex w-full flex-col px-2.5">
             <Link

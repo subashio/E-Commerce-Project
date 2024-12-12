@@ -16,7 +16,8 @@ export default function AddToCartButton({ id }: ProductCartProps) {
   const cartList = useSelector((state: RootState) => state.product.cartList);
   const { toast } = useToast();
   const [isAvailableCart, setIsAvailableCart] = React.useState(false);
-  const { updateCartItem, deleteCartItem, fetchCartItem } = useGlobleContext();
+  const { updateCartItem, deleteCartItem, fetchCartItem, handleToast } =
+    useGlobleContext();
   const [cartItemDetails, setCartItemsDetails] = React.useState<any>(null);
   const [qty, setQty] = React.useState<number>(0);
   const [isLoading, setIsLoading] = React.useState(false);
@@ -40,6 +41,7 @@ export default function AddToCartButton({ id }: ProductCartProps) {
       }
     } catch (error) {
       console.error(error);
+      handleToast();
     } finally {
       setIsLoading(false);
     }

@@ -1,22 +1,25 @@
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { ToastAction } from "@/components/ui/toast";
 import { SummaryApi } from "@/constants/SummaryApi";
 import { useToast } from "@/hooks/use-toast";
 import Axios from "@/lib/Axios";
+import { cn } from "@/lib/utils";
 import { handleAddAddress } from "@/store/addressSlice";
 import { setOrder } from "@/store/orderSlice";
 import { setCart, setProduct } from "@/store/ProductSlice";
 import { RootState } from "@/store/store";
 import React, { ReactNode } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 
 // Define type for the context
 type GlobleContextType = {
   fetchAddress: () => Promise<void>;
   fetchCartItem: () => Promise<void>;
   fetchAllProduct: () => Promise<void>;
+  handleToast: () => void;
   fetchOrder: () => Promise<void>;
-  addToCart: (product: any) => void;
+  // addToCart: (product: any) => void;
   updateCartItem: (id: string, qty: any) => Promise<void>;
   deleteCartItem: (cartId: string) => Promise<void>;
   // fetchProductByCategory: (id: string, setProduct?: any) => Promise<void>;
@@ -39,7 +42,9 @@ export const useGlobleContext = () => {
 const GlobleProvider = ({ children }: { children: ReactNode }) => {
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.user);
+  const isLoggedIn = user?._id;
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const addToCart = (product: any) => {
     if (user) {
@@ -174,6 +179,24 @@ const GlobleProvider = ({ children }: { children: ReactNode }) => {
       console.error(error);
     }
   };
+  const handleToast = () => {
+    if (!isLoggedIn) {
+      toast({
+        variant: "default",
+        title: "Login",
+        description: "login to add products to cart",
+        action: (
+          <ToastAction
+            className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
+            onClick={() => navigate("/login")}
+            altText="Goto schedule to undo"
+          >
+            Login
+          </ToastAction>
+        ),
+      });
+    }
+  };
 
   React.useEffect(() => {
     fetchAddress();
@@ -185,11 +208,12 @@ const GlobleProvider = ({ children }: { children: ReactNode }) => {
   const value = {
     fetchCartItem,
     fetchAddress,
+    handleToast,
     fetchAllProduct,
     updateCartItem,
     deleteCartItem,
     fetchOrder,
-    addToCart,
+    // addToCart,
   };
 
   return (

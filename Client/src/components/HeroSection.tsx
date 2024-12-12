@@ -101,6 +101,7 @@ export default function HeroSection() {
                 <div className="absolute bottom-4 z-30 mx-auto flex w-full justify-center gap-2 md:bg-secondary/0">
                   {Array.from({ length: count }).map((_, index) => (
                     <svg
+                      key={index}
                       xmlns="http://www.w3.org/2000/svg"
                       className={cn(
                         "w-3 cursor-pointer transition-colors",
