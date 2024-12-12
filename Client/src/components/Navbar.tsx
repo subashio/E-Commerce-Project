@@ -7,8 +7,10 @@ import {
   AlignRight,
   House,
   LogOut,
+  Moon,
   SearchIcon,
   ShoppingBag,
+  Sun,
   User,
 } from "lucide-react";
 import React from "react";
@@ -18,7 +20,7 @@ import MaxWidthWrapper from "./MaxWidthWrapper";
 import MobileNav from "./MobileNav";
 import SearchInput from "./SearchInput";
 import { Badge } from "./ui/badge";
-import { buttonVariants } from "./ui/button";
+import { Button, buttonVariants } from "./ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,12 +30,14 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import CartSheet from "./CartSheet";
+import { useTheme } from "@/context/theme-provider";
 
 export default function Navbar() {
   const user = useSelector((state: RootState) => state.user);
   const cartList = useSelector((state: RootState) => state.product.cartList);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { setTheme } = useTheme();
   const isLoggedIn = user?._id;
   const isAdmin = user.role == "ADMIN";
   const [hideOnScroll, setHideOnScroll] = React.useState(false);
@@ -205,7 +209,7 @@ export default function Navbar() {
                   </button>
                 }
               />
-              {/* <DropdownMenu>
+              <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" size="icon">
                     <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
@@ -224,7 +228,7 @@ export default function Navbar() {
                     System
                   </DropdownMenuItem>
                 </DropdownMenuContent>
-              </DropdownMenu> */}
+              </DropdownMenu>
 
               <MobileNav button={<AlignRight />} />
             </div>
