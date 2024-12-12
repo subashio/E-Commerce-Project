@@ -10,7 +10,7 @@ import { setCart, setProduct } from "@/store/ProductSlice";
 import { RootState } from "@/store/store";
 import React, { ReactNode } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 // Define type for the context
 type GlobleContextType = {

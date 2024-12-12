@@ -101,3 +101,38 @@ export const subCategoryColumns = [
 
   { header: "Created At", key: "createdAt" },
 ];
+
+export const orderColumn = [
+  {
+    header: "Image",
+    key: "image",
+    render: (value: string | undefined) => (
+      <img
+        src={value}
+        alt="product"
+        className="h-10 w-10 rounded-md object-cover"
+      />
+    ),
+  },
+
+  { header: "Product Name", key: "name" },
+  { header: "orderId", key: "orderId" },
+  { header: "Items", key: "qty" },
+
+  {
+    header: "Status",
+    key: "status",
+    render: (value: boolean) => (
+      <Badge
+        className={`rounded-sm p-1 px-1.5 text-xs ${
+          value === true
+            ? "bg-green-500/50 text-green-900 hover:bg-green-500/50"
+            : "hover:bg-red-500/ 50 bg-red-500/50 text-red-950"
+        }`}
+      >
+        {value === true ? "Processing" : "Completed"}
+      </Badge>
+    ),
+  },
+  { header: "Price", key: "price" },
+];

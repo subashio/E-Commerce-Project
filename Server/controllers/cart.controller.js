@@ -1,4 +1,3 @@
-import { json } from "express";
 import cartModel from "../models/cart.model.js";
 import userModel from "../models/user.model.js";
 
@@ -77,6 +76,7 @@ export async function getCartItemController(req, res) {
     });
   }
 }
+
 export async function updateCartQuantityController(req, res) {
   try {
     const userId = req.userId;
@@ -113,6 +113,7 @@ export async function updateCartQuantityController(req, res) {
     });
   }
 }
+
 export async function deleteCartController(req, res) {
   try {
     const userId = req.userId;

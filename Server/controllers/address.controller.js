@@ -122,6 +122,7 @@ export async function updateAddressController(req, res) {
     });
   }
 }
+
 export async function updateAddressStatus(req, res) {
   try {
     const userId = req.userId; //auth middleware

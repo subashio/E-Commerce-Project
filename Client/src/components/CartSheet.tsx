@@ -2,7 +2,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { RootState } from "@/store/store";
-import { ShoppingBag, Trash2 } from "lucide-react";
+import { Loader, ShoppingBag } from "lucide-react";
 import React, { ReactNode } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -18,159 +18,107 @@ import {
 } from "./ui/card";
 import { ScrollArea } from "./ui/scroll-area";
 import { useGlobleContext } from "@/context/GlobleContextProvider";
-import { Badge } from "./ui/badge";
+import CartItem from "./CartItem";
 
 export default function CartSheet({ button }: { button: ReactNode }) {
   const [isSheetOpen, isSetSheetOpen] = React.useState(false);
-  const user = useSelector((state: RootState) => state.user);
   const cartList = useSelector((state: RootState) => state.product.cartList);
+  const user = useSelector((state: RootState) => state.user);
+  const isLoggedIn = user?._id;
   const { toast } = useToast();
-  const [totalPrice, setTotalPrice] = React.useState(0);
+
+  // Loading state for fetching cart items
+  const [isFetchingCart, setIsFetchingCart] = React.useState(false);
+
+  // Derived state for item quantities
+  const itemQuantities = React.useMemo(
+    () =>
+      cartList.reduce(
+        (acc, item) => ({ ...acc, [item._id]: item.quantity }),
+        {} as Record<string, number>,
+      ),
+    [cartList],
+  );
+
+  const [loadingItems, setLoadingItems] = React.useState<
+    Record<string, boolean>
+  >({});
+
+  const setItemLoading = (itemId: string, status: boolean) => {
+    setLoadingItems((prev) => ({ ...prev, [itemId]: status }));
+  };
+
+  const calculateTotalPrice = React.useMemo(
+    () =>
+      cartList.reduce((total, item) => {
+        const product =
+          typeof item.productId === "object" ? item.productId : null;
+        if (!product) return total;
+        const quantity = itemQuantities[item._id] || item.quantity;
+        const discountedPrice = product.discount
+          ? product.price - (product.price * product.discount) / 100
+          : product.price;
+        return total + quantity * discountedPrice;
+      }, 0),
+    [cartList, itemQuantities],
+  );
+
   const { updateCartItem, deleteCartItem, fetchCartItem, handleToast } =
     useGlobleContext();
-  const [itemQuantities, setItemQuantities] = React.useState<any>({});
-  const isLoggedIn = user?._id;
 
-  // calculating total Price
-  const calculateTotalPrice = (cartList: any, quantities: any) => {
-    return cartList.reduce((total: number, item: any) => {
-      const product =
-        typeof item.productId === "object" ? item.productId : null;
-      if (!product) return total;
-
-      const quantity = quantities[item._id] || item.quantity;
-
-      // Check if there's a discount
-      const discountedPrice = product.discount
-        ? product.price - (product.price * product.discount) / 100
-        : product.price;
-
-      return total + quantity * discountedPrice;
-    }, 0);
-  };
-
-  // Increase product quantity
-  const increaseQty = async (e: React.MouseEvent, itemId: string) => {
+  const increaseQty = (e: React.MouseEvent, itemId: string) => {
     e.preventDefault();
     e.stopPropagation();
-
-    const cartItem = cartList.find((item) => item._id === itemId);
-    if (!cartItem) return;
-
-    // Update the quantity in the state and send the update to the server
-    const newQuantity = (itemQuantities[itemId] || cartItem.quantity) + 1;
-    await updateCartItem(cartItem._id, newQuantity);
-
-    setItemQuantities((prev: any) => ({
-      ...prev,
-      [itemId]: newQuantity,
-    }));
-
-    toast({
-      variant: "default",
-      title: "Product added to cart",
-    });
+    const newQuantity = (itemQuantities[itemId] || 0) + 1;
+    setItemLoading(itemId, true);
+    updateCartItem(itemId, newQuantity)
+      .then(() => {
+        setItemLoading(itemId, false);
+      })
+      .catch(() => {
+        toast({ variant: "destructive", title: "Failed to increase quantity" });
+        setItemLoading(itemId, false);
+      });
   };
 
-  // Decrease product quantity
-  const decreaseQty = async (e: React.MouseEvent, itemId: string) => {
+  const decreaseQty = (e: React.MouseEvent, itemId: string) => {
     e.preventDefault();
     e.stopPropagation();
-
-    const cartItem = cartList.find((item) => item._id === itemId);
-    if (!cartItem) return;
-
-    const newQuantity = (itemQuantities[itemId] || cartItem.quantity) - 1;
-
-    if (newQuantity < 1) {
-      // Delete the item if the new quantity is less than 1
-      try {
-        await deleteCartItem(itemId);
-
-        // Update the local state to remove the item
-        setItemQuantities((prev: any) => {
-          const updatedQuantities = { ...prev };
-          delete updatedQuantities[itemId];
-          return updatedQuantities;
-        });
-        fetchCartItem();
-
-        toast({
-          variant: "default",
-          title: "Item removed from cart",
-        });
-      } catch (error) {
-        console.error("Error deleting cart item:", error);
-        toast({
-          variant: "destructive",
-          title: "Failed to remove item",
-        });
-      }
-    } else {
-      // Update the cart item quantity
-      try {
-        await updateCartItem(cartItem._id, newQuantity);
-
-        setItemQuantities((prev: any) => ({
-          ...prev,
-          [itemId]: newQuantity,
-        }));
-
-        toast({
-          variant: "default",
-          title: "Quantity decreased",
-        });
-      } catch (error) {
-        console.error("Error decreasing quantity:", error);
-        toast({
-          variant: "destructive",
-          title: "Failed to decrease quantity",
-        });
-      }
-    }
+    const newQuantity = Math.max(0, (itemQuantities[itemId] || 0) - 1);
+    setItemLoading(itemId, true);
+    (newQuantity === 0
+      ? deleteCartItem(itemId)
+      : updateCartItem(itemId, newQuantity)
+    )
+      .then(() => {
+        setItemLoading(itemId, false);
+      })
+      .catch(() => {
+        toast({ variant: "destructive", title: "Failed to update cart item" });
+        setItemLoading(itemId, false);
+      });
   };
 
-  const handleDeleteCart = async (e: React.MouseEvent, id: string) => {
+  const handleDeleteCart = (e: React.MouseEvent, id: string) => {
     e.preventDefault();
     e.stopPropagation();
-
-    try {
-      await deleteCartItem(id);
-
-      // Update the local state to remove the item
-      setItemQuantities((prev: any) => {
-        const updatedQuantities = { ...prev };
-        delete updatedQuantities[id];
-        return updatedQuantities;
+    setItemLoading(id, true);
+    deleteCartItem(id)
+      .then(() => {
+        setIsFetchingCart(true);
+        return fetchCartItem();
+      })
+      .then(() => {
+        toast({ variant: "default", title: "Item removed from cart" });
+      })
+      .catch(() => {
+        toast({ variant: "destructive", title: "Failed to remove item" });
+      })
+      .finally(() => {
+        setItemLoading(id, false);
+        setIsFetchingCart(false);
       });
-      fetchCartItem();
-      toast({
-        variant: "default",
-        title: "Item removed from cart",
-      });
-    } catch (error) {
-      console.error("Error deleting cart item:", error);
-      toast({
-        variant: "destructive",
-        title: "Failed to remove item",
-      });
-    }
   };
-
-  // Set cart item details and quantity when cartList changes
-  React.useEffect(() => {
-    if (cartList.length > 0) {
-      const initialQuantities = cartList.reduce((acc: any, item: any) => {
-        acc[item._id] = item.quantity;
-        return acc;
-      }, {});
-      setItemQuantities(initialQuantities);
-      setTotalPrice(calculateTotalPrice(cartList, initialQuantities)); // Use initialQuantities here
-    } else {
-      setItemQuantities({});
-      setTotalPrice(0);
-    }
-  }, [cartList]);
 
   return (
     <Sheet
@@ -186,14 +134,239 @@ export default function CartSheet({ button }: { button: ReactNode }) {
                 Shopping Cart <ShoppingBag />
               </span>
             </CardTitle>
-            <CardDescription>Total Price: ₹{totalPrice}</CardDescription>
+            <CardDescription>Total Items: {cartList.length}</CardDescription>
           </CardHeader>
-          {cartList.length > 0 ? (
+          {isFetchingCart ? (
+            <div className="flex h-[80vh] w-full items-center justify-center gap-2">
+              <Loader className="animate-spin" /> Fecthing Cart Items
+            </div>
+          ) : cartList.length > 0 ? (
             <CardContent>
               <div className="mx-auto">
                 <ScrollArea className="h-[500px] w-full">
-                  <div>
-                    {cartList.map((item: any) => {
+                  {cartList.map((item) => (
+                    <CartItem
+                      key={item._id}
+                      item={item}
+                      quantity={itemQuantities[item._id] || 0}
+                      isLoading={loadingItems[item._id] || false}
+                      increaseQty={increaseQty}
+                      decreaseQty={decreaseQty}
+                      handleDeleteCart={handleDeleteCart}
+                    />
+                  ))}
+                </ScrollArea>
+              </div>
+              <h2 className="ml-auto mt-4 w-full text-sm font-bold">
+                Total Price: ₹{calculateTotalPrice}
+              </h2>
+              <CardFooter className="mt-2 flex w-full flex-col items-center justify-between gap-3 p-0 sm:flex-row">
+                <Link
+                  to={isLoggedIn ? "/shop/checkout" : "/login"}
+                  onClick={() => isSetSheetOpen(false)}
+                  className={cn(
+                    "w-full sm:w-auto",
+                    buttonVariants({ variant: "default" }),
+                  )}
+                >
+                  Proceed To Checkout
+                </Link>
+
+                <Button
+                  variant="outline"
+                  onClick={() => isSetSheetOpen(false)}
+                  className="w-full rounded-lg sm:w-auto"
+                >
+                  Continue Shopping
+                </Button>
+              </CardFooter>
+            </CardContent>
+          ) : (
+            <div className="flex h-[80vh] w-full flex-col items-center justify-center gap-4 px-4">
+              <h1 className="text-3xl font-bold text-secondary/70 dark:text-secondary-foreground/70">
+                Oops!
+              </h1>
+              <p className="text-center text-lg">Your cart is empty.</p>
+              <Link
+                to="/shop"
+                onClick={() => isSetSheetOpen(false)}
+                className={cn(
+                  buttonVariants({ variant: "default" }),
+                  "w-full sm:w-auto",
+                )}
+              >
+                Shop Now
+              </Link>
+            </div>
+          )}
+        </Card>
+      </SheetContent>
+    </Sheet>
+  );
+}
+
+// const [isSheetOpen, isSetSheetOpen] = React.useState(false);
+// const user = useSelector((state: RootState) => state.user);
+// const cartList = useSelector((state: RootState) => state.product.cartList);
+// const { toast } = useToast();
+// const [totalPrice, setTotalPrice] = React.useState(0);
+// const { updateCartItem, deleteCartItem, fetchCartItem, handleToast } =
+//   useGlobleContext();
+// const [itemQuantities, setItemQuantities] = React.useState<any>({});
+// const isLoggedIn = user?._id;
+// const [isLoading, setIsLoading] = React.useState<boolean>(false);
+
+// // calculating total Price
+// const calculateTotalPrice = (cartList: any, quantities: any) => {
+//   return cartList.reduce((total: number, item: any) => {
+//     const product =
+//       typeof item.productId === "object" ? item.productId : null;
+//     if (!product) return total;
+
+//     const quantity = quantities[item._id] || item.quantity;
+
+//     // Check if there's a discount
+//     const discountedPrice = product.discount
+//       ? product.price - (product.price * product.discount) / 100
+//       : product.price;
+
+//     return total + quantity * discountedPrice;
+//   }, 0);
+// };
+
+// // Increase product quantity
+// const increaseQty = async (e: React.MouseEvent, itemId: string) => {
+//   e.preventDefault();
+//   e.stopPropagation();
+//   setIsLoading(true);
+//   const cartItem = cartList.find((item) => item._id === itemId);
+//   if (!cartItem) return;
+
+//   const newQuantity = (itemQuantities[itemId] || cartItem.quantity) + 1; // Update the quantity in the state and send the update to the server
+//   try {
+//     await updateCartItem(cartItem._id, newQuantity);
+
+//     setItemQuantities((prev: any) => ({
+//       ...prev,
+//       [itemId]: newQuantity,
+//     }));
+
+//     toast({
+//       variant: "default",
+//       title: "Quantity Increased! ✅",
+//     });
+//   } catch (error) {
+//     console.error(error);
+//   } finally {
+//     setIsLoading(false);
+//   }
+// };
+
+// // Decrease product quantity
+// const decreaseQty = async (e: React.MouseEvent, itemId: string) => {
+//   e.preventDefault();
+//   e.stopPropagation();
+//   setIsLoading(true);
+
+//   const cartItem = cartList.find((item) => item._id === itemId);
+//   if (!cartItem) return;
+
+//   const newQuantity = (itemQuantities[itemId] || cartItem.quantity) - 1;
+
+//   if (newQuantity < 1) {
+//     try {
+//       await deleteCartItem(itemId); // Delete the item if the new quantity is less than 1
+
+//       // Update the local state to remove the item
+//       setItemQuantities((prev: any) => {
+//         const updatedQuantities = { ...prev };
+//         delete updatedQuantities[itemId];
+//         return updatedQuantities;
+//       });
+//       fetchCartItem();
+
+//       toast({
+//         variant: "default",
+//         title: "Item removed from cart ✅",
+//       });
+//     } catch (error) {
+//       console.error("Error deleting cart item:", error);
+//       toast({
+//         variant: "destructive",
+//         title: "Failed to remove item ❌",
+//       });
+//     } finally {
+//       setIsLoading(false);
+//     }
+//   } else {
+//     try {
+//       await updateCartItem(cartItem._id, newQuantity); // Update the cart item quantity
+
+//       setItemQuantities((prev: any) => ({
+//         ...prev,
+//         [itemId]: newQuantity,
+//       }));
+
+//       toast({
+//         variant: "default",
+//         title: "Quantity decreased ✅",
+//       });
+//     } catch (error) {
+//       console.error("Error decreasing quantity:", error);
+//       toast({
+//         variant: "destructive",
+//         title: "Failed to decrease quantity ❌",
+//       });
+//     } finally {
+//       setIsLoading(false);
+//     }
+//   }
+// };
+
+// const handleDeleteCart = async (e: React.MouseEvent, id: string) => {
+//   e.preventDefault();
+//   e.stopPropagation();
+
+//   try {
+//     await deleteCartItem(id);
+
+//     // Update the local state to remove the item
+//     setItemQuantities((prev: any) => {
+//       const updatedQuantities = { ...prev };
+//       delete updatedQuantities[id];
+//       return updatedQuantities;
+//     });
+//     fetchCartItem();
+//     toast({
+//       variant: "default",
+//       title: "Item removed from cart",
+//     });
+//   } catch (error) {
+//     console.error("Error deleting cart item:", error);
+//     toast({
+//       variant: "destructive",
+//       title: "Failed to remove item",
+//     });
+//   }
+// };
+
+// // Set cart item details and quantity when cartList changes
+// React.useEffect(() => {
+//   if (cartList.length > 0) {
+//     const initialQuantities = cartList.reduce((acc: any, item: any) => {
+//       acc[item._id] = item.quantity;
+//       return acc;
+//     }, {});
+//     setItemQuantities(initialQuantities);
+//     setTotalPrice(calculateTotalPrice(cartList, initialQuantities)); // Use initialQuantities here
+//   } else {
+//     setItemQuantities({});
+//     setTotalPrice(0);
+//   }
+// }, [cartList]);
+
+{
+  /* {cartList.map((item: any) => {
                       const product =
                         typeof item.productId === "object"
                           ? item.productId
@@ -244,7 +417,11 @@ export default function CartSheet({ button }: { button: ReactNode }) {
                                 -
                               </button>
                               <p className="border px-2 py-1 text-sm font-medium">
-                                {itemQuantity}
+                                {isLoading ? (
+                                  <Loader className="animate-spin p-1.5" />
+                                ) : (
+                                  itemQuantity
+                                )}
                               </p>
                               <button
                                 onClick={(e) => increaseQty(e, item._id)}
@@ -263,44 +440,6 @@ export default function CartSheet({ button }: { button: ReactNode }) {
                           </div>
                         </div>
                       );
-                    })}
-                  </div>
-                </ScrollArea>
-              </div>
-              <CardFooter className="mt-2 flex w-full flex-row items-center justify-between p-0">
-                <Button
-                  variant="outline"
-                  onClick={() => isSetSheetOpen(false)}
-                  className="rounded-lg"
-                >
-                  Continue Shopping
-                </Button>
-                <Link
-                  to={isLoggedIn ? "/shop/checkout" : "/login"}
-                  onClick={() => isSetSheetOpen(false)}
-                  className={cn(buttonVariants({ variant: "default" }))}
-                >
-                  Proceed To Checkout
-                </Link>
-              </CardFooter>
-            </CardContent>
-          ) : (
-            <div className="flex h-[80vh] w-full flex-col items-center justify-center gap-2">
-              <h1 className="text-3xl font-bold text-secondary/70 dark:text-secondary-foreground/70">
-                Opps!
-              </h1>
-              <p>Your cart is empty.</p>
-              <Link
-                to="/shop"
-                onClick={() => isSetSheetOpen(false)}
-                className={cn(buttonVariants({ variant: "default" }))}
-              >
-                Shop Now
-              </Link>
-            </div>
-          )}
-        </Card>
-      </SheetContent>
-    </Sheet>
-  );
+                     
+                    })} */
 }
