@@ -177,6 +177,7 @@ const paymentMethodList = [
   },
 ];
 
+// const CheckoutPage: React.FC = (): JSX.Element | null => {
 export default function CheckoutPage() {
   const navigate = useNavigate();
   const [paymentMethod, setPaymentMethod] = React.useState("cash");
@@ -233,11 +234,11 @@ export default function CheckoutPage() {
     (address) => address.status === true,
   );
   // If no address with status true, handle the error
-  if (typeof selectedAddress !== "object") {
-    return console.error("selectedAddress is invalid or does not have _id.");
-  }
+  // if (typeof selectedAddress !== "object") {
+  //   return console.error("selectedAddress is invalid or does not have _id.");
+  // }
 
-  const addressId = selectedAddress._id;
+  const addressId = selectedAddress?._id;
 
   const handleCashOnDelivery = async () => {
     try {
@@ -368,7 +369,11 @@ export default function CheckoutPage() {
               </div>
             </Card>
 
-            <Button onClick={handlePlaceOrder} className="mt-8 w-full">
+            <Button
+              onClick={handlePlaceOrder}
+              disabled={paymentMethod === ""}
+              className="mt-8 w-full"
+            >
               {paymentMethod === "stripe" ? "Online Payment" : "Place Order"}
             </Button>
           </div>
@@ -377,3 +382,5 @@ export default function CheckoutPage() {
     </section>
   );
 }
+
+// export default CheckoutPage;

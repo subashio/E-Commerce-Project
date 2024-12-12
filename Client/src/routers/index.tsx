@@ -20,6 +20,7 @@ import ResetPassword from "@/pages/ResetPassword";
 import SearchPage from "@/pages/SearchPage";
 import ShopPage from "@/pages/ShopPage";
 import SubCategory from "@/pages/SubCategory";
+import SuccessPage from "@/pages/SuccessPage";
 import VerfiyEmail from "@/pages/VerfiyEmail";
 import { createBrowserRouter } from "react-router-dom";
 
@@ -32,6 +33,7 @@ const router = createBrowserRouter(
         { path: "", element: <Home /> },
         { path: "search", element: <SearchPage /> },
         { path: "shop/checkout", element: <CheckoutPage /> },
+        { path: "success", element: <SuccessPage /> },
         { path: "login", element: <Login /> },
         { path: "register", element: <Register /> },
         { path: "forgot-password", element: <ForgotPassword /> },
