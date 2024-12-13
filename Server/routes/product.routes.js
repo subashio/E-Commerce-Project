@@ -13,10 +13,10 @@ import auth from "../middleware/auth.js";
 const productRouter = Router();
 
 productRouter.post("/create", auth, admin, createProductController);
-productRouter.get("/get", auth, admin, getProductsDetails);
-productRouter.put("/update", auth, admin, updateProductDetails);
-productRouter.delete("/delete", auth, admin, deleteProduct);
+productRouter.get("/get", getProductsDetails);
 productRouter.get("/filter", filterProduct);
 productRouter.get("/filter/category", filterByCategoryController);
+productRouter.put("/update", auth, admin, updateProductDetails);
+productRouter.delete("/delete", auth, admin, deleteProduct);
 
 export default productRouter;

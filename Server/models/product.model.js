@@ -17,7 +17,7 @@ const productSchema = new mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       ref: "subCategory",
     },
-    unit: {
+    brandName: {
       type: String,
       default: null,
     },
@@ -37,7 +37,11 @@ const productSchema = new mongoose.Schema(
       type: Number,
       default: null,
     },
-    discount: {
+    wholesalePrice: {
+      type: Number,
+      default: null,
+    },
+    minQuantity: {
       type: Number,
       default: null,
     },

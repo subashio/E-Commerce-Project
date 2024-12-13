@@ -1,11 +1,12 @@
 import { imageSchema, loginSchema, RegisterSchema } from "@/constants/schema";
 import { SummaryApi } from "@/constants/SummaryApi";
 import Axios from "@/lib/Axios";
-import { setUserDetails } from "@/store/userSlice";
+import { logout, setUserDetails } from "@/store/userSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { useToast } from "./use-toast";
+import { persist } from "@/store/store";
 
 export function useUser() {
   const { toast } = useToast();
@@ -67,7 +68,8 @@ export function useUser() {
       });
 
       if (response.data) {
-        navigate("/");
+        localStorage.setItem("accesstoken", response.data.data.accesstoken);
+        localStorage.setItem("refreshToken", response.data.data.refreshToken);
         //adding the userdetails to the persist
         const userDetails = await fetchUserDetails();
         if (userDetails?.data) {
@@ -81,6 +83,7 @@ export function useUser() {
           title: "Login successful ",
           description: "Welcome back! You have successfully logged in.",
         });
+        navigate("/");
       }
     } catch (error) {
       toast({
@@ -88,6 +91,25 @@ export function useUser() {
         title: "Something went Wrong",
         description: "We couldn't able to sign. Please try again.",
       });
+    }
+  };
+
+  const handleLogout = async () => {
+    // need to add in the use user hook
+    try {
+      const response = await Axios({
+        ...SummaryApi.logout,
+      });
+
+      console.log("Logout", response);
+      if (response.data) {
+        localStorage.clear();
+        persist.purge(); // Ensure purge happens first
+        dispatch(logout()); // clear the redux store state
+        navigate("/login"); // navigate to loginPage}
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -134,5 +156,11 @@ export function useUser() {
     }
   };
 
-  return { loginUser, registerUser, fetchUserDetails, uploadUserProfile };
+  return {
+    loginUser,
+    registerUser,
+    fetchUserDetails,
+    uploadUserProfile,
+    handleLogout,
+  };
 }

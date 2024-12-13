@@ -185,9 +185,7 @@ export default function CheckoutPage() {
   const user = useSelector((state: RootState) => state.user);
   const cart = useSelector((state: RootState) => state.product.cartList); // Assuming cart.items contains the cart data
   const isLoggedIn = user?._id;
-  const addressList = useSelector(
-    (state: RootState) => state.address.addressList,
-  );
+  const address = useSelector((state: RootState) => state.address.addressList);
 
   // Prepare table data
   const cartColumns = [
@@ -230,9 +228,7 @@ export default function CheckoutPage() {
   let grandTotal = (subtotal + tax + shippingFee).toFixed(2);
 
   // Find the address with status true
-  const selectedAddress = addressList.find(
-    (address) => address.status === true,
-  );
+  const selectedAddress = address.find((address) => address.status === true);
   // If no address with status true, handle the error
   // if (typeof selectedAddress !== "object") {
   //   return console.error("selectedAddress is invalid or does not have _id.");

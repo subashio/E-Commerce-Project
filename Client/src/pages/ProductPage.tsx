@@ -15,29 +15,21 @@ import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
 export default function ProductPage() {
-  const productList = useSelector(
-    (state: RootState) => state.product.productList,
-  );
+  const product = useSelector((state: RootState) => state.product.product);
   const { id: selectedId } = useParams();
 
-  const categoryList = useSelector(
-    (state: RootState) => state.product.categoryList,
-  );
+  const category = useSelector((state: RootState) => state.product.category);
 
-  const categoryLookup = new Map(
-    categoryList.map((category: { _id: string; name: string }) => [
-      category._id,
-      category.name,
-    ]),
-  );
+  const categoryLookup = (categoryId: string | undefined) => {
+    return category?.find((cat) => cat._id === categoryId)?.name;
+  };
 
-  const selectedProduct = productList.find((product) => {
-    const isMatch = product._id === selectedId;
-    const isCategory = categoryLookup.has(product.categoryId);
-    return isMatch && isCategory;
+  const selectedProduct = product?.find((product) => {
+    return product._id === selectedId;
   });
-  const [activeIndex, setActiveIndex] = React.useState(0);
 
+  console.log("selected Product:", selectedProduct);
+  const [activeIndex, setActiveIndex] = React.useState(0);
   const plugin = React.useRef(
     Autoplay({ delay: 2000, stopOnInteraction: true }),
   );
@@ -51,8 +43,8 @@ export default function ProductPage() {
         className="mx-auto mt-6 w-full max-w-screen-2xl px-5 lg:px-10"
         path="/shop"
         pathName="Shop"
-        path2="/shop"
-        pathName2={selectedProduct?.categoryId}
+        path2={`/shop/${selectedProduct?.categoryId}`}
+        pathName2={categoryLookup(selectedProduct?.categoryId)}
         finalPathName={selectedProduct?.name}
       />
       <MaxWidthWrapper className="mx-auto grid w-full grid-cols-1 gap-4 p-4 md:grid-cols-3">
@@ -114,6 +106,7 @@ export default function ProductPage() {
 
         <div className="border px-8 py-4 text-start md:col-span-1">
           <div>
+            <p>{categoryLookup(selectedProduct?.categoryId)}</p>
             <h1 className="py-2 text-xl font-bold">{selectedProduct?.name} </h1>
           </div>
 

@@ -24,7 +24,13 @@ export const ProductSchema = z.object({
     .string()
     .min(2, { message: "Sub-Category must be seleted.." }),
 
-  unit: z.string().min(1, { message: "Unit must be provided." }),
+  minQuantity: z
+    .number()
+    // .transform((val) => Number(val))
+    // .refine((val) => !isNaN(val), {
+    //   message: "Discount must be a valid number.",
+    // })
+    .optional(),
 
   description: z
     .string()
@@ -47,12 +53,18 @@ export const ProductSchema = z.object({
       message: "Sale price must be a valid number.",
     }),
 
-  discount: z
+  brandName: z
+    .string()
+    // .min(2, { message: "Brand Name must be at least 2 characters." })
+    .optional(),
+  wholesalePrice: z
     .number()
-    .transform((val) => Number(val))
-    .refine((val) => !isNaN(val), {
-      message: "Discount must be a valid number.",
-    }),
+    // .transform((val) => Number(val))
+    // .refine((val) => !isNaN(val), {
+    //   message: "Discount must be a valid number.",
+    // })
+    .optional(),
+
   status: z.boolean(),
 
   role: z.union([z.literal("edit"), z.literal("add")]),

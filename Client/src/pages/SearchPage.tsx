@@ -7,12 +7,10 @@ export default function SearchPage() {
   const location = useLocation();
   const query =
     new URLSearchParams(location.search).get("q")?.toLowerCase() || "";
-  const productList = useSelector(
-    (state: RootState) => state.product.productList,
-  );
+  const product = useSelector((state: RootState) => state.product.product);
 
   // Filter the data based on the query
-  const filteredProducts = productList.filter((product) =>
+  const filteredProducts = product.filter((product) =>
     product.name.toLowerCase().includes(query),
   );
 

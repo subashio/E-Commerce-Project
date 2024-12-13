@@ -1,6 +1,6 @@
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { ReactNode } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Button, buttonVariants } from "./ui/button";
 import { Separator } from "./ui/separator";
 
@@ -11,43 +11,20 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
-import { SummaryApi } from "@/constants/SummaryApi";
-import Axios from "@/lib/Axios";
+import { useUser } from "@/hooks/useUser";
 import { cn } from "@/lib/utils";
-import { persist, RootState } from "@/store/store";
-import { logout } from "@/store/userSlice";
-import React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 import { LayoutGrid } from "lucide-react";
+import React from "react";
+import { useSelector } from "react-redux";
 
 export default function MobileNav({ button }: { button: ReactNode }) {
   const [isSheetOpen, setIsSheetOpen] = React.useState<boolean>(false);
   const user = useSelector((state: RootState) => state.user);
-  const categoryList = useSelector(
-    (state: RootState) => state.product.categoryList,
-  );
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-
+  const { handleLogout } = useUser();
+  const category = useSelector((state: RootState) => state.product.category);
   const isLoggedIn = user._id;
   const isAdmin = user.role === "ADMIN";
-
-  const handleLogout = async () => {
-    try {
-      const response = await Axios({
-        ...SummaryApi.logout,
-      });
-
-      console.log("Logout", response);
-      if (response.data) {
-        persist.purge(); // Ensure purge happens first
-        dispatch(logout()); // clear the redux store state
-        navigate("/login"); // navigate to loginPage}
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   return (
     <Sheet open={isSheetOpen} onOpenChange={(isOpen) => setIsSheetOpen(isOpen)}>
@@ -70,7 +47,7 @@ export default function MobileNav({ button }: { button: ReactNode }) {
               </Button>
             </AccordionTrigger>
             <AccordionContent className="flex flex-col rounded-md border">
-              {categoryList.map((_item, _index) => (
+              {category?.map((_item, _index) => (
                 <Link
                   key={_index}
                   to="#"

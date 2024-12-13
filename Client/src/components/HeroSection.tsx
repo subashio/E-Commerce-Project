@@ -47,7 +47,7 @@ export default function HeroSection() {
   React.useEffect(() => {
     if (!api) return;
 
-    // Set total slide count and listen for slide changes
+    // // Set total slide count and listen for slide changes
     setCount(api.scrollSnapList().length);
     setCurrent(api.selectedScrollSnap());
     api.on("select", () => {

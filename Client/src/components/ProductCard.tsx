@@ -2,9 +2,11 @@ import { Link } from "react-router-dom";
 import AddToCartButton from "./AddToCartButton";
 import { Badge } from "./ui/badge";
 import { Card } from "./ui/card";
+import { cn } from "@/lib/utils";
 
 //
 export default function ProductCard({
+  className,
   _id,
   name,
   category,
@@ -14,8 +16,11 @@ export default function ProductCard({
   salePrice,
 }: ProductCartProps) {
   return (
-    <Link to={`/shop/product/${_id}`} className=" ">
-      <Card className="group relative mt-6 border-none p-4 hover:shadow-2xl">
+    <Link
+      to={`/shop/product/${_id}`}
+      className={cn("group relative rounded-lg p-4", className)}
+    >
+      <Card className="border-none p-0 shadow-none">
         <Badge className="absolute right-3 top-3 bg-red-600 px-4 hover:bg-red-500">
           {discount}%
         </Badge>

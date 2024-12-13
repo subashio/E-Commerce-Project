@@ -35,9 +35,7 @@ export default function ProfilePage() {
   const { toast } = useToast();
   const dispatch = useDispatch();
   const { fetchUserDetails } = useUser();
-  const addressList = useSelector(
-    (state: RootState) => state.address.addressList,
-  );
+  const address = useSelector((state: RootState) => state.address.addressList);
 
   async function handleSubmit(
     data: z.infer<typeof ProfileSchema>,
@@ -164,7 +162,7 @@ export default function ProfilePage() {
       <section className="py-6">
         <h2 className="mb-4 px-4 text-xl font-semibold">Address</h2>
         <Card className="border-none p-4 shadow-none">
-          {addressList
+          {address
             .filter((item) => item.status == true) // Show only active addresses
             .map((item, index) => (
               <div key={index} className="mb-4 grid gap-4 md:grid-cols-2">

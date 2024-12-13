@@ -38,9 +38,7 @@ export default function SubCategoryForm({
   id,
 }: SubCategoryFormProps) {
   const { handleSubCategory } = useProduct();
-  const categoryList = useSelector(
-    (state: RootState) => state.product.categoryList,
-  );
+  const category = useSelector((state: RootState) => state.product.category);
   const form = useForm<z.infer<typeof subCategorySchema>>({
     resolver: zodResolver(subCategorySchema),
     defaultValues: initialData
@@ -57,8 +55,8 @@ export default function SubCategoryForm({
   });
 
   // Use categoryList directly for productsData mapping
-  const categoryTypes = Array.isArray(categoryList)
-    ? categoryList.map((category: any) => ({
+  const categoryTypes = Array.isArray(category)
+    ? category.map((category: any) => ({
         value: category._id || "N/A",
         label: category.name || "N/A",
       }))

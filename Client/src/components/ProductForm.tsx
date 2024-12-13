@@ -32,15 +32,16 @@ import { Textarea } from "./ui/textarea";
 interface ProductProps {
   initialData?: {
     name: string;
+    brandName: string;
     image: Array<any> | undefined;
     categoryId: string;
     sub_categoryId: string;
-    unit: string;
+    minQuantity: number | undefined;
     status: boolean;
     stock: number | undefined;
     price: number | undefined;
     salePrice: number | undefined;
-    discount: number | undefined;
+    wholesalePrice: number | undefined;
     description: string;
     role: "edit" | "add";
   };
@@ -49,11 +50,9 @@ interface ProductProps {
 export default function ProductForm({ initialData, id }: ProductProps) {
   const [isImageLoading, setImageLoading] = React.useState<boolean>(false);
   const { handleProduct } = useProduct();
-  const categoryList = useSelector(
-    (state: RootState) => state.product.categoryList,
-  );
-  const SubcategoryList = useSelector(
-    (state: RootState) => state.product.subcategoryList,
+  const category = useSelector((state: RootState) => state.product.category);
+  const Subcategory = useSelector(
+    (state: RootState) => state.product.subcategory,
   );
 
   const form = useForm<z.infer<typeof ProductSchema>>({
@@ -62,26 +61,28 @@ export default function ProductForm({ initialData, id }: ProductProps) {
       ? {
           name: initialData.name,
           image: initialData.image,
-          unit: initialData.unit,
+          minQuantity: initialData.minQuantity ?? undefined,
           description: initialData.description,
           status: initialData.status,
           categoryId: initialData.categoryId,
           sub_categoryId: initialData.sub_categoryId,
-          discount: initialData.discount,
+          wholesalePrice: initialData.wholesalePrice ?? undefined,
           price: initialData.price,
           salePrice: initialData.salePrice,
           stock: initialData.stock,
+          brandName: initialData.brandName ?? undefined,
           role: initialData.role,
         }
       : {
           name: "",
           image: [],
-          unit: "",
+          minQuantity: undefined,
           description: "",
           status: false,
+          brandName: undefined,
           categoryId: "",
           sub_categoryId: "",
-          discount: undefined,
+          wholesalePrice: undefined,
           price: undefined,
           salePrice: undefined,
           stock: undefined,
@@ -89,14 +90,14 @@ export default function ProductForm({ initialData, id }: ProductProps) {
         },
   });
 
-  const categoryTypes = Array.isArray(categoryList)
-    ? categoryList.map((category: any) => ({
+  const categoryTypes = Array.isArray(category)
+    ? category.map((category: any) => ({
         value: category._id || "N/A",
         label: category.name || "N/A",
       }))
     : [];
-  const subCategoryTypes = Array.isArray(SubcategoryList)
-    ? SubcategoryList.map((subCategory: any) => ({
+  const subCategoryTypes = Array.isArray(Subcategory)
+    ? Subcategory.map((subCategory: any) => ({
         value: subCategory._id || "N/A",
         label: subCategory.name || "N/A",
       }))
@@ -129,7 +130,7 @@ export default function ProductForm({ initialData, id }: ProductProps) {
   async function onSubmit(data: z.infer<typeof ProductSchema>) {
     try {
       handleProduct(data, initialData, id);
-      form.reset();
+      // form.reset();
     } catch (error) {
       console.log("error in form submition");
     }
@@ -183,14 +184,15 @@ export default function ProductForm({ initialData, id }: ProductProps) {
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
-                name="unit"
+                name="brandName"
                 render={({ field }) => (
-                  <FormItem defaultValue={field.value}>
-                    <FormLabel>Unit</FormLabel>
+                  <FormItem className="">
+                    <FormLabel>Brand Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="Product Name" {...field} />
+                      <Input placeholder="Brand Name" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -271,7 +273,7 @@ export default function ProductForm({ initialData, id }: ProductProps) {
                           <Input
                             className="no-arrows"
                             type="number"
-                            placeholder="$0.00"
+                            placeholder="₹0.00"
                             {...field}
                             value={field.value || ""} // Prevent uncontrolled component issues
                             onChange={(e) =>
@@ -288,12 +290,12 @@ export default function ProductForm({ initialData, id }: ProductProps) {
                     name="salePrice"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Sales Price</FormLabel>
+                        <FormLabel>Sales Price (M.R.P)</FormLabel>
                         <FormControl>
                           <Input
                             className="no-arrows"
                             type="number"
-                            placeholder="$0.00"
+                            placeholder="₹0.00"
                             {...field}
                             value={field.value || ""} // Prevent uncontrolled component issues
                             onChange={(e) =>
@@ -315,15 +317,15 @@ export default function ProductForm({ initialData, id }: ProductProps) {
                   </h1>
                   <FormField
                     control={form.control}
-                    name="discount"
+                    name="wholesalePrice"
                     render={({ field }) => (
                       <FormItem defaultValue={field.value} className="my-2">
-                        <FormLabel>Discount</FormLabel>
+                        <FormLabel>WholesalePrice</FormLabel>
                         <FormControl>
                           <Input
                             className="no-arrows"
                             type="number"
-                            placeholder="$0.00"
+                            placeholder="₹0.00"
                             {...field}
                             value={field.value || ""} // Prevent uncontrolled component issues
                             onChange={(e) =>
@@ -345,7 +347,7 @@ export default function ProductForm({ initialData, id }: ProductProps) {
                           <Input
                             className="no-arrows"
                             type="number"
-                            placeholder="$0.00"
+                            placeholder="₹0.00"
                             {...field}
                             value={field.value || ""} // Prevent uncontrolled component issues
                             onChange={(e) =>
@@ -357,6 +359,30 @@ export default function ProductForm({ initialData, id }: ProductProps) {
                       </FormItem>
                     )}
                   />
+
+                  <FormField
+                    control={form.control}
+                    name="minQuantity"
+                    render={({ field }) => (
+                      <FormItem defaultValue={field.value} className="my-2">
+                        <FormLabel>Min Quanitity</FormLabel>
+                        <FormControl>
+                          <Input
+                            className="no-arrows"
+                            type="number"
+                            placeholder="Min Quanitity"
+                            {...field}
+                            value={field.value || ""} // Prevent uncontrolled component issues
+                            onChange={(e) =>
+                              field.onChange(e.target.valueAsNumber)
+                            }
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
                   <FormField
                     control={form.control}
                     name="status"

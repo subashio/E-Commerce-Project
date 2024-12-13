@@ -1,4 +1,5 @@
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { useUser } from "@/hooks/useUser";
 import { cn } from "@/lib/utils";
 import {
   AlignLeft,
@@ -11,7 +12,7 @@ import {
   Users,
 } from "lucide-react";
 import React from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import {
   DropdownMenu,
@@ -21,11 +22,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { SummaryApi } from "@/constants/SummaryApi";
-import { persist } from "@/store/store";
-import { useDispatch } from "react-redux";
-import Axios from "@/lib/Axios";
-import { logout } from "@/store/userSlice";
 
 export const dashboardLinks = [
   {
@@ -57,25 +53,25 @@ export const dashboardLinks = [
 export default function DashboardHeader() {
   const [isSheetOpen, isSetSheetOpen] = React.useState<boolean>(false);
   const location = useLocation();
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const handleLogout = async () => {
-    // need to add in the use user hook
-    try {
-      const response = await Axios({
-        ...SummaryApi.logout,
-      });
+  const { handleLogout } = useUser();
+  // const handleLogout = async () => {
+  //   // need to add in the use user hook
+  //   try {
+  //     const response = await Axios({
+  //       ...SummaryApi.logout,
+  //     });
 
-      console.log("Logout", response);
-      if (response.data) {
-        persist.purge(); // Ensure purge happens first
-        dispatch(logout()); // clear the redux store state
-        navigate("/login"); // navigate to loginPage}
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  //     console.log("Logout", response);
+  //     if (response.data) {
+  //       localStorage.clear();
+  //       persist.purge(); // Ensure purge happens first
+  //       dispatch(logout()); // clear the redux store state
+  //       navigate("/login"); // navigate to loginPage}
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   return (
     <section className="relative w-full">

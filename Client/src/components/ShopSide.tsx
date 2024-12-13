@@ -138,19 +138,15 @@ export default function ShopSide() {
   const navigate = useNavigate();
 
   // Redux selectors
-  const categoryList = useSelector(
-    (state: RootState) => state.product.categoryList,
-  );
-  const subCategoryList = useSelector(
-    (state: RootState) => state.product.subcategoryList,
+  const category = useSelector((state: RootState) => state.product.category);
+  const subCategory = useSelector(
+    (state: RootState) => state.product.subcategory,
   );
 
   // Map subcategories to their respective categories
-  const categorySubcategoryMap = categoryList.map((category) => ({
+  const categorySubcategoryMap = category.map((category) => ({
     ...category,
-    subcategories: subCategoryList.filter(
-      (sub) => sub.categoryId === category._id,
-    ),
+    subcategories: subCategory.filter((sub) => sub.categoryId === category._id),
   }));
 
   return (

@@ -46,27 +46,6 @@ const GlobleProvider = ({ children }: { children: ReactNode }) => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
-  // const addToCart = (product: any) => {
-  //   if (user) {
-  //     const CartItem = [...product];
-  //     dispatch(setCart(CartItem));
-  //     toast({
-  //       variant: "default",
-  //       description: "Product Added to cart successfully!",
-  //     });
-  //   } else {
-  //     toast({
-  //       variant: "default",
-  //       description: "login to add products to cart",
-  //       action: (
-  //         <ToastAction altText="Goto schedule to undo">
-  //           <Button> Login </Button>
-  //         </ToastAction>
-  //       ),
-  //     });
-  //   }
-  // };
-
   const fetchCartItem = async () => {
     try {
       const response = await Axios({

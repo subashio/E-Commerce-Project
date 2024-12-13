@@ -1,26 +1,24 @@
-import { SummaryApi } from "@/constants/SummaryApi";
-import Axios from "@/lib/Axios";
+import { useUser } from "@/hooks/useUser";
 import { cn } from "@/lib/utils";
-import { persist, RootState } from "@/store/store";
-import { logout } from "@/store/userSlice";
+import { RootState } from "@/store/store";
 import {
   AlignRight,
   House,
   LogOut,
-  Moon,
   SearchIcon,
   ShoppingBag,
-  Sun,
+  ShoppingCartIcon,
   User,
 } from "lucide-react";
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import CartSheet from "./CartSheet";
 import MaxWidthWrapper from "./MaxWidthWrapper";
 import MobileNav from "./MobileNav";
 import SearchInput from "./SearchInput";
 import { Badge } from "./ui/badge";
-import { Button, buttonVariants } from "./ui/button";
+import { buttonVariants } from "./ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,15 +27,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import CartSheet from "./CartSheet";
-import { useTheme } from "@/context/theme-provider";
 
 export default function Navbar() {
   const user = useSelector((state: RootState) => state.user);
   const cartList = useSelector((state: RootState) => state.product.cartList);
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { setTheme } = useTheme();
+  const { handleLogout } = useUser();
   const isLoggedIn = user?._id;
   const isAdmin = user.role == "ADMIN";
   const [hideOnScroll, setHideOnScroll] = React.useState(false);
@@ -67,23 +61,6 @@ export default function Navbar() {
     };
   }, []);
 
-  const handleLogout = async () => {
-    try {
-      const response = await Axios({
-        ...SummaryApi.logout,
-      });
-
-      console.log("Logout", response);
-      if (response.data) {
-        persist.purge(); // Ensure purge happens first
-        dispatch(logout()); // clear the redux store state
-        navigate("/login"); // navigate to loginPage}
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   return (
     <header
       className={`sticky top-0 z-50 border-b bg-background transition-all duration-200 ${
@@ -110,14 +87,14 @@ export default function Navbar() {
               <SearchInput />
             </div>
 
-            <div className="flex items-center justify-between gap-2.5">
+            <div className="flex items-center justify-between gap-1.5 md:gap-2.5">
               <Link
                 className="flex items-center gap-2 text-primary md:hidden"
                 to="/"
               ></Link>
               <SearchInput
                 button={
-                  <SearchIcon className="h-10 w-10 p-2 text-primary md:hidden" />
+                  <SearchIcon className="h-10 w-10 rounded-full bg-primary/20 p-2 text-primary md:hidden" />
                 }
               />
 
@@ -128,7 +105,7 @@ export default function Navbar() {
                       className="hidden items-center gap-2 text-primary md:flex"
                       to={isLoggedIn ? "/profile-page" : "/login"}
                     >
-                      <User className="h-10 w-10 p-2" />
+                      <User className="h-10 w-10 rounded-full bg-primary/20 p-2" />
                     </Link>
                   </DropdownMenuTrigger>
 
@@ -199,9 +176,9 @@ export default function Navbar() {
               <CartSheet
                 button={
                   <button className="relative flex items-center gap-4 text-primary">
-                    <ShoppingBag className="h-10 w-10 p-2" />
+                    <ShoppingCartIcon className="h-10 w-10 rounded-full bg-primary/20 p-2" />
                     <Badge
-                      className="absolute -right-1 -top-0 p-0.5 px-1.5"
+                      className="absolute -right-2 -top-1 p-0.5 px-1.5"
                       variant="secondary"
                     >
                       {cartList.length}
@@ -209,28 +186,8 @@ export default function Navbar() {
                   </button>
                 }
               />
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="icon">
-                    <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-                    <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-                    <span className="sr-only">Toggle theme</span>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={() => setTheme("light")}>
-                    Light
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setTheme("dark")}>
-                    Dark
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setTheme("system")}>
-                    System
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
 
-              <MobileNav button={<AlignRight />} />
+              <MobileNav button={<AlignRight className="ml-2" />} />
             </div>
           </div>
         </div>

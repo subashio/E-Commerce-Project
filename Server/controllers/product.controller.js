@@ -1,4 +1,5 @@
 import productModel from "../models/product.model.js";
+import catergoryModel from "../models/category.model.js";
 
 export async function createProductController(req, res) {
   try {
@@ -7,9 +8,10 @@ export async function createProductController(req, res) {
       image,
       categoryId,
       sub_categoryId,
-      unit,
+      brandName,
+      minQuantity,
+      wholesalePrice,
       stock,
-      isReatail, ///
       status,
       price,
       salePrice,
@@ -18,14 +20,33 @@ export async function createProductController(req, res) {
     } = req.body;
 
     console.log("Request body:", req.body);
+    if (
+      !name ||
+      !image[0] ||
+      !categoryId[0] ||
+      !sub_categoryId[0] ||
+      !salePrice ||
+      !price ||
+      !description
+    ) {
+      return res.status(400).json({
+        message: "Enter required fields",
+        error: true,
+        success: false,
+      });
+    }
+
+    const category = await catergoryModel.find({ _id: categoryId });
 
     const product = new productModel({
       name,
       image, // Save array of image URLs
       categoryId,
       sub_categoryId,
-      unit,
+      brandName,
       stock,
+      wholesalePrice,
+      minQuantity,
       status,
       price,
       salePrice,

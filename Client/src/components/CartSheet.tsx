@@ -55,8 +55,8 @@ export default function CartSheet({ button }: { button: ReactNode }) {
           typeof item.productId === "object" ? item.productId : null;
         if (!product) return total;
         const quantity = itemQuantities[item._id] || item.quantity;
-        const discountedPrice = product.discount
-          ? product.price - (product.price * product.discount) / 100
+        const discountedPrice = product.salePrice
+          ? product.salePrice - product.price / 100
           : product.price;
         return total + quantity * discountedPrice;
       }, 0),

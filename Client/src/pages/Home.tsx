@@ -2,10 +2,13 @@ import BestSellers from "@/components/BestSellers";
 import CategoriesSection from "@/components/CategoriesSection";
 import HeroSection from "@/components/HeroSection";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
+import ProductCarousel from "@/components/ProductCarousel";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { RootState } from "@/store/store";
 import { MoveRight } from "lucide-react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 const banners = [
@@ -18,10 +21,11 @@ const banners = [
 ];
 
 export default function Home() {
+  const category = useSelector((state: RootState) => state.product.category);
   return (
     <section className="">
       <HeroSection />
-      <CategoriesSection />
+      {category.length >= 4 ? <CategoriesSection /> : <ProductCarousel />}
       <MaxWidthWrapper className="grid w-full grid-cols-1">
         {banners.map((_item, _index) => (
           <div

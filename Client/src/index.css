@@ -116,6 +116,13 @@
   }
 }
 
+.carousel-content {
+  scroll-snap-type: x mandatory; /* Enables snap-to behavior */
+}
+
+.carousel-item {
+  scroll-snap-align: start; /* Ensures each item aligns to the start when scrolling */
+}
 @layer utilities {
   .no-arrows {
     /* For Chrome, Safari, Edge, and Opera */

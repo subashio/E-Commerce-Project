@@ -18,12 +18,13 @@ interface Products {
   image: Array<any>;
   categoryId: string;
   sub_categoryId: string;
-  unit: string;
+  minQuantity: number;
   stock: number;
   status: boolean;
   price: number;
+  brandName: string;
   salePrice: number;
-  discount: number;
+  wholesalePrice: number;
   description: string;
 }
 interface Cart {
@@ -34,16 +35,16 @@ interface Cart {
 }
 
 interface productSlice {
-  categoryList: Array<Category>;
-  subcategoryList: Array<SubCategoryProps>;
-  productList: Array<Products>;
+  category: Array<Category>;
+  subcategory: Array<SubCategoryProps>;
+  product: Array<Products>;
   cartList: Array<Cart>;
 }
 
 const initialState: productSlice = {
-  categoryList: [],
-  subcategoryList: [],
-  productList: [],
+  category: [],
+  subcategory: [],
+  product: [],
   cartList: [],
 };
 
@@ -52,13 +53,13 @@ export const productSlice = createSlice({
   initialState: initialState,
   reducers: {
     setCategory: (state, action: PayloadAction<Array<Category>>) => {
-      state.categoryList = [...action.payload]; // Set categoryList to the payload directly
+      state.category = [...action.payload]; // Set categoryList to the payload directly
     },
     setSubCategory: (state, action: PayloadAction<Array<SubCategoryProps>>) => {
-      state.subcategoryList = [...action.payload]; // set sub categoty to the payload  directly
+      state.subcategory = [...action.payload]; // set sub categoty to the payload  directly
     },
     setProduct: (state, action) => {
-      state.productList = [...action.payload];
+      state.product = [...action.payload];
     },
     setCart: (state, action) => {
       state.cartList = [...action.payload];

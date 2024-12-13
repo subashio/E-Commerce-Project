@@ -9,9 +9,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 
 export default function Footer() {
-  const categoryList = useSelector(
-    (state: RootState) => state.product.categoryList,
-  );
+  const category = useSelector((state: RootState) => state.product.category);
 
   return (
     <footer className="border-t">
@@ -43,7 +41,7 @@ export default function Footer() {
                     Categories
                   </h1>
                   <ul className="text-xs text-gray-500 dark:text-gray-400">
-                    {categoryList.map((item) => (
+                    {category?.map((item: any) => (
                       <li key={item._id} className="mb-4">
                         <Link
                           to={item._id ? `/shop/${item._id}` : item._id}

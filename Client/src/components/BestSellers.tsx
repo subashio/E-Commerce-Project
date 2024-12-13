@@ -6,21 +6,17 @@ import MaxWidthWrapper from "./MaxWidthWrapper";
 import ProductCard from "./ProductCard";
 
 export default function BestSellers() {
-  const productList = useSelector(
-    (state: RootState) => state.product.productList,
-  );
-  const categoryList = useSelector(
-    (state: RootState) => state.product.categoryList,
-  );
+  const product = useSelector((state: RootState) => state.product.product);
+  const category = useSelector((state: RootState) => state.product.category);
 
   const categoryLookup = new Map(
-    categoryList.map((category: { _id: string; name: string }) => [
+    category?.map((category: { _id: string; name: string }) => [
       category._id,
       category.name,
     ]),
   );
 
-  const products = productList.map((product: any) => ({
+  const products = product?.map((product: any) => ({
     _id: product._id,
     name: product.name,
     discount: product.discount,
@@ -43,8 +39,8 @@ export default function BestSellers() {
           <ArrowRight className="h-10 w-10 rounded-full p-2.5 transition-all duration-300 group-hover:translate-x-2" />
         </Link>
       </div>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-        {products.map((item, index) => (
+      <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-3 lg:grid-cols-4">
+        {products?.map((item, index) => (
           <ProductCard
             discount={item.discount}
             _id={item._id}
@@ -54,6 +50,7 @@ export default function BestSellers() {
             image={item.image}
             price={item.price}
             salePrice={item.salePrice}
+            className="!border"
           />
         ))}
       </div>

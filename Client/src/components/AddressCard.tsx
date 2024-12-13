@@ -5,14 +5,12 @@ import { useAddress } from "@/hooks/useAddress";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 export default function AddressCard() {
-  const addressList = useSelector(
-    (state: RootState) => state.address.addressList,
-  );
+  const address = useSelector((state: RootState) => state.address.addressList);
   const { handleAddressStatus, handleDeleteAddress } = useAddress();
   return (
     <ScrollArea className="mt-8 h-[600px]">
       <div className="mb-10 mt-5 flex w-full flex-wrap justify-center gap-3">
-        {addressList.map((item: any, index: any) => (
+        {address.map((item: any, index: any) => (
           <label
             onClick={() => handleAddressStatus(item._id)}
             key={index}

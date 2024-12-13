@@ -22,6 +22,7 @@ declare global {
     discount: number | undefined;
     price: number;
     salePrice: number;
+    className?: string;
   }
 }
 

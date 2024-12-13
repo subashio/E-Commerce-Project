@@ -15,9 +15,7 @@ import { useToast } from "./use-toast";
 export function useAddress() {
   const { toast } = useToast();
   const dispatch = useDispatch();
-  const addressList = useSelector(
-    (state: RootState) => state.address.addressList,
-  );
+  const address = useSelector((state: RootState) => state.address.addressList);
 
   const user = useSelector((state: RootState) => state.user);
 
@@ -112,7 +110,7 @@ export function useAddress() {
   //updating stauts
   const handleAddressStatus = async (id: any) => {
     try {
-      const selectedAddress = addressList.find((item) => item._id === id);
+      const selectedAddress = address.find((item) => item._id === id);
       if (!selectedAddress || selectedAddress.status) return;
 
       const response = await Axios({

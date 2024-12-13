@@ -30,43 +30,42 @@ export default function ProductList() {
   const [search, setSearch] = React.useState("");
   const [status, setStatus] = React.useState("");
   const { toast } = useToast();
-  const productList = useSelector(
-    (state: RootState) => state.product.productList,
-  );
-  const categoryList = useSelector(
-    (state: RootState) => state.product.categoryList,
-  );
-  const subCategoryList = useSelector(
-    (state: RootState) => state.product.subcategoryList,
+  const product = useSelector((state: RootState) => state.product.product);
+  const category = useSelector((state: RootState) => state.product.category);
+  const subCategory = useSelector(
+    (state: RootState) => state.product.subcategory,
   );
 
   const categoryLookup = new Map(
-    categoryList.map((category: { _id: string; name: string }) => [
+    category?.map((category: { _id: string; name: string }) => [
       category._id,
       category.name,
     ]),
   );
   const subCategoryLookup = new Map(
-    subCategoryList.map((subCategory: { _id: string; name: string }) => [
+    subCategory?.map((subCategory: { _id: string; name: string }) => [
       subCategory._id,
       subCategory.name,
     ]),
   );
 
-  const selectedProduct = productList.find((product) => {
+  const selectedProduct = product.find((product) => {
     const isMatch = product._id === selectedId;
     const hasCategory = categoryLookup.has(product.categoryId);
     const hasSubCategory = subCategoryLookup.has(product.sub_categoryId);
     return isMatch && hasCategory && hasSubCategory;
   });
 
-  const productsData = productList.map((product: any) => ({
+  const productsData = product.map((product: any) => ({
     id: product._id,
     image: product.image[0],
     name: product.name,
     category: categoryLookup.get(product.categoryId), // Look
     subCategory: subCategoryLookup.get(product.sub_categoryId), // Look
     status: product.status,
+    brandName: product.brandName,
+    wholesalePrice: product.wholesalePrice,
+    minQuantity: product.minQuantity,
     price: product.price,
     createdAt: new Date().toISOString().split("T")[0],
   }));
@@ -192,12 +191,13 @@ export default function ProductList() {
                   image: selectedProduct.image,
                   categoryId: selectedProduct.categoryId,
                   sub_categoryId: selectedProduct.sub_categoryId,
-                  unit: selectedProduct.unit,
+                  wholesalePrice: selectedProduct.wholesalePrice,
                   stock: selectedProduct.stock,
                   status: selectedProduct.status,
                   price: selectedProduct.price,
                   salePrice: selectedProduct.salePrice,
-                  discount: selectedProduct.discount,
+                  brandName: selectedProduct.brandName,
+                  minQuantity: selectedProduct.minQuantity,
                   description: selectedProduct.description,
                   role: "edit",
                 }

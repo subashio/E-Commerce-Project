@@ -5,19 +5,15 @@ import { useParams } from "react-router-dom";
 
 export default function ShopPage() {
   const { id } = useParams<{ id: string }>();
-  const productList = useSelector(
-    (state: RootState) => state.product.productList,
-  );
-  const categoryList = useSelector(
-    (state: RootState) => state.product.categoryList,
-  );
+  const product = useSelector((state: RootState) => state.product.product);
+  const category = useSelector((state: RootState) => state.product.category);
 
-  if (!productList || !categoryList) {
+  if (!product || !category) {
     return <p>Loading products...</p>; // Display loading message if data is not yet available
   }
 
   const categoryLookup = new Map(
-    categoryList.map((category: { _id: string; name: string }) => [
+    category.map((category: { _id: string; name: string }) => [
       category._id,
       category.name,
     ]),
@@ -25,8 +21,8 @@ export default function ShopPage() {
 
   // Filter products based on the category ID from the URL or show all products if no ID is given
   const filteredProducts = id
-    ? productList.filter((product: any) => product.categoryId === id) // If id is present, filter by category
-    : productList; // Otherwise, show all products
+    ? product.filter((product: any) => product.categoryId === id) // If id is present, filter by category
+    : product; // Otherwise, show all products
 
   // If no products are found
   if (filteredProducts.length === 0) {

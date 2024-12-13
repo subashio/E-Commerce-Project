@@ -29,23 +29,21 @@ export default function SubCategoryList() {
   const { toast } = useToast();
   const [search, setSearch] = React.useState("");
   const [selectedCategory, setSelectedCategory] = React.useState("");
-  const SubcategoryList = useSelector(
-    (state: RootState) => state.product.subcategoryList,
+  const Subcategory = useSelector(
+    (state: RootState) => state.product.subcategory,
   );
-  const categoryList = useSelector(
-    (state: RootState) => state.product.categoryList,
-  );
+  const category = useSelector((state: RootState) => state.product.category);
 
   // Create a lookup map for categories
   const categoryLookup = new Map(
-    categoryList.map((category: { _id: string; name: string }) => [
+    category?.map((category: { _id: string; name: string }) => [
       category._id,
       category.name,
     ]),
   );
 
   // Use SubcategoryList directly for productsData mapping
-  const productsData = SubcategoryList.map((subcategory: any) => ({
+  const productsData = Subcategory?.map((subcategory: any) => ({
     id: subcategory._id || "N/A",
     subcategory: subcategory.name || "Unnamed Subcategory",
     category: categoryLookup.get(subcategory.categoryId) || "Unknown Category", // Look up the category name
@@ -53,7 +51,7 @@ export default function SubCategoryList() {
   }));
 
   //this is used for table
-  const selectedSubCategory = SubcategoryList.find(
+  const selectedSubCategory = Subcategory?.find(
     (subCategory: { _id: string; categoryId: string }) =>
       subCategory._id === selectedId &&
       categoryLookup.has(subCategory.categoryId),
@@ -61,8 +59,8 @@ export default function SubCategoryList() {
   const [filteredData, setFilteredData] = React.useState(productsData);
 
   //seting the values for the select
-  const categoryTypes = Array.isArray(categoryList)
-    ? categoryList.map((category: any) => ({
+  const categoryTypes = Array.isArray(category)
+    ? category.map((category: any) => ({
         value: category._id || "N/A",
         label: category.name || "N/A",
       }))
@@ -203,7 +201,7 @@ export default function SubCategoryList() {
           </CardHeader>
           <CardContent className="p-0">
             <ScrollArea className="min-w-full max-w-sm whitespace-nowrap sm:max-w-xl md:max-w-2xl lg:max-w-4xl xl:max-w-xl">
-              {filteredData.length > 0 ? (
+              {filteredData?.length > 0 ? (
                 <GenericTable
                   columns={subCategoryColumns}
                   data={filteredData}

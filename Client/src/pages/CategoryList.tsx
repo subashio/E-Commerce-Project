@@ -33,10 +33,8 @@ export default function CategoryList() {
   const [search, setSearch] = React.useState("");
   const [status, setStatus] = React.useState("");
 
-  const categoryList = useSelector(
-    (state: RootState) => state.product.categoryList,
-  );
-  const productsData = categoryList.map((category: any) => ({
+  const category = useSelector((state: RootState) => state.product.category);
+  const productsData = category?.map((category: any) => ({
     id: category._id || "N/A",
     image: category.image || "default.jpg",
     category: category.name || "Unnamed",
@@ -44,9 +42,9 @@ export default function CategoryList() {
     createdAt: new Date().toISOString().split("T")[0],
   }));
 
-  const selectedCategory = categoryList.find(
-    (category: { _id: string }) => category._id === selectedId,
-  );
+  const selectedCategory = category?.find((category: { _id: string }) => {
+    return category._id === selectedId;
+  });
 
   const [filteredData, setFilteredData] = React.useState(productsData);
 
@@ -189,7 +187,7 @@ export default function CategoryList() {
           </CardHeader>
           <CardContent className="p-0">
             <ScrollArea className="min-w-full max-w-sm whitespace-nowrap sm:max-w-xl md:max-w-2xl lg:max-w-4xl xl:max-w-xl">
-              {filteredData.length > 0 ? (
+              {filteredData?.length > 0 ? (
                 <GenericTable
                   columns={categoryColumns}
                   data={filteredData}
