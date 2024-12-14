@@ -21,14 +21,13 @@ export default function ProductPage() {
   const category = useSelector((state: RootState) => state.product.category);
 
   const categoryLookup = (categoryId: string | undefined) => {
-    return category?.find((cat) => cat._id === categoryId)?.name;
+    return category.find((cat) => cat._id === categoryId)?.name;
   };
 
   const selectedProduct = product?.find((product) => {
     return product._id === selectedId;
   });
 
-  console.log("selected Product:", selectedProduct);
   const [activeIndex, setActiveIndex] = React.useState(0);
   const plugin = React.useRef(
     Autoplay({ delay: 2000, stopOnInteraction: true }),
