@@ -21,17 +21,22 @@ export default function BestSellers() {
     [category],
   );
 
-  const products = product.map((product: any) => ({
-    _id: product._id,
-    name: product.name,
-    discount: product.discount,
-    to: "/",
-    image: product.image[0] || "default.jpg",
-    category: categoryLookup.get(product.categoryId) || "Unknown Category", // Look
-    price: product.price,
-    salePrice: product.salePrice,
-  }));
+  const products = Array.isArray(product)
+    ? product.map((product: any) => ({
+        _id: product._id,
+        name: product.name,
+        discount: product.discount,
+        to: "/",
+        image: product.image[0] || "default.jpg",
+        category: categoryLookup.get(product.categoryId) || "Unknown Category", // Look
+        price: product.price,
+        salePrice: product.salePrice,
+      }))
+    : [];
 
+  if (!Array.isArray(product) || !Array.isArray(category)) {
+    return <p>Loading...</p>;
+  }
   return (
     <MaxWidthWrapper className="my-10 flex flex-col gap-4">
       <div className="flex w-full items-center justify-between">

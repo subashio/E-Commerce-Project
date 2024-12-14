@@ -25,7 +25,7 @@ export default function CategoriesSection() {
       <h1 className="text-center text-3xl font-bold">Shop by Category</h1>
 
       <div className="grid grid-cols-2 md:grid-cols-4">
-        {categories &&
+        {Array.isArray(category) &&
           categories?.map((_item, index) => (
             <div
               key={index}

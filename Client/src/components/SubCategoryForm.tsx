@@ -39,9 +39,7 @@ export default function SubCategoryForm({
   id,
 }: SubCategoryFormProps) {
   const { handleSubCategory } = useProduct();
-  const category = useSelector(
-    (state: RootState) => state.product?.category || [],
-  );
+  const category = useSelector((state: RootState) => state.product.category);
   const form = useForm<z.infer<typeof subCategorySchema>>({
     resolver: zodResolver(subCategorySchema),
     defaultValues: initialData
