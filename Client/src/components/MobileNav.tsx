@@ -21,7 +21,9 @@ export default function MobileNav({ button }: { button: ReactNode }) {
   const [isSheetOpen, setIsSheetOpen] = React.useState<boolean>(false);
   const user = useSelector((state: RootState) => state.user);
   const { handleLogout } = useUser();
-  const category = useSelector((state: RootState) => state.product.category);
+  const category = useSelector(
+    (state: RootState) => state.product?.category || [],
+  );
   const isLoggedIn = user._id;
   const isAdmin = user.role === "ADMIN";
 

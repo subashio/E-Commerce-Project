@@ -50,9 +50,11 @@ interface ProductProps {
 export default function ProductForm({ initialData, id }: ProductProps) {
   const [isImageLoading, setImageLoading] = React.useState<boolean>(false);
   const { handleProduct } = useProduct();
-  const category = useSelector((state: RootState) => state.product.category);
+  const category = useSelector(
+    (state: RootState) => state.product?.category || [],
+  );
   const Subcategory = useSelector(
-    (state: RootState) => state.product.subcategory,
+    (state: RootState) => state.product?.subcategory || [],
   );
 
   const form = useForm<z.infer<typeof ProductSchema>>({

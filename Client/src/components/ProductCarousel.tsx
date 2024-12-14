@@ -15,8 +15,12 @@ import { createLookup } from "@/lib/lookUpMap";
 
 export default function ProductCarousel() {
   const [api, setApi] = React.useState<CarouselApi>();
-  const product = useSelector((state: RootState) => state.product.product);
-  const category = useSelector((state: RootState) => state.product.category);
+  const product = useSelector(
+    (state: RootState) => state.product?.product || [],
+  );
+  const category = useSelector(
+    (state: RootState) => state.product?.category || [],
+  );
   const plugin = React.useRef(
     Autoplay({ delay: 2000, stopOnInteraction: true }),
   );
