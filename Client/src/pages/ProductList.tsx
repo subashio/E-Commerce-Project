@@ -37,13 +37,13 @@ export default function ProductList() {
   );
 
   const categoryLookup = new Map(
-    category?.map((category: { _id: string; name: string }) => [
+    category.map((category: { _id: string; name: string }) => [
       category._id,
       category.name,
     ]),
   );
   const subCategoryLookup = new Map(
-    subCategory?.map((subCategory: { _id: string; name: string }) => [
+    subCategory.map((subCategory: { _id: string; name: string }) => [
       subCategory._id,
       subCategory.name,
     ]),
