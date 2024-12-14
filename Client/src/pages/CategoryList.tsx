@@ -34,9 +34,7 @@ export default function CategoryList() {
   const [status, setStatus] = React.useState("");
   const category = useSelector((state: RootState) => state.product.category);
 
-  const selectedCategory = category.find((category: { _id: string }) => {
-    return category._id === selectedId;
-  });
+  const selectedCategory = category.find((cat) => cat._id === selectedId);
 
   const productsData = category.map((category: any) => ({
     id: category._id || "N/A",
@@ -47,10 +45,6 @@ export default function CategoryList() {
   }));
 
   const [filteredData, setFilteredData] = React.useState(productsData);
-
-  React.useEffect(() => {
-    filterCatergory();
-  }, [search, status]);
 
   const filterCatergory = async () => {
     try {
@@ -102,13 +96,14 @@ export default function CategoryList() {
   };
 
   React.useEffect(() => {
-    setFilteredData(productsData);
-  }, [productsData]);
+    filterCatergory();
+  }, [search, status]);
 
   let isAddCategory =
-    location.pathname == "/dashboard-page/category/add-category";
+    location.pathname === "/dashboard-page/category/add-category";
   let isEditCategory =
-    location.pathname == `/dashboard-page/category/edit-category/${selectedId}`;
+    location.pathname ===
+    `/dashboard-page/category/edit-category/${selectedId}`;
 
   const renderActions = (id: string) =>
     actions(id, "category/edit-category", handleDeleteCategory);

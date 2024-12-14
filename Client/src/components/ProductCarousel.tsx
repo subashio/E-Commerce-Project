@@ -11,22 +11,21 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import MaxWidthWrapper from "./MaxWidthWrapper";
 import ProductCard from "./ProductCard";
+import { createLookup } from "@/lib/lookUpMap";
 
 export default function ProductCarousel() {
+  const [api, setApi] = React.useState<CarouselApi>();
+  const product = useSelector((state: RootState) => state.product.product);
+  const category = useSelector((state: RootState) => state.product.category);
   const plugin = React.useRef(
     Autoplay({ delay: 2000, stopOnInteraction: true }),
   );
-  const [api, setApi] = React.useState<CarouselApi>();
 
-  const product = useSelector((state: RootState) => state.product.product);
-  const category = useSelector((state: RootState) => state.product.category);
-
-  const categoryLookup = new Map(
-    category.map((category: { _id: string; name: string }) => [
-      category._id,
-      category.name,
-    ]),
+  const categoryLookup = React.useMemo(
+    () => createLookup(category, "_id", "name"),
+    [category],
   );
+
   const products = product.map((product: any) => ({
     _id: product._id,
     name: product.name,

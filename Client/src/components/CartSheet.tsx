@@ -22,10 +22,12 @@ import { ScrollArea } from "./ui/scroll-area";
 
 export default function CartSheet({ button }: { button: ReactNode }) {
   const [isSheetOpen, isSetSheetOpen] = React.useState(false);
+  const { toast } = useToast();
+  const { updateCartItem, deleteCartItem, fetchCartItem, handleToast } =
+    useGlobleContext();
   const cartList = useSelector((state: RootState) => state.product.cartList);
   const user = useSelector((state: RootState) => state.user);
   const isLoggedIn = user?._id;
-  const { toast } = useToast();
 
   // Loading state for fetching cart items
   const [isFetchingCart, setIsFetchingCart] = React.useState(false);
@@ -62,9 +64,6 @@ export default function CartSheet({ button }: { button: ReactNode }) {
       }, 0),
     [cartList, itemQuantities],
   );
-
-  const { updateCartItem, deleteCartItem, fetchCartItem, handleToast } =
-    useGlobleContext();
 
   const increaseQty = (e: React.MouseEvent, itemId: string) => {
     e.preventDefault();

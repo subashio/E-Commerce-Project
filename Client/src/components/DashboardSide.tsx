@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
+import { dashboardLinks } from "@/pages/data/links";
 import { House } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
-import { dashboardLinks } from "./DashboardHeder";
 
 export default function DashboardSide() {
   const location = useLocation();

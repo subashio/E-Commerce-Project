@@ -22,6 +22,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { Card, CardContent, CardHeader } from "../components/ui/card";
+import { createLookup } from "@/lib/lookUpMap";
 
 export default function ProductList() {
   const location = useLocation();
@@ -36,25 +37,24 @@ export default function ProductList() {
     (state: RootState) => state.product.subcategory,
   );
 
-  const categoryLookup = new Map(
-    category.map((category: { _id: string; name: string }) => [
-      category._id,
-      category.name,
-    ]),
-  );
-  const subCategoryLookup = new Map(
-    subCategory.map((subCategory: { _id: string; name: string }) => [
-      subCategory._id,
-      subCategory.name,
-    ]),
+  const categoryLookup = React.useMemo(
+    () => createLookup(category, "_id", "name"),
+    [category],
   );
 
-  const selectedProduct = product.find((product) => {
-    const isMatch = product._id === selectedId;
-    const hasCategory = categoryLookup.has(product.categoryId);
-    const hasSubCategory = subCategoryLookup.has(product.sub_categoryId);
-    return isMatch && hasCategory && hasSubCategory;
-  });
+  const subCategoryLookup = React.useMemo(
+    () => createLookup(subCategory, "_id", "name"),
+    [subCategory],
+  );
+
+  const selectedProduct = React.useMemo(() => {
+    return product.find(
+      (item) =>
+        item._id === selectedId &&
+        categoryLookup.has(item.categoryId) &&
+        subCategoryLookup.has(item.sub_categoryId),
+    );
+  }, [product, selectedId, categoryLookup, subCategoryLookup]);
 
   const productsData = product.map((product: any) => ({
     id: product._id,
@@ -127,14 +127,9 @@ export default function ProductList() {
       });
     }
   }
-
   React.useEffect(() => {
     filterProduct();
   }, [search, status]);
-
-  React.useEffect(() => {
-    setFilteredData(productsData);
-  }, [productsData]);
 
   let isAddProduct =
     location.pathname == "/dashboard-page/products/add-product";

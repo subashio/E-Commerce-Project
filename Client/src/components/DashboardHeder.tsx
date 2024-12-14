@@ -1,16 +1,8 @@
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useUser } from "@/hooks/useUser";
 import { cn } from "@/lib/utils";
-import {
-  AlignLeft,
-  House,
-  List,
-  ListTree,
-  LogOut,
-  ShoppingBag,
-  ShoppingCartIcon,
-  Users,
-} from "lucide-react";
+import { dashboardLinks } from "@/pages/data/links";
+import { AlignLeft, House, LogOut } from "lucide-react";
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
@@ -23,56 +15,10 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 
-export const dashboardLinks = [
-  {
-    name: "Products",
-    to: "/dashboard-page/products",
-    logo: <ShoppingCartIcon className="h-4 w-4" />,
-  },
-  {
-    name: "Category",
-    to: "/dashboard-page/category",
-    logo: <List className="h-4 w-4" />,
-  },
-  {
-    name: "Sub_Category",
-    to: "/dashboard-page/sub-category",
-    logo: <ListTree className="h-4 w-4" />,
-  },
-  {
-    name: "Orders",
-    to: "/dashboard-page/orders",
-    logo: <ShoppingBag className="h-4 w-4" />,
-  },
-  {
-    name: "Customers",
-    to: "/dashboard-page/customers",
-    logo: <Users className="h-4 w-4" />,
-  },
-];
 export default function DashboardHeader() {
   const [isSheetOpen, isSetSheetOpen] = React.useState<boolean>(false);
   const location = useLocation();
   const { handleLogout } = useUser();
-  // const handleLogout = async () => {
-  //   // need to add in the use user hook
-  //   try {
-  //     const response = await Axios({
-  //       ...SummaryApi.logout,
-  //     });
-
-  //     console.log("Logout", response);
-  //     if (response.data) {
-  //       localStorage.clear();
-  //       persist.purge(); // Ensure purge happens first
-  //       dispatch(logout()); // clear the redux store state
-  //       navigate("/login"); // navigate to loginPage}
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
   return (
     <section className="relative w-full">
       <div className="flex w-full items-center justify-between py-3 xl:justify-end xl:border-b">

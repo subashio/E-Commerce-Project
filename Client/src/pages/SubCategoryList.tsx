@@ -21,6 +21,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { Card, CardContent, CardHeader } from "../components/ui/card";
 import { useToast } from "@/hooks/use-toast";
+import { createLookup } from "@/lib/lookUpMap";
 
 export default function SubCategoryList() {
   const location = useLocation();
@@ -29,19 +30,21 @@ export default function SubCategoryList() {
   const { toast } = useToast();
   const [search, setSearch] = React.useState("");
   const [selectedCategory, setSelectedCategory] = React.useState("");
+  const category = useSelector((state: RootState) => state.product.category);
   const Subcategory = useSelector(
     (state: RootState) => state.product.subcategory,
   );
-  const category = useSelector((state: RootState) => state.product.category);
+  let isAddCategory =
+    location.pathname == "/dashboard-page/sub-category/add-sub-category";
+  let isEditCategory =
+    location.pathname ==
+    `/dashboard-page/sub-category/edit-sub-category/${selectedId}`;
 
   // Create a lookup map for categories
-  const categoryLookup = new Map(
-    category.map((category: { _id: string; name: string }) => [
-      category._id,
-      category.name,
-    ]),
+  const categoryLookup = React.useMemo(
+    () => createLookup(category, "_id", "name"),
+    [category],
   );
-
   // Use SubcategoryList directly for productsData mapping
   const productsData = Subcategory.map((subcategory: any) => ({
     id: subcategory._id || "N/A",
@@ -113,18 +116,8 @@ export default function SubCategoryList() {
   }
 
   React.useEffect(() => {
-    setFilteredData(productsData);
-  }, [productsData]);
-
-  React.useEffect(() => {
     fetchFilteresSubCategory();
   }, [search, selectedCategory]);
-
-  let isAddCategory =
-    location.pathname == "/dashboard-page/sub-category/add-sub-category";
-  let isEditCategory =
-    location.pathname ==
-    `/dashboard-page/sub-category/edit-sub-category/${selectedId}`;
 
   const renderActions = (id: string) =>
     actions(id, "sub-category/edit-sub-category", handleDelete);

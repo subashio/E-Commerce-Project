@@ -3,7 +3,6 @@ import { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { Button, buttonVariants } from "./ui/button";
 import { Separator } from "./ui/separator";
-
 import {
   Accordion,
   AccordionContent,
@@ -93,9 +92,9 @@ export default function MobileNav({ button }: { button: ReactNode }) {
                 "w-full !justify-start",
                 buttonVariants({ variant: "ghost" }),
               )}
-              to="/cart"
+              to="/profile-page/order-details"
             >
-              Cart
+              Orders
             </Link>
 
             <Link

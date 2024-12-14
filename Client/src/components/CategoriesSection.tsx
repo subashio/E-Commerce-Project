@@ -3,15 +3,20 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import MaxWidthWrapper from "./MaxWidthWrapper";
 import { Card } from "./ui/card";
+import React from "react";
 
 export default function CategoriesSection() {
   const category = useSelector((state: RootState) => state.product.category);
 
-  const categories = category.map((category) => ({
-    name: category.name,
-    to: `/shop/${category._id}`,
-    image: category.image,
-  }));
+  const categories = React.useMemo(
+    () =>
+      category.map((category) => ({
+        name: category.name,
+        to: `/shop/${category._id}`,
+        image: category.image,
+      })),
+    [category],
+  );
 
   return (
     <MaxWidthWrapper className="my-10 flex flex-col gap-4">

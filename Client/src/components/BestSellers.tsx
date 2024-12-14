@@ -4,16 +4,17 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import MaxWidthWrapper from "./MaxWidthWrapper";
 import ProductCard from "./ProductCard";
+import { createLookup } from "@/lib/lookUpMap";
+import React from "react";
 
 export default function BestSellers() {
   const product = useSelector((state: RootState) => state.product.product);
   const category = useSelector((state: RootState) => state.product.category);
 
-  const categoryLookup = new Map(
-    category?.map((category: { _id: string; name: string }) => [
-      category._id,
-      category.name,
-    ]),
+  // Memoized category lookup for better performance
+  const categoryLookup = React.useMemo(
+    () => createLookup(category, "_id", "name"),
+    [category],
   );
 
   const products = product?.map((product: any) => ({

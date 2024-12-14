@@ -24,6 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import React from "react";
 
 interface SubCategoryFormProps {
   id?: string;
@@ -55,12 +56,16 @@ export default function SubCategoryForm({
   });
 
   // Use categoryList directly for productsData mapping
-  const categoryTypes = Array.isArray(category)
-    ? category.map((category: any) => ({
-        value: category._id || "N/A",
-        label: category.name || "N/A",
-      }))
-    : [];
+  const categoryTypes = React.useMemo(
+    () =>
+      Array.isArray(category)
+        ? category.map((category: any) => ({
+            value: category._id || "N/A",
+            label: category.name || "N/A",
+          }))
+        : [],
+    [category],
+  );
 
   async function handleSubmit(data: z.infer<typeof subCategorySchema>) {
     try {

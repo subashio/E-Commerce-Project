@@ -90,18 +90,26 @@ export default function ProductForm({ initialData, id }: ProductProps) {
         },
   });
 
-  const categoryTypes = Array.isArray(category)
-    ? category.map((category: any) => ({
-        value: category._id || "N/A",
-        label: category.name || "N/A",
-      }))
-    : [];
-  const subCategoryTypes = Array.isArray(Subcategory)
-    ? Subcategory.map((subCategory: any) => ({
-        value: subCategory._id || "N/A",
-        label: subCategory.name || "N/A",
-      }))
-    : [];
+  const categoryTypes = React.useMemo(
+    () =>
+      Array.isArray(category)
+        ? category.map(({ _id, name }: { _id: string; name: string }) => ({
+            value: _id || "N/A",
+            label: name || "N/A",
+          }))
+        : [],
+    [category], // Dependency array ensures it's recomputed only when category changes
+  );
+  const subCategoryTypes = React.useMemo(
+    () =>
+      Array.isArray(Subcategory)
+        ? Subcategory.map(({ _id, name }: { _id: string; name: string }) => ({
+            value: _id || "N/A",
+            label: name || "N/A",
+          }))
+        : [],
+    [Subcategory],
+  );
 
   const handleImageUpload = async (
     acceptedFiles: File[],
@@ -130,7 +138,7 @@ export default function ProductForm({ initialData, id }: ProductProps) {
   async function onSubmit(data: z.infer<typeof ProductSchema>) {
     try {
       handleProduct(data, initialData, id);
-      // form.reset();
+      form.reset();
     } catch (error) {
       console.log("error in form submition");
     }

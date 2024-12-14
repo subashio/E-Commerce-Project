@@ -14,7 +14,11 @@ declare global {
     minQuantity: number;
     description: string;
   }
-
+  interface LinksProps {
+    name: string;
+    to: string;
+    logo: JSX.Element;
+  }
   interface ProductCartProps {
     _id: string;
     name: string;

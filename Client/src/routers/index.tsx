@@ -42,7 +42,7 @@ const router = createBrowserRouter(
         { path: "reset-password", element: <ResetPassword /> },
         { path: "shop/product/:id", element: <ProductPage /> },
         {
-          path: "/profile-page",
+          path: "profile-page",
           element: <Profile />,
           children: [
             { path: "", element: <ProfilePage /> },

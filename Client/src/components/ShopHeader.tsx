@@ -1,44 +1,11 @@
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
-import {
-  Filter,
-  List,
-  ListTree,
-  ShoppingBag,
-  ShoppingCartIcon,
-  Users,
-} from "lucide-react";
+import { dashboardLinks } from "@/pages/data/links";
+import { Filter } from "lucide-react";
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "./ui/button";
 
-export const dashboardLinks = [
-  {
-    name: "Products",
-    to: "/dashboard-page/products",
-    logo: <ShoppingCartIcon className="h-4 w-4" />,
-  },
-  {
-    name: "Category",
-    to: "/dashboard-page/category",
-    logo: <List className="h-4 w-4" />,
-  },
-  {
-    name: "Sub_Category",
-    to: "/dashboard-page/sub-category",
-    logo: <ListTree className="h-4 w-4" />,
-  },
-  {
-    name: "Orders",
-    to: "/dashboard-page/orders",
-    logo: <ShoppingBag className="h-4 w-4" />,
-  },
-  {
-    name: "Customers",
-    to: "/dashboard-page/customers",
-    logo: <Users className="h-4 w-4" />,
-  },
-];
 export default function ShopHeader() {
   const [isSheetOpen, isSetSheetOpen] = React.useState<boolean>(false);
   const location = useLocation();

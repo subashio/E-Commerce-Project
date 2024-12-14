@@ -1,24 +1,6 @@
 import { cn } from "@/lib/utils";
-import { MapPin, ShoppingBag, User } from "lucide-react";
+import { links } from "@/pages/data/links";
 import { Link, useLocation } from "react-router-dom";
-
-const links = [
-  {
-    name: "My Profile",
-    to: "/profile-page",
-    logo: <User className="h-5 w-5" />,
-  },
-  {
-    name: "Orders",
-    to: "/profile-page/order-details",
-    logo: <ShoppingBag className="h-5 w-5" />,
-  },
-  {
-    name: "Address",
-    to: "/profile-page/address-details",
-    logo: <MapPin className="h-5 w-5" />,
-  },
-];
 
 export default function Side() {
   const location = useLocation();
