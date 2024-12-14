@@ -38,7 +38,7 @@ export default function CategoryList() {
     return category._id === selectedId;
   });
 
-  const productsData = (category || []).map((category: any) => ({
+  const productsData = category?.map((category: any) => ({
     id: category._id || "N/A",
     image: category.image || "default.jpg",
     category: category.name || "Unnamed",
