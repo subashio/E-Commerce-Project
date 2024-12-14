@@ -25,7 +25,7 @@ export default function Home() {
   return (
     <section className="">
       <HeroSection />
-      {category.length >= 4 ? <CategoriesSection /> : <ProductCarousel />}
+      {category?.length >= 4 ? <CategoriesSection /> : <ProductCarousel />}
       <MaxWidthWrapper className="grid w-full grid-cols-1">
         {banners.map((_item, _index) => (
           <div

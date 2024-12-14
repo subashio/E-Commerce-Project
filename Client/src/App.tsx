@@ -6,6 +6,7 @@ import GlobleContextProvider from "./context/GlobleContextProvider";
 
 export default function () {
   const location = useLocation();
+
   React.useEffect(() => {
     window.scrollTo(0, 0);
   }, []);

@@ -6,7 +6,7 @@ import Axios from "@/lib/Axios";
 import { cn } from "@/lib/utils";
 import { handleAddAddress } from "@/store/addressSlice";
 import { setOrder } from "@/store/orderSlice";
-import { setCart, setProduct } from "@/store/ProductSlice";
+import { setCart, setCategory, setProduct } from "@/store/ProductSlice";
 import { RootState } from "@/store/store";
 import React, { ReactNode } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,6 +20,7 @@ type GlobleContextType = {
   handleToast: () => void;
   fetchOrder: () => Promise<void>;
   // addToCart: (product: any) => void;
+  fetchAllCategory: () => Promise<void>;
   updateCartItem: (id: string, qty: any) => Promise<void>;
   deleteCartItem: (cartId: string) => Promise<void>;
   // fetchProductByCategory: (id: string, setProduct?: any) => Promise<void>;
@@ -93,6 +94,22 @@ const GlobleProvider = ({ children }: { children: ReactNode }) => {
       console.error(error);
     }
   };
+  //fecth all category
+  const fetchAllCategory = async () => {
+    try {
+      const response = await Axios({
+        ...SummaryApi.get_Category,
+      });
+
+      if (response.data.data) {
+        dispatch(setCategory(response.data.data));
+        console.log("Category data: ", response.data);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const fetchOrder = async () => {
     try {
       const response = await Axios({
@@ -182,6 +199,7 @@ const GlobleProvider = ({ children }: { children: ReactNode }) => {
     fetchCartItem();
     fetchOrder();
     fetchAllProduct();
+    fetchAllCategory();
   }, [user]);
 
   const value = {
@@ -192,6 +210,7 @@ const GlobleProvider = ({ children }: { children: ReactNode }) => {
     updateCartItem,
     deleteCartItem,
     fetchOrder,
+    fetchAllCategory,
     // addToCart,
   };
 

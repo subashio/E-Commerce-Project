@@ -32,19 +32,19 @@ export default function CategoryList() {
   const { id: selectedId } = useParams();
   const [search, setSearch] = React.useState("");
   const [status, setStatus] = React.useState("");
-
   const category = useSelector((state: RootState) => state.product.category);
-  const productsData = category?.map((category: any) => ({
+
+  const selectedCategory = category.find((category: { _id: string }) => {
+    return category._id === selectedId;
+  });
+
+  const productsData = (category || []).map((category: any) => ({
     id: category._id || "N/A",
     image: category.image || "default.jpg",
     category: category.name || "Unnamed",
     status: category.status ?? false,
     createdAt: new Date().toISOString().split("T")[0],
   }));
-
-  const selectedCategory = category?.find((category: { _id: string }) => {
-    return category._id === selectedId;
-  });
 
   const [filteredData, setFilteredData] = React.useState(productsData);
 

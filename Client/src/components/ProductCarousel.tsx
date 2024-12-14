@@ -22,7 +22,7 @@ export default function ProductCarousel() {
   const category = useSelector((state: RootState) => state.product.category);
 
   const categoryLookup = new Map(
-    category?.map((category: { _id: string; name: string }) => [
+    category.map((category: { _id: string; name: string }) => [
       category._id,
       category.name,
     ]),

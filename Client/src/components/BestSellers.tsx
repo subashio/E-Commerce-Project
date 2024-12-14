@@ -10,19 +10,19 @@ export default function BestSellers() {
   const category = useSelector((state: RootState) => state.product.category);
 
   const categoryLookup = new Map(
-    category?.map((category: { _id: string; name: string }) => [
+    category.map((category: { _id: string; name: string }) => [
       category._id,
       category.name,
     ]),
   );
 
-  const products = product?.map((product: any) => ({
+  const products = product.map((product: any) => ({
     _id: product._id,
     name: product.name,
     discount: product.discount,
     to: "/",
     image: product.image[0] || "default.jpg",
-    category: categoryLookup.get(product.categoryId), // Look
+    category: categoryLookup.get(product.categoryId) || "Unknown Category", // Look
     price: product.price,
     salePrice: product.salePrice,
   }));
