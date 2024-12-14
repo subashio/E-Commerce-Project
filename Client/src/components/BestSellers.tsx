@@ -8,8 +8,12 @@ import { createLookup } from "@/lib/lookUpMap";
 import React from "react";
 
 export default function BestSellers() {
-  const product = useSelector((state: RootState) => state.product.product);
-  const category = useSelector((state: RootState) => state.product.category);
+  const product = useSelector(
+    (state: RootState) => state.product?.product || [],
+  );
+  const category = useSelector(
+    (state: RootState) => state.product?.category || [],
+  );
 
   // Memoized category lookup for better performance
   const categoryLookup = React.useMemo(

@@ -6,7 +6,9 @@ import { Card } from "./ui/card";
 import React from "react";
 
 export default function CategoriesSection() {
-  const category = useSelector((state: RootState) => state.product.category);
+  const category = useSelector(
+    (state: RootState) => state.product?.category || [],
+  );
 
   const categories = React.useMemo(
     () =>
