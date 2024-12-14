@@ -42,7 +42,7 @@ export default function BestSellers() {
       </div>
       <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-3 lg:grid-cols-4">
         {products &&
-          products.map((item, index) => (
+          products?.map((item, index) => (
             <ProductCard
               key={index}
               discount={item.discount}
