@@ -7,7 +7,7 @@ import { Card } from "./ui/card";
 export default function CategoriesSection() {
   const category = useSelector((state: RootState) => state.product.category);
 
-  const categories = category?.map((category) => ({
+  const categories = category.map((category) => ({
     name: category.name,
     to: `/shop/${category._id}`,
     image: category.image,
