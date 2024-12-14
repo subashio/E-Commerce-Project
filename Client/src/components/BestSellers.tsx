@@ -41,19 +41,20 @@ export default function BestSellers() {
         </Link>
       </div>
       <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-3 lg:grid-cols-4">
-        {products.map((item, index) => (
-          <ProductCard
-            key={index}
-            discount={item.discount}
-            _id={item._id}
-            category={item.category}
-            name={item.name}
-            image={item.image}
-            price={item.price}
-            salePrice={item.salePrice}
-            className="!border"
-          />
-        ))}
+        {products &&
+          products.map((item, index) => (
+            <ProductCard
+              key={index}
+              discount={item.discount}
+              _id={item._id}
+              category={item.category}
+              name={item.name}
+              image={item.image}
+              price={item.price}
+              salePrice={item.salePrice}
+              className="!border"
+            />
+          ))}
       </div>
     </MaxWidthWrapper>
   );
