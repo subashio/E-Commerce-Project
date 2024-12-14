@@ -36,14 +36,14 @@ export default function SubCategoryList() {
 
   // Create a lookup map for categories
   const categoryLookup = new Map(
-    category?.map((category: { _id: string; name: string }) => [
+    category.map((category: { _id: string; name: string }) => [
       category._id,
       category.name,
     ]),
   );
 
   // Use SubcategoryList directly for productsData mapping
-  const productsData = Subcategory?.map((subcategory: any) => ({
+  const productsData = Subcategory.map((subcategory: any) => ({
     id: subcategory._id || "N/A",
     subcategory: subcategory.name || "Unnamed Subcategory",
     category: categoryLookup.get(subcategory.categoryId) || "Unknown Category", // Look up the category name
@@ -51,7 +51,7 @@ export default function SubCategoryList() {
   }));
 
   //this is used for table
-  const selectedSubCategory = Subcategory?.find(
+  const selectedSubCategory = Subcategory.find(
     (subCategory: { _id: string; categoryId: string }) =>
       subCategory._id === selectedId &&
       categoryLookup.has(subCategory.categoryId),

@@ -24,7 +24,7 @@ export default function ProductPage() {
     return category.find((cat) => cat._id === categoryId)?.name;
   };
 
-  const selectedProduct = product?.find((product) => {
+  const selectedProduct = product.find((product) => {
     return product._id === selectedId;
   });
 
