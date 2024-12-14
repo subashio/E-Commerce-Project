@@ -1,4 +1,5 @@
 import App from "@/App";
+import AuthLayout from "@/layouts/AuthLayout";
 import Dashboard from "@/layouts/Dashboard";
 import Profile from "@/layouts/Profile";
 import Shop from "@/layouts/shop";
@@ -35,10 +36,7 @@ const router = createBrowserRouter(
         { path: "search", element: <SearchPage /> },
         { path: "shop/checkout", element: <CheckoutPage /> },
         { path: "success", element: <SuccessPage /> },
-        { path: "login", element: <Login /> },
-        { path: "register", element: <Register /> },
-        { path: "forgot-password", element: <ForgotPassword /> },
-        { path: "verify-forgot-password-otp", element: <OtpVerification /> },
+
         { path: "reset-password", element: <ResetPassword /> },
         { path: "shop/product/:id", element: <ProductPage /> },
         {
@@ -95,10 +93,22 @@ const router = createBrowserRouter(
         { path: "customers", element: <Customers /> },
       ],
     },
-
     {
       path: "/verify-email",
       element: <VerfiyEmail />,
+    },
+    {
+      path: "/",
+      element: <AuthLayout />,
+      children: [
+        {
+          path: "login",
+          element: <Login />,
+        },
+        { path: "forgot-password", element: <ForgotPassword /> },
+        { path: "register", element: <Register /> },
+        { path: "verify-forgot-password-otp", element: <OtpVerification /> },
+      ],
     },
   ],
   {

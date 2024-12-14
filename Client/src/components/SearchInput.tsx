@@ -5,6 +5,7 @@ import { Button } from "./ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 
 const categories = [
+  "All Categories",
   "Smartphones",
   "Laptops",
   "Tablets",
@@ -46,7 +47,9 @@ export default function SearchInput({ button }: { button?: ReactNode }) {
     setQuery(category);
     setShowDropdown(false);
   };
-
+  const [selectedCategory, setSelectedCategory] = React.useState(
+    categories[0], // Default to "All Categories"
+  );
   const handleSearchClick = (e: any) => {
     if (query.trim()) {
       navigate(`/search?q=${query}`);
@@ -59,29 +62,36 @@ export default function SearchInput({ button }: { button?: ReactNode }) {
     <>
       {!button ? (
         <div className="relative h-auto w-full">
-          <div className="group relative flex h-12 w-full min-w-[300px] items-center overflow-hidden rounded-full bg-background text-neutral-500 shadow-sm">
-            <div className="m-1 flex h-full items-center justify-center rounded-full p-2">
-              <Search size={20} />
-            </div>
+          <div className="group relative flex h-12 w-full items-center overflow-hidden rounded-md border bg-background text-neutral-500 shadow-sm">
+            <select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="mr-2 h-full bg-transparent px-2 text-sm text-neutral-700 outline-none"
+            >
+              {categories.map((category, index) => (
+                <option key={index} value={category}>
+                  {category}
+                </option>
+              ))}
+            </select>
             <div className="h-full w-full">
               <input
                 type="text"
                 placeholder="Search for atta dal and more."
                 autoFocus
-                className="h-full w-full bg-transparent outline-none"
+                className="h-full w-full border-l border-r bg-transparent px-5 outline-none"
                 value={query}
                 onChange={handleOnChange}
                 onFocus={() => setShowDropdown(!!query.trim())}
                 onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
               />
             </div>
-            <Button
+            <button
               onClick={handleSearchClick}
-              variant="default"
-              className="text-md !justify-start gap-4 rounded-full shadow-md"
+              className="flex h-full items-center justify-center gap-2 bg-primary p-2 px-6 text-primary-foreground"
             >
               <Search size={20} /> Search
-            </Button>
+            </button>
           </div>
           {/* Dropdown for categories */}
           {showDropdown && (
@@ -112,7 +122,7 @@ export default function SearchInput({ button }: { button?: ReactNode }) {
           <SheetTrigger>{button}</SheetTrigger>
           <SheetContent side="top" className="pt-8">
             <div className="relative h-auto">
-              <div className="group relative flex h-12 w-full min-w-[300px] items-center overflow-hidden rounded-full bg-background text-neutral-500 shadow-sm">
+              <div className="group relative flex h-12 w-full min-w-[700px] items-center overflow-hidden rounded-full bg-background text-neutral-500 shadow-sm">
                 <div className="m-1 flex h-full items-center justify-center rounded-full p-2">
                   <Search size={20} />
                 </div>
@@ -128,6 +138,7 @@ export default function SearchInput({ button }: { button?: ReactNode }) {
                     onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
                   />
                 </div>
+
                 <Button
                   onClick={handleSearchClick}
                   variant="default"

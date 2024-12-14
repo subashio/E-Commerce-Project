@@ -13,7 +13,7 @@ export default function Profile() {
   return (
     <GlobleContextProvider>
       <MaxWidthWrapper>
-        <div className="grid w-full md:grid-cols-[260px_1fr] lg:grid-cols-[280px_1fr]">
+        <div className="mt-10 grid w-full md:grid-cols-[260px_1fr] lg:grid-cols-[280px_1fr]">
           <div className="hidden justify-center rounded-lg border-r md:flex md:min-h-screen">
             <Side />
           </div>

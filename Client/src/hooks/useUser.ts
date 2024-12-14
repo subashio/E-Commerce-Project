@@ -50,6 +50,8 @@ export function useUser() {
             "Your account has been created successfully. Welcome aboard!",
         });
       }
+
+      navigate("/login");
     } catch (error) {
       toast({
         variant: "destructive",

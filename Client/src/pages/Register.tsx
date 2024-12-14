@@ -37,8 +37,8 @@ export default function Register() {
     }
   }
   return (
-    <div className="flex w-full items-center justify-center py-10 dark:bg-gray-950">
-      <div className="flex max-w-xl flex-col gap-10 rounded-xl bg-white px-8 shadow-[rgba(0,_0,_0,_0.4)_0px_30px_90px] dark:bg-gray-900">
+    <div className="flex w-full items-center justify-center py-10">
+      <div className="flex max-w-xl flex-col gap-10 rounded-xl px-8">
         <h1 className="mb-4 mt-10 text-center text-3xl font-bold dark:text-gray-200">
           Create an Account
         </h1>
@@ -46,7 +46,7 @@ export default function Register() {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="w-[350px] pb-24 sm:w-[500px]"
+            className="w-[350px] pb-24 md:w-[300px] lg:w-[500px]"
           >
             <div className="mb-4 w-full">
               <FormField

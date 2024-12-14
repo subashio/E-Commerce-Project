@@ -19,7 +19,7 @@ export default function Footer() {
             <div className="">
               <Link
                 to="/"
-                className="mb-5 flex items-center justify-center font-semibold text-gray-900 dark:text-white sm:text-2xl"
+                className="mb-3 flex items-center justify-center font-semibold text-gray-900 dark:text-white sm:text-2xl"
               >
                 <img
                   src="/logo.png"
@@ -29,9 +29,7 @@ export default function Footer() {
               </Link>
               <p className="max-w-2xl text-sm">
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Error
-                beatae nisi voluptas, numquam optio aperiam esse sed dolor
-                eligendi nihil hic recusandae illum. Fugit neque quam illum
-                fugiat facilis consequuntur.
+                beatae nisi voluptas.
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2">
@@ -70,11 +68,11 @@ export default function Footer() {
                 </nav>
               </div>
               <div>
-                <p className="mb-6 text-sm font-semibold uppercase text-gray-900 dark:text-white">
+                <p className="mb-6 mt-2 text-sm font-semibold uppercase text-gray-900 dark:text-white">
                   MOBILE APP IS AVAILABLE ON
                 </p>
                 <div className="flex items-center gap-1">
-                  <a href="#" className="mt-4 max-w-md">
+                  <a href="#" className="max-w-md">
                     <img
                       src="https://mcqmate.com/public/images/icons/playstore.svg"
                       alt="Playstore Button"

@@ -56,7 +56,7 @@ export default function VerfiyEmail() {
   return (
     <div className="flex h-[60vh] w-full flex-col items-center justify-center px-10">
       <div className="flex flex-col items-start gap-6 bg-background">
-        <img src="/vite.svg" alt="logo" />
+        <img src="/logo.png" alt="logo" />
         <h1 className="text-2xl font-semibold">Confirm your account</h1>
         <p>
           Please click the button below to confirm your email address and finish
