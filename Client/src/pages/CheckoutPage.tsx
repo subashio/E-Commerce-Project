@@ -209,8 +209,7 @@ export default function CheckoutPage() {
   ];
 
   const cartData = cart.map((item) => {
-    const product =
-      typeof item.productId === "object" ? (item.productId as Products) : null;
+    const product = typeof item.productId === "object" ? item.productId : null;
     return {
       image: product?.image[0] || "/placeholder.png", // Default image if not available
       product: product?.name || "Unknown Product",

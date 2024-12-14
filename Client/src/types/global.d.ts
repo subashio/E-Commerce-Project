@@ -5,12 +5,13 @@ declare global {
     image: string[];
     categoryId: string;
     sub_categoryId: string;
-    unit: string;
+    brandName: string;
     stock: number;
     status: boolean;
     price: number;
     salePrice: number;
-    discount: number;
+    wholsalePrice: number;
+    minQuantity: number;
     description: string;
   }
 
