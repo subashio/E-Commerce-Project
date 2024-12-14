@@ -120,11 +120,12 @@ export default function ProductPage() {
             {selectedProduct?.salePrice && (
               <span className="my-1.5 text-xs font-semibold text-secondary/70">
                 M.R.P: <del>₹{selectedProduct.salePrice} </del>
-                {selectedProduct?.discount && (
+                {/* {selectedProduct?. && (
                   <b className="ml-2 text-primary/90">
                     {selectedProduct?.discount} % OFF
                   </b>
-                )}
+                )} */}
+                <b className="ml-2 text-primary/90">20 % OFF</b>
               </span>
             )}
           </div>
