@@ -17,7 +17,7 @@ export default function BestSellers() {
     [category],
   );
 
-  const products = product?.map((product: any) => ({
+  const products = product.map((product: any) => ({
     _id: product._id,
     name: product.name,
     discount: product.discount,
@@ -41,11 +41,11 @@ export default function BestSellers() {
         </Link>
       </div>
       <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-3 lg:grid-cols-4">
-        {products?.map((item, index) => (
+        {products.map((item, index) => (
           <ProductCard
+            key={index}
             discount={item.discount}
             _id={item._id}
-            key={index}
             category={item.category}
             name={item.name}
             image={item.image}

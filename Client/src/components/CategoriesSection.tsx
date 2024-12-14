@@ -23,7 +23,7 @@ export default function CategoriesSection() {
       <h1 className="text-center text-3xl font-bold">Shop by Category</h1>
 
       <div className="grid grid-cols-2 md:grid-cols-4">
-        {categories?.map((_item, index) => (
+        {categories.map((_item, index) => (
           <div
             key={index}
             className="basis-1/2 p-4 sm:basis-1/3 lg:basis-1/4 xl:basis-1/5"
