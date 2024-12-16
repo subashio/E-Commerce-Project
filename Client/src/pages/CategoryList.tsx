@@ -32,7 +32,9 @@ export default function CategoryList() {
   const { id: selectedId } = useParams();
   const [search, setSearch] = React.useState("");
   const [status, setStatus] = React.useState("");
-  const category = useSelector((state: RootState) => state.product.category);
+  const category = useSelector(
+    (state: RootState) => state.product?.category || [],
+  );
 
   const selectedCategory = category.find((cat) => cat._id === selectedId);
 
