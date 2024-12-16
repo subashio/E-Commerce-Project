@@ -21,7 +21,7 @@ export default function ProductCard({
       className={cn("group relative rounded-lg p-4", className)}
     >
       <Card className="border-none p-0 shadow-none">
-        <Badge className="absolute right-3 top-3 bg-red-600 px-4 hover:bg-red-500">
+        <Badge className="absolute right-3 top-3 hidden bg-red-600 px-4 hover:bg-red-500">
           {discount}%
         </Badge>
         <img src={image} className="mx-auto h-32 w-32" />

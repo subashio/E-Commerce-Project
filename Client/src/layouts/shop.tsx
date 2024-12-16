@@ -11,7 +11,9 @@ import { Outlet, useLocation, useParams } from "react-router-dom";
 export default function Shop() {
   const { id } = useParams<{ id: string }>();
   const [categoryName, setCategoryName] = React.useState<string>("");
-  const category = useSelector((state: RootState) => state.product.category);
+  const category = useSelector(
+    (state: RootState) => state.product?.category || [],
+  );
   // Set category name based on the category ID in the URL
   React.useEffect(() => {
     if (id) {

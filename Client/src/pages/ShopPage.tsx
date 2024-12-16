@@ -5,8 +5,12 @@ import { useParams } from "react-router-dom";
 
 export default function ShopPage() {
   const { id } = useParams<{ id: string }>();
-  const product = useSelector((state: RootState) => state.product.product);
-  const category = useSelector((state: RootState) => state.product.category);
+  const product = useSelector(
+    (state: RootState) => state.product?.product || [],
+  );
+  const category = useSelector(
+    (state: RootState) => state.product?.category || [],
+  );
 
   if (!product || !category) {
     return <p>Loading products...</p>; // Display loading message if data is not yet available
