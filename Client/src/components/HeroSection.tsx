@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/carousel";
 import { cn } from "@/lib/utils";
 import Autoplay from "embla-carousel-autoplay";
-import { ArrowLeft, ArrowRight, MoveRight } from "lucide-react";
+import { MoveRight } from "lucide-react";
 import React from "react";
 import { Link } from "react-router-dom";
 import MaxWidthWrapper from "./MaxWidthWrapper";
@@ -15,20 +15,20 @@ import { Badge } from "./ui/badge";
 const list = [
   {
     to: "/",
-    image: "/slide-1.png",
+    image: "/slide-f-2.PNG",
     tag: "Advanced Tech for Everyday Life",
     className:
-      "mx-10  flex flex-col items-start  justify-center gap-y-4 rounded-sm p-5 md:m-0 h-full w-full md:gap-y-6 md:bg-secondary/0 md:px-14 text-accent",
+      "  flex flex-col items-start  justify-center gap-y-4 rounded-sm p-5 md:m-0 h-full w-full md:gap-y-6 md:bg-secondary/0  text-secondary",
     title: "Experience Superior Sound and Style",
     description: "Premium comfort. Powerful audio.",
   },
   {
     to: "/",
-    image: "/slide-2.png",
+    image: "/slide-2-f.png",
     tag: "Stay Connected, Stay Ahead",
     title: "Latest Smartphones at Your Fingertips",
     className:
-      "mx-10   flex flex-col items-start justify-center gap-y-4 rounded-sm  p-5 md:m-0 h-full w-full  md:gap-y-6 md:bg-secondary/0 md:px-14 text-accent",
+      "  flex flex-col items-start justify-center gap-y-4 rounded-sm  p-5 md:m-0 h-full w-full  md:gap-y-6 md:bg-secondary/0  text-secondary",
     description:
       "Explore top-brand mobile phones with unbeatable features and prices. Find your perfect match today.",
   },
@@ -60,7 +60,7 @@ export default function HeroSection() {
   };
 
   return (
-    <MaxWidthWrapper className="mt-20">
+    <MaxWidthWrapper className="mt-10">
       <Carousel
         setApi={setApi}
         plugins={[plugin.current]}
@@ -68,39 +68,29 @@ export default function HeroSection() {
         onMouseEnter={plugin.current.stop}
         onMouseLeave={plugin.current.reset}
       >
-        <div className="absolute z-10 mx-auto flex h-full w-full items-center justify-end gap-4 px-2 pb-4 md:items-center md:justify-between md:px-2 lg:px-20">
-          <ArrowLeft
-            onClick={() => api && api.scrollPrev()}
-            className="h-16 w-16 cursor-pointer rounded-full bg-primary/20 p-4"
-          />
-          <ArrowRight
-            onClick={() => api && api.scrollNext()}
-            className="h-16 w-16 cursor-pointer rounded-full bg-primary/20 p-4"
-          />
-        </div>
         <CarouselContent className="">
           {list.map((_item, index) => (
             <CarouselItem key={index}>
               <div
-                className="relative flex h-[40vh] flex-col place-items-center rounded-lg bg-cover bg-center bg-no-repeat pb-20 sm:h-[73vh]"
+                className="relative flex h-[30vh] flex-col place-items-center rounded-lg bg-cover bg-left bg-no-repeat pb-20 sm:h-[60vh]"
                 style={{ backgroundImage: `url(${_item.image})` }}
               >
-                <div className={cn("max-w-screen-lg", _item.className)}>
+                <div className={cn("my-10 max-w-screen-xl", _item.className)}>
                   <Badge className="mr-auto bg-amber-600 px-2 pb-1.5 hover:bg-amber-600">
                     {_item.tag}
                   </Badge>
-                  <h1 className="font-semibold sm:max-w-xl sm:text-6xl">
+                  <h1 className="font-semibold sm:max-w-xl sm:text-5xl">
                     {_item.title}
                   </h1>
-                  <p className="max-w-sm text-sm text-[#bbecb6] sm:text-sm md:text-sm">
+                  <p className="max-w-sm text-sm text-[#153d11] sm:text-sm md:text-sm">
                     {_item.description}
                   </p>
                   <Link
-                    className="group inline-flex h-10 items-center justify-center gap-2 whitespace-nowrap !rounded-md border-[1px] border-[#052702] px-4 py-2 text-sm transition-all duration-300 hover:bg-secondary"
+                    className="group inline-flex h-10 cursor-pointer items-center justify-center gap-2 rounded-lg border-2 border-transparent bg-secondary px-4 text-center text-sm font-medium text-primary-foreground transition-all duration-500 hover:border-secondary hover:bg-white hover:text-black"
                     to={_item.to}
                   >
                     Show Now
-                    <MoveRight className="transition-all duration-300 group-hover:translate-x-2" />
+                    <MoveRight className="w-4 transition-transform duration-300 group-hover:translate-x-2" />
                   </Link>
                 </div>
               </div>
@@ -115,8 +105,8 @@ export default function HeroSection() {
               className={cn(
                 "h-3 w-3 cursor-pointer transition-colors",
                 current === index
-                  ? "scale-x-150 rounded-sm fill-secondary"
-                  : "fill-gray-100",
+                  ? "scale-x-[1.8] rounded-sm fill-accent"
+                  : "rounded-full border fill-secondary/50",
               )}
               viewBox="0 0 24 24"
               onClick={() => handleDotClick(index)}
@@ -128,4 +118,17 @@ export default function HeroSection() {
       </Carousel>
     </MaxWidthWrapper>
   );
+}
+
+{
+  /* <div className="absolute z-10 mt-4 flex w-full items-end justify-end gap-4 px-2 md:my-60 md:items-center md:justify-between lg:items-center">
+          <ChevronLeft
+            onClick={() => api && api.scrollPrev()}
+            className="h-16 w-16 cursor-pointer rounded-full bg-primary/20 p-4 text-white"
+          />
+          <ChevronRight
+            onClick={() => api && api.scrollNext()}
+            className="h-16 w-16 cursor-pointer rounded-full bg-primary/20 p-4 text-white"
+          />
+        </div> */
 }

@@ -5,6 +5,7 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
 import * as React from "react";
@@ -49,12 +50,33 @@ const components: { title: string; href: string; description: string }[] = [
 ];
 
 export function Navmenu() {
+  // const category = useSelector(
+  //   (state: RootState) => state.product?.category || [],
+  // );
   return (
     <NavigationMenu>
-      <NavigationMenuList>
+      <NavigationMenuList className="ml-5 gap-2">
+        {/* <NavigationMenuItem>
+          <NavigationMenuTrigger className="flex w-[250px] justify-between bg-transparent">
+            All Departments
+            <LayoutGrid className="relative top-[1px] ml-1 h-5 w-5 transition duration-200 group-data-[state=open]:rotate-180" />
+          </NavigationMenuTrigger>
+          <NavigationMenuContent>
+            <ul className="w-[250px] gap-y-3 p-2">
+              {category?.map((_item, _index) => (
+                <ListItem
+                  key={_index}
+                  title={_item.name}
+                  href={`/shop/${_item._id}`}
+                  // handleClick={() => handleClick(item.name, "Products")}
+                ></ListItem>
+              ))}
+            </ul>
+          </NavigationMenuContent>
+        </NavigationMenuItem> */}
         <NavigationMenuItem>
-          <NavigationMenuTrigger className="bg-transparent">
-            Getting started
+          <NavigationMenuTrigger className="flex w-[110px] justify-between bg-transparent">
+            Moblies
           </NavigationMenuTrigger>
           <NavigationMenuContent>
             <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
@@ -89,8 +111,8 @@ export function Navmenu() {
           </NavigationMenuContent>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <NavigationMenuTrigger className="bg-transparent">
-            Components
+          <NavigationMenuTrigger className="flex w-[130px] justify-between bg-transparent">
+            Headphones
           </NavigationMenuTrigger>
           <NavigationMenuContent>
             <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
@@ -107,9 +129,24 @@ export function Navmenu() {
           </NavigationMenuContent>
         </NavigationMenuItem>
         <NavigationMenuItem>
+          <Link to="/docs" className="bg-transparent">
+            <NavigationMenuLink
+              className={navigationMenuTriggerStyle({
+                className: "bg-transparent",
+              })}
+            >
+              About
+            </NavigationMenuLink>
+          </Link>
+        </NavigationMenuItem>
+        <NavigationMenuItem>
           <Link to="/docs">
-            <NavigationMenuLink className="bg-transparent">
-              Documentation
+            <NavigationMenuLink
+              className={navigationMenuTriggerStyle({
+                className: "bg-transparent",
+              })}
+            >
+              Contact
             </NavigationMenuLink>
           </Link>
         </NavigationMenuItem>

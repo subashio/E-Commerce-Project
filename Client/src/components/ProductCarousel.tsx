@@ -3,6 +3,7 @@ import {
   CarouselApi,
   CarouselContent,
 } from "@/components/ui/carousel";
+import { createLookup } from "@/lib/lookUpMap";
 import { RootState } from "@/store/store";
 import Autoplay from "embla-carousel-autoplay";
 import { ArrowLeft, ArrowRight, ArrowRightCircleIcon } from "lucide-react";
@@ -11,9 +12,8 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import MaxWidthWrapper from "./MaxWidthWrapper";
 import ProductCard from "./ProductCard";
-import { createLookup } from "@/lib/lookUpMap";
 
-export default function ProductCarousel() {
+export default function ProductCarousel({ title }: { title: string }) {
   const [api, setApi] = React.useState<CarouselApi>();
   const product = useSelector(
     (state: RootState) => state.product?.product || [],
@@ -68,7 +68,7 @@ export default function ProductCarousel() {
           to="/shop"
           className="group flex items-center gap-3 rounded-full px-2 text-3xl font-bold"
         >
-          Top Smartphones{" "}
+          {title}
           <ArrowRightCircleIcon className="mt-2 -translate-x-5 opacity-0 transition-all duration-500 group-hover:translate-x-0 group-hover:opacity-100" />
         </Link>
         <div className="flex gap-4">

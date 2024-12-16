@@ -160,7 +160,10 @@ export default function ProfilePage() {
       </section>
       {/* Address Section */}
       <section className="py-6">
-        <h2 className="mb-4 px-4 text-xl font-semibold">Address</h2>
+        <h2 className="mb-4 px-4 text-xl font-semibold">
+          {address.filter((item) => item.status == true).length > 0 &&
+            "Address"}
+        </h2>
         <Card className="border-none p-4 shadow-none">
           {address
             .filter((item) => item.status == true) // Show only active addresses

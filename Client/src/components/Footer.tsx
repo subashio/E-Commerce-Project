@@ -1,7 +1,5 @@
 "use client";
 import { footerSvg, Links } from "@/constants/details";
-// import Logo from "@/components/ui/Logo";
-
 import MaxWidthWrapper from "./MaxWidthWrapper";
 import { Link } from "react-router-dom";
 import Logos from "./Logos";
@@ -15,66 +13,75 @@ export default function Footer() {
     <footer className="border-t">
       <MaxWidthWrapper>
         <div className="mx-auto p-2 py-6">
-          <div className="grid place-content-center gap-8 md:grid-cols-1">
-            <div className="">
-              <Link
-                to="/"
-                className="mb-3 flex items-center justify-center font-semibold text-gray-900 dark:text-white sm:text-2xl"
-              >
-                <img
-                  src="/logo.png"
-                  className="mr-auto h-10 sm:h-14"
-                  alt="Landwind Logo"
-                />
-              </Link>
-              <p className="max-w-2xl text-sm">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Error
-                beatae nisi voluptas.
-              </p>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2">
-              <div className="grid grid-cols-1 sm:grid-cols-2">
-                <nav>
-                  <h1 className="mb-6 text-sm font-semibold uppercase text-gray-900 dark:text-white">
-                    Categories
-                  </h1>
-                  <ul className="text-xs text-gray-500 dark:text-gray-400">
-                    {category?.map((item: any) => (
-                      <li key={item._id} className="mb-4">
-                        <Link
-                          to={item._id ? `/shop/${item._id}` : item._id}
-                          className="hover:underline"
-                        >
-                          {item.name}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </nav>
+          <div className="grid gap-8 md:grid-cols-1">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-3 md:grid-cols-4">
+              {/* <div className="grid grid-cols-1 sm:grid-cols-2"> */}
+              <nav>
+                <h1 className="mb-6 text-sm font-semibold text-gray-900 dark:text-white">
+                  Categories
+                </h1>
+                <ul className="text-xs text-gray-500 dark:text-gray-400">
+                  {category?.map((item: any) => (
+                    <li key={item._id} className="mb-4">
+                      <Link
+                        to={item._id ? `/shop/${item._id}` : item._id}
+                        className="hover:underline"
+                      >
+                        {item.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
 
-                <nav>
-                  <h1 className="mb-6 text-sm font-semibold uppercase text-gray-900 dark:text-white">
-                    Company
-                  </h1>
-                  <ul className="text-xs text-gray-500 dark:text-gray-400">
-                    {Links.map((item) => (
-                      <li key={item.id} className="mb-4">
-                        <Link to={item.to} className="hover:underline">
-                          {item.name}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </nav>
-              </div>
+              <nav>
+                <h1 className="mb-6 text-sm font-semibold text-gray-900 dark:text-white">
+                  Company
+                </h1>
+                <ul className="text-xs text-gray-500 dark:text-gray-400">
+                  {Links.map((item) => (
+                    <li key={item.id} className="mb-4">
+                      <Link to={item.to} className="hover:underline">
+                        {item.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+              {/* </div> */}
               <div>
-                <p className="mb-6 mt-2 text-sm font-semibold uppercase text-gray-900 dark:text-white">
-                  MOBILE APP IS AVAILABLE ON
+                <p className="mb-6 mt-2 text-sm font-semibold text-gray-900 dark:text-white">
+                  Stay connected
                 </p>
-                <div className="flex items-center gap-1">
+                <ul className="text-xs text-gray-500 dark:text-gray-400">
+                  {footerSvg.map((item) => (
+                    <li key={item.id}>
+                      <Link
+                        to="#"
+                        className="mt-2 flex items-center gap-2 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+                      >
+                        <Logos d={item.d} className="h-4 w-4 border-none" />
+                        {item.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="mb-4">
+                <p className="mb-4 mt-2 text-sm font-semibold text-gray-900 dark:text-white">
+                  App Available on
+                </p>
+                <div className="flex flex-wrap items-center gap-1">
                   <a href="#" className="max-w-md">
                     <img
-                      src="https://mcqmate.com/public/images/icons/playstore.svg"
+                      src="/play_store.png"
+                      alt="Playstore Button"
+                      className="h-10"
+                    />
+                  </a>
+                  <a href="#" className="max-w-md">
+                    <img
+                      src="/app_store.png"
                       alt="Playstore Button"
                       className="h-10"
                     />
@@ -83,22 +90,10 @@ export default function Footer() {
               </div>
             </div>
           </div>
-          <hr className="my-6 border-gray-200 dark:border-gray-700 sm:mx-auto lg:my-8" />
-          <span className="block text-center text-sm text-gray-500 dark:text-gray-400">
+          <hr className="my-2 border-gray-200 dark:border-gray-700 sm:mx-auto" />
+          <span className="block text-center text-xs text-gray-500 dark:text-gray-400">
             © 2024. All Rights Reserved.
           </span>
-          <ul className="mt-5 flex justify-center space-x-5">
-            {footerSvg.map((item) => (
-              <li key={item.id}>
-                <Link
-                  to="#"
-                  className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
-                >
-                  <Logos d={item.d} className="border-none" />
-                </Link>
-              </li>
-            ))}
-          </ul>
         </div>
       </MaxWidthWrapper>
     </footer>

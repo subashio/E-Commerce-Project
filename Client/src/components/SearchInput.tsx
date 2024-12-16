@@ -21,6 +21,7 @@ const categories = [
 export default function SearchInput({ button }: { button?: ReactNode }) {
   const [query, setQuery] = React.useState("");
   const [isSheetOpen, setIsSheetOpen] = React.useState<boolean>(false);
+  // const category = useSelector((state: RootState) => state.product.category);
   const [filteredCategories, setFilteredCategories] = React.useState<string[]>(
     [],
   );
@@ -34,9 +35,10 @@ export default function SearchInput({ button }: { button?: ReactNode }) {
     if (value.trim()) {
       setFilteredCategories(
         categories.filter((category) =>
-          category.toLowerCase().includes(value.toLowerCase()),
+          category.toLowerCase().includes(category.toLowerCase()),
         ),
       );
+      // setFilteredCategories(category.filter((cat) => cat._id ))
       setShowDropdown(true);
     } else {
       setShowDropdown(false);
@@ -62,7 +64,7 @@ export default function SearchInput({ button }: { button?: ReactNode }) {
     <>
       {!button ? (
         <div className="relative h-auto w-full">
-          <div className="group relative flex h-12 w-full items-center overflow-hidden rounded-md border bg-background text-neutral-500 shadow-sm">
+          <div className="group relative flex h-10 w-full items-center overflow-hidden rounded-md border bg-background text-neutral-500 shadow-sm">
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
@@ -122,7 +124,7 @@ export default function SearchInput({ button }: { button?: ReactNode }) {
           <SheetTrigger>{button}</SheetTrigger>
           <SheetContent side="top" className="pt-8">
             <div className="relative h-auto">
-              <div className="group relative flex h-12 w-full min-w-[700px] items-center overflow-hidden rounded-full bg-background text-neutral-500 shadow-sm">
+              <div className="group relative flex h-12 w-full items-center overflow-hidden rounded-full bg-background text-neutral-500 shadow-sm">
                 <div className="m-1 flex h-full items-center justify-center rounded-full p-2">
                   <Search size={20} />
                 </div>

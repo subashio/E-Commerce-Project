@@ -13,7 +13,7 @@ export default function () {
 
   return (
     <GlobleContextProvider>
-      <div className="relative flex min-h-screen flex-col overflow-visible font-sans">
+      <div className="relative flex min-h-screen flex-col overflow-visible scroll-smooth font-sans">
         <Navbar />
         <main className="flex-grow">
           <Outlet />

@@ -1,11 +1,11 @@
+import { createLookup } from "@/lib/lookUpMap";
 import { RootState } from "@/store/store";
 import { ArrowRight } from "lucide-react";
+import React from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import MaxWidthWrapper from "./MaxWidthWrapper";
 import ProductCard from "./ProductCard";
-import { createLookup } from "@/lib/lookUpMap";
-import React from "react";
 
 export default function BestSellers() {
   const product = useSelector(
