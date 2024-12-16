@@ -202,7 +202,7 @@ export default function SubCategoryList() {
                 />
               ) : (
                 <div className="p-4 text-center text-gray-500">
-                  No categories found.
+                  No sub-categories found.
                 </div>
               )}
               <ScrollBar orientation="horizontal" />

@@ -31,10 +31,14 @@ export default function ProductList() {
   const [search, setSearch] = React.useState("");
   const [status, setStatus] = React.useState("");
   const { toast } = useToast();
-  const product = useSelector((state: RootState) => state.product.product);
-  const category = useSelector((state: RootState) => state.product.category);
+  const product = useSelector(
+    (state: RootState) => state.product?.product || [],
+  );
+  const category = useSelector(
+    (state: RootState) => state.product?.category || [],
+  );
   const subCategory = useSelector(
-    (state: RootState) => state.product.subcategory,
+    (state: RootState) => state.product?.subcategory || [],
   );
 
   const categoryLookup = React.useMemo(
@@ -225,11 +229,17 @@ export default function ProductList() {
           </CardHeader>
           <CardContent className="p-0">
             <ScrollArea className="min-w-full max-w-sm whitespace-nowrap sm:max-w-xl md:max-w-2xl lg:max-w-4xl xl:max-w-xl">
-              <GenericTable
-                columns={productColumns}
-                data={filteredData}
-                actions={(row) => renderActions(row.id)}
-              />
+              {filteredData?.length > 0 ? (
+                <GenericTable
+                  columns={productColumns}
+                  data={filteredData}
+                  actions={(row) => renderActions(row.id)}
+                />
+              ) : (
+                <div className="p-4 text-center text-gray-500">
+                  No Products found.
+                </div>
+              )}
               <ScrollBar orientation="horizontal" />
             </ScrollArea>
           </CardContent>
