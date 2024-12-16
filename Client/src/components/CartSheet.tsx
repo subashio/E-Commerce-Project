@@ -5,7 +5,7 @@ import { RootState } from "@/store/store";
 import { Loader, ShoppingBag } from "lucide-react";
 import React, { ReactNode } from "react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button, buttonVariants } from "./ui/button";
 
 import { useGlobleContext } from "@/context/GlobleContextProvider";
@@ -23,11 +23,13 @@ import { ScrollArea } from "./ui/scroll-area";
 export default function CartSheet({ button }: { button: ReactNode }) {
   const [isSheetOpen, isSetSheetOpen] = React.useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
   const { updateCartItem, deleteCartItem, fetchCartItem, handleToast } =
     useGlobleContext();
   const cartList = useSelector((state: RootState) => state.product.cartList);
   const user = useSelector((state: RootState) => state.user);
   const isLoggedIn = user?._id;
+  const location = useLocation();
 
   // Loading state for fetching cart items
   const [isFetchingCart, setIsFetchingCart] = React.useState(false);
@@ -75,7 +77,10 @@ export default function CartSheet({ button }: { button: ReactNode }) {
         setItemLoading(itemId, false);
       })
       .catch(() => {
-        toast({ variant: "destructive", title: "Failed to increase quantity" });
+        toast({
+          variant: "destructive",
+          title: "Failed to increase quantity ❌",
+        });
         setItemLoading(itemId, false);
       });
   };
@@ -93,7 +98,10 @@ export default function CartSheet({ button }: { button: ReactNode }) {
         setItemLoading(itemId, false);
       })
       .catch(() => {
-        toast({ variant: "destructive", title: "Failed to update cart item" });
+        toast({
+          variant: "destructive",
+          title: "Failed to update cart item ❌",
+        });
         setItemLoading(itemId, false);
       });
   };
@@ -108,10 +116,12 @@ export default function CartSheet({ button }: { button: ReactNode }) {
         return fetchCartItem();
       })
       .then(() => {
-        toast({ variant: "default", title: "Item removed from cart" });
+        location.pathname === "/shop/checkout"
+          ? navigate("/")
+          : toast({ variant: "default", title: "Item removed from cart ✅" });
       })
       .catch(() => {
-        toast({ variant: "destructive", title: "Failed to remove item" });
+        toast({ variant: "destructive", title: "Failed to remove item ❌" });
       })
       .finally(() => {
         setItemLoading(id, false);

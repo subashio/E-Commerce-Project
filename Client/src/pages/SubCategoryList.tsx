@@ -47,6 +47,14 @@ export default function SubCategoryList() {
     () => createLookup(category, "_id", "name"),
     [category],
   );
+
+  //this is used for table
+  const selectedSubCategory = React.useMemo(() => {
+    return Subcategory.find(
+      (item) => item._id === selectedId && categoryLookup.has(item.categoryId),
+    );
+  }, [Subcategory, categoryLookup, selectedId]);
+
   // Use SubcategoryList directly for productsData mapping
   const productsData = Subcategory.map((subcategory: any) => ({
     id: subcategory._id || "N/A",
@@ -55,14 +63,7 @@ export default function SubCategoryList() {
     createdAt: new Date().toISOString().split("T")[0],
   }));
 
-  //this is used for table
-  const selectedSubCategory = Subcategory.find(
-    (subCategory: { _id: string; categoryId: string }) =>
-      subCategory._id === selectedId &&
-      categoryLookup.has(subCategory.categoryId),
-  );
   const [filteredData, setFilteredData] = React.useState(productsData);
-
   //seting the values for the select
   const categoryTypes = Array.isArray(category)
     ? category.map((category: any) => ({
@@ -125,7 +126,7 @@ export default function SubCategoryList() {
     actions(id, "sub-category/edit-sub-category", handleDelete);
 
   return (
-    <div className="relative w-full">
+    <div className="relative mt-10 w-full">
       <div className="flex flex-wrap items-center justify-between gap-y-4 pb-10 pt-10 md:pb-10 md:pt-0">
         <div className="flex flex-col items-start gap-2">
           <h1 className="text-3xl font-semibold">

@@ -1,146 +1,37 @@
-// import { cn } from "@/lib/utils";
-// import { RootState } from "@/store/store";
-// import { ChevronDown } from "lucide-react";
-// import { useSelector } from "react-redux";
-// import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
-// import {
-//   Accordion,
-//   AccordionContent,
-//   AccordionItem,
-//   AccordionTrigger,
-// } from "./ui/accordion";
-// import { buttonVariants } from "./ui/button";
-
-// export default function ShopSide() {
-//   const location = useLocation();
-//   const { id } = useParams<{ id: string }>();
-//   const navigate = useNavigate();
-//   const categoryList = useSelector(
-//     (state: RootState) => state.product.categoryList,
-//   );
-//   const productList = useSelector(
-//     (state: RootState) => state.product.productList,
-//   );
-//   const subCategoryList = useSelector(
-//     (state: RootState) => state.product.subcategoryList,
-//   );
-
-//   const filteredProducts = id
-//     ? subCategoryList.filter((product: any) => product.categoryId === id) // If id is present, filter by category
-//     : subCategoryList; // Otherwise, show all products
-
-//   // If no products are found
-
-//   const products = filteredProducts.map((product: any) => ({
-//     _id: product._id,
-//     name: product.name,
-//   }));
-
-//   return (
-//     <aside className="hidden max-h-screen w-full flex-col gap-2 md:flex">
-//       <div className=" ">
-//         <nav className="text-lg font-medium">
-//           <div className="flex w-full flex-col px-2.5">
-//             <p className="p-4 text-sm text-secondary/50">Categories </p>
-
-//             <Accordion type="single" collapsible>
-//               <AccordionItem className="!border-none" value="item-1 ">
-//                 <AccordionTrigger
-//                   className={cn(
-//                     "flex items-center gap-3 rounded-lg p-4 text-sm text-secondary/80 transition-all duration-700 hover:no-underline",
-//                     location.pathname === `/shop`
-//                       ? "bg-primary/20"
-//                       : "hover:bg-accent",
-//                   )}
-//                 >
-//                   <Link
-//                     to="/shop"
-//                     className="flex w-full justify-start hover:underline"
-//                   >
-//                     All Products
-//                   </Link>
-//                   <ChevronDown className="text-secondary/50" />
-//                 </AccordionTrigger>
-//                 <AccordionContent className="flex flex-col rounded-md border">
-//                   {productList.map((_item, _index) => (
-//                     <Link
-//                       key={_index}
-//                       to="#"
-//                       className={cn(
-//                         "!justify-start",
-//                         buttonVariants({ variant: "ghost" }),
-//                       )}
-//                     >
-//                       {_item.name}
-//                     </Link>
-//                   ))}
-//                 </AccordionContent>
-//               </AccordionItem>
-//               {categoryList.map((item, index) => (
-//                 <AccordionItem className="!border-none" value={item._id}>
-//                   <AccordionTrigger
-//                     className={cn(
-//                       "flex items-center gap-3 rounded-lg p-4 text-sm transition-all duration-300 hover:no-underline",
-//                       location.pathname === `/shop/${item._id}`
-//                         ? "bg-primary/20"
-//                         : "hover:bg-accent",
-//                     )}
-//                   >
-//                     <Link
-//                       key={index}
-//                       to={`/shop/${item._id}`}
-//                       className="flex w-full justify-start hover:underline"
-//                     >
-//                       {item.name}
-//                     </Link>
-//                     <ChevronDown className="text-secondary/50" />
-//                   </AccordionTrigger>
-//                   <AccordionContent className="flex flex-col rounded-md border">
-//                     {products.map((_item, _index) => (
-//                       <Link
-//                         key={_index}
-//                         to={`/shop/${item._id}`}
-//                         className={cn(
-//                           "!justify-start",
-//                           buttonVariants({ variant: "ghost" }),
-//                         )}
-//                       >
-//                         {_item.name}
-//                       </Link>
-//                     ))}
-//                   </AccordionContent>
-//                 </AccordionItem>
-//               ))}
-//             </Accordion>
-
-//           </div>
-//         </nav>
-//       </div>
-//     </aside>
-//   );
-// }
-
-import { cn } from "@/lib/utils";
 import { RootState } from "@/store/store";
-import { ChevronDown } from "lucide-react";
+import { ChevronRight } from "lucide-react";
+import React from "react";
 import { useSelector } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "./ui/accordion";
-import { buttonVariants } from "./ui/button";
+import { Slider } from "./ui/slider";
 
-export default function ShopSide() {
-  const location = useLocation();
+export default function ShopSide({
+  setPriceRange,
+}: {
+  setPriceRange: (range: [number, number]) => void;
+}) {
+  const [priceRange, setLocalPriceRange] = React.useState<[number, number]>([
+    0, 500000,
+  ]);
   const navigate = useNavigate();
 
+  // Function to handle slider value change
+  const handlePriceChange = (value: [number, number]) => {
+    setLocalPriceRange(value);
+    setPriceRange(value); // Update the parent component's state
+  };
   // Redux selectors
-  const category = useSelector((state: RootState) => state.product.category);
+  const category = useSelector(
+    (state: RootState) => state.product?.category || [],
+  );
   const subCategory = useSelector(
-    (state: RootState) => state.product.subcategory,
+    (state: RootState) => state.product?.subcategory || [],
   );
 
   // Map subcategories to their respective categories
@@ -150,26 +41,33 @@ export default function ShopSide() {
   }));
 
   return (
-    <aside className="hidden max-h-screen w-full flex-col gap-2 md:flex">
+    <aside className="hidden max-h-screen w-full flex-col lg:flex">
       <nav className="text-lg font-medium">
-        <div className="flex w-full flex-col px-2.5">
-          <p className="p-4 text-sm text-secondary/50">Categories</p>
+        <div className="flex w-full flex-col">
+          <p className="text-md px-2 text-secondary">Categories</p>
 
-          <Accordion type="single" collapsible>
+          <Accordion type="single" className="my-4" collapsible>
             {/* All Products */}
             <AccordionItem className="!border-none" value="all-products">
-              <AccordionTrigger
-                className={cn(
-                  "flex items-center gap-3 rounded-lg p-4 text-sm text-secondary/80 transition-all duration-700 hover:no-underline",
-                  location.pathname === `/shop`
-                    ? "bg-primary/20"
-                    : "hover:bg-accent",
-                )}
-                onClick={() => navigate("/shop")}
-              >
+              <AccordionTrigger className="flex border-spacing-1 items-center gap-3 border-b p-2 text-sm shadow-none transition-transform duration-300 hover:text-primary hover:no-underline">
                 All Products
-                <ChevronDown className="text-secondary/50" />
+                <ChevronRight className="w-4 shrink-0 text-secondary/50" />
               </AccordionTrigger>
+              <AccordionContent className="flex flex-col">
+                {subCategory.map((subcategory) => (
+                  <button
+                    key={subcategory._id}
+                    onClick={() =>
+                      navigate(
+                        `/shop/${subcategory.categoryId}/${subcategory._id}`,
+                      )
+                    }
+                    className="!justify-start !p-2 text-left hover:text-primary"
+                  >
+                    {subcategory.name}
+                  </button>
+                ))}
+              </AccordionContent>
             </AccordionItem>
 
             {/* Categories with Subcategories */}
@@ -179,27 +77,20 @@ export default function ShopSide() {
                 value={category._id}
                 key={category._id}
               >
-                <AccordionTrigger
-                  className={cn(
-                    "flex items-center gap-3 rounded-lg p-4 text-sm transition-all duration-300 hover:no-underline",
-                    location.pathname === `/shop/${category._id}`
-                      ? "bg-primary/20"
-                      : "hover:bg-accent",
-                  )}
-                  onClick={() => navigate(`/shop/${category._id}`)}
-                >
+                <AccordionTrigger className="flex border-spacing-1 items-center gap-3 border-b border-secondary/15 p-2 text-sm shadow-none transition-transform duration-300 hover:text-primary hover:no-underline">
                   {category.name}
-                  <ChevronDown className="text-secondary/50" />
+                  <ChevronRight className="w-4 shrink-0 text-secondary/50" />
                 </AccordionTrigger>
-                <AccordionContent className="flex flex-col rounded-md border">
+                <AccordionContent className="flex flex-col rounded-md">
                   {category.subcategories.map((subcategory) => (
                     <button
                       key={subcategory._id}
-                      onClick={() => navigate(`/shop/${subcategory._id}`)}
-                      className={cn(
-                        "!justify-start p-2 text-left",
-                        buttonVariants({ variant: "ghost" }),
-                      )}
+                      onClick={() =>
+                        navigate(
+                          `/shop/${subcategory.categoryId}/${subcategory._id}`,
+                        )
+                      }
+                      className="!justify-start !p-2 text-left hover:text-primary"
                     >
                       {subcategory.name}
                     </button>
@@ -208,6 +99,18 @@ export default function ShopSide() {
               </AccordionItem>
             ))}
           </Accordion>
+          <h1 className="mb-4 mt-8 px-2 text-xl"> Price</h1>
+          <Slider
+            value={priceRange}
+            onValueChange={handlePriceChange} // Update on change
+            max={500000}
+            step={100}
+            min={0}
+            className="w-full px-2"
+          />
+          <p className="mt-3 px-2 text-xs">
+            Price: ₹{priceRange[0]} - ₹{priceRange[1]}
+          </p>
         </div>
       </nav>
     </aside>

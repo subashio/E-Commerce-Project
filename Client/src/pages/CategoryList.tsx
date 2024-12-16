@@ -111,7 +111,7 @@ export default function CategoryList() {
     actions(id, "category/edit-category", handleDeleteCategory);
 
   return (
-    <div className="relative w-full">
+    <div className="relative mt-10 w-full">
       <div className="flex flex-wrap items-center justify-between gap-y-4 pb-10 pt-10 md:pb-10 md:pt-0">
         <div className="flex flex-col items-start gap-2">
           <h1 className="text-3xl font-semibold">

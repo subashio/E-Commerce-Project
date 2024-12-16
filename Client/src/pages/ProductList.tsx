@@ -51,21 +51,22 @@ export default function ProductList() {
     [subCategory],
   );
 
-  const selectedProduct = React.useMemo(() => {
-    return product?.find(
+  const selectedProduct =
+    // React.useMemo(() => {
+    product.find(
       (item) =>
         item._id === selectedId &&
         categoryLookup.has(item.categoryId) &&
         subCategoryLookup.has(item.sub_categoryId),
     );
-  }, [product, selectedId, categoryLookup, subCategoryLookup]);
-
+  // }, [product, selectedId, categoryLookup, subCategoryLookup]);
+  console.log("look up:", subCategoryLookup);
   const productsData = product.map((product: any) => ({
     id: product._id,
     image: product.image[0],
     name: product.name,
-    category: categoryLookup.get(product.categoryId), // Look
-    subCategory: subCategoryLookup.get(product.sub_categoryId), // Look
+    category: categoryLookup.get(product.categoryId) || "NA", // Look
+    subCategory: subCategoryLookup.get(product.sub_categoryId) || "NA", // Look
     status: product.status,
     brandName: product.brandName,
     wholesalePrice: product.wholesalePrice,
@@ -99,6 +100,7 @@ export default function ProductList() {
             image: product.image[0],
             name: product.name,
             category: categoryLookup.get(product.categoryId),
+            subCategory: subCategoryLookup.get(product.sub_categoryId),
             status: product.status,
             price: product.price,
             createdAt: new Date(product.createdAt).toISOString().split("T")[0], // Use actual date
@@ -143,7 +145,7 @@ export default function ProductList() {
     actions(id, "products/edit-product", handleDeleteProduct);
 
   return (
-    <div className="relative w-full">
+    <div className="relative mt-10 w-full">
       <div className="flex flex-wrap items-center justify-between gap-y-4 pb-10 pt-10 md:pb-10 md:pt-0">
         <div className="flex flex-col items-start gap-2">
           <h1 className="text-3xl font-semibold">

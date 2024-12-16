@@ -40,14 +40,14 @@ export default function Breadcrumbs({
         {path2 && (
           <BreadcrumbItem>
             <BreadcrumbLink href={path2} className="">
-              <BreadcrumbSeparator>/ {pathName2}</BreadcrumbSeparator>
+              <BreadcrumbSeparator> {pathName2}</BreadcrumbSeparator>
             </BreadcrumbLink>
           </BreadcrumbItem>
         )}
         <>
           <BreadcrumbItem>
             <BreadcrumbLink>
-              <BreadcrumbSeparator>/ {finalPathName}</BreadcrumbSeparator>
+              <BreadcrumbSeparator> {finalPathName}</BreadcrumbSeparator>
             </BreadcrumbLink>
           </BreadcrumbItem>
         </>

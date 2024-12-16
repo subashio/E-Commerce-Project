@@ -41,9 +41,9 @@ export default function ProductPage() {
       <Breadcrumbs
         className="mx-auto mt-6 w-full max-w-screen-2xl px-5 lg:px-10"
         path="/shop"
-        pathName="Shop"
+        pathName="Shop /"
         path2={`/shop/${selectedProduct?.categoryId}`}
-        pathName2={categoryLookup(selectedProduct?.categoryId)}
+        pathName2={`${categoryLookup(selectedProduct?.categoryId)} /`}
         finalPathName={selectedProduct?.name}
       />
       <MaxWidthWrapper className="mx-auto grid w-full grid-cols-1 gap-4 p-4 md:grid-cols-3">

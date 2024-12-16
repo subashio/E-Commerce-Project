@@ -23,8 +23,8 @@ declare global {
     _id: string;
     name: string;
     image: string;
-    category: string | undefined;
-    discount: number | undefined;
+    category: any;
+    discount?: number | undefined;
     price: number;
     salePrice: number;
     className?: string;

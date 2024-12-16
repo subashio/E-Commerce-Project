@@ -4,7 +4,6 @@ import {
   AlignRight,
   House,
   LogOut,
-  MapPin,
   SearchIcon,
   ShoppingBag,
   ShoppingCartIcon,
@@ -156,12 +155,12 @@ export default function Navbar() {
                   <SearchIcon className="h-10 w-10 rounded-full bg-primary/20 p-2 text-primary lg:hidden" />
                 }
               />
-              <Link
+              {/* <Link
                 to="/profile-page/address-details"
                 className="relative flex items-center gap-4 text-primary lg:hidden"
               >
                 <MapPin className="h-10 w-10 rounded-full bg-primary/20 p-2" />
-              </Link>
+              </Link> */}
               <CartSheet
                 button={
                   <button className="relative flex items-center gap-4 text-primary">

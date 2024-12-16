@@ -1,68 +1,108 @@
 import ProductCard from "@/components/ProductCard";
+import { createLookup } from "@/lib/lookUpMap";
 import { RootState } from "@/store/store";
+import React from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
-export default function ShopPage() {
-  const { id } = useParams<{ id: string }>();
+function ShopPage({ PriceRange }: { PriceRange: [number, number] }) {
+  const { categoryId, subCategoryId } = useParams<{
+    categoryId: string;
+    subCategoryId: string;
+  }>();
+
   const product = useSelector(
     (state: RootState) => state.product?.product || [],
   );
   const category = useSelector(
     (state: RootState) => state.product?.category || [],
   );
-
-  if (!product || !category) {
-    return <p>Loading products...</p>; // Display loading message if data is not yet available
-  }
-
-  const categoryLookup = new Map(
-    category.map((category: { _id: string; name: string }) => [
-      category._id,
-      category.name,
-    ]),
+  const subCategory = useSelector(
+    (state: RootState) => state.product?.subcategory || [],
   );
 
-  // Filter products based on the category ID from the URL or show all products if no ID is given
-  const filteredProducts = id
-    ? product.filter((product: any) => product.categoryId === id) // If id is present, filter by category
-    : product; // Otherwise, show all products
-
-  // If no products are found
-  if (filteredProducts.length === 0) {
-    return <p>No products found.</p>;
+  if (!product || !category || !subCategory) {
+    return (
+      <div className="flex items-center justify-center">
+        Loading products...
+      </div>
+    );
   }
-  const products = filteredProducts.map((product: any) => ({
+
+  const categoryLookup = React.useMemo(
+    () => createLookup(category, "_id", "name"),
+    [category],
+  );
+  const subCategoryLookup = React.useMemo(
+    () => createLookup(subCategory, "_id", "name"),
+    [subCategory],
+  );
+
+  const filteredProducts = React.useMemo(() => {
+    let filtered = product;
+
+    if (categoryId) {
+      filtered = filtered.filter((prod: any) => prod.categoryId === categoryId);
+    }
+
+    if (subCategoryId) {
+      filtered = filtered.filter(
+        (prod: any) => prod.sub_categoryId === subCategoryId,
+      );
+    }
+
+    // Filter by price range
+    filtered = filtered.filter(
+      (prod: any) => prod.price >= PriceRange[0] && prod.price <= PriceRange[1],
+    );
+
+    return filtered;
+  }, [categoryId, subCategoryId, product, PriceRange]);
+
+  const activeProducts = filteredProducts.filter(
+    (prod: any) => prod.status === true,
+  );
+
+  if (activeProducts.length === 0) {
+    return (
+      <p>
+        {categoryId
+          ? `No products found in this category.`
+          : "No products found."}
+      </p>
+    );
+  }
+  const products = activeProducts.map((product: any) => ({
     _id: product._id,
     name: product.name,
     discount: product.discount,
     to: "/",
     image: product.image[0] || "default.jpg",
     category: categoryLookup.get(product.categoryId), // Look
+    subCategory:
+      subCategoryLookup.get(product.sub_categoryId) || "Unknown Subcategory",
     price: product.price,
     salePrice: product.salePrice,
+    status: product.status ?? false,
   }));
 
   return (
-    <div className="mx-6">
-      {products.length === 0 ? (
-        <p>No products found in this category.</p>
-      ) : (
-        <div className="mb-20 grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4">
-          {products.map((product: ProductCartProps, index: number) => (
-            <ProductCard
-              _id={product._id}
-              discount={product.discount}
-              name={product.name}
-              salePrice={product.salePrice}
-              price={product.price}
-              image={product.image}
-              key={index}
-              category={product.category}
-            />
-          ))}
-        </div>
-      )}
+    <div>
+      <div className="mb-20 grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4">
+        {products.map((product, index) => (
+          <ProductCard
+            _id={product._id}
+            name={product.name}
+            salePrice={product.salePrice}
+            price={product.price}
+            image={product.image}
+            key={index}
+            category={product.category}
+          />
+        ))}
+      </div>
     </div>
   );
 }
+
+export default ShopPage;

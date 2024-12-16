@@ -29,7 +29,7 @@ export default function MobileNav({ button }: { button: ReactNode }) {
 
   return (
     <Sheet open={isSheetOpen} onOpenChange={(isOpen) => setIsSheetOpen(isOpen)}>
-      <SheetTrigger className="block md:hidden">{button}</SheetTrigger>
+      <SheetTrigger className="block lg:hidden">{button}</SheetTrigger>
       <SheetContent side="left" className="p-2 pt-0">
         <Link to="/">
           <img

@@ -39,6 +39,7 @@ export default function ProductCarousel({ title }: { title: string }) {
     category: categoryLookup.get(product.categoryId), // Look
     price: product.price,
     salePrice: product.salePrice,
+    status: product.status ?? false,
   }));
   // Handle navigation for the arrows
   const handleRightClick = () => {
@@ -91,19 +92,21 @@ export default function ProductCarousel({ title }: { title: string }) {
         onMouseLeave={plugin.current.reset}
       >
         <CarouselContent className="ml-1 flex snap-x snap-mandatory items-center py-10">
-          {products?.map((item, index) => (
-            <ProductCard
-              discount={item.discount}
-              _id={item._id}
-              key={index}
-              category={item.category}
-              name={item.name}
-              image={item.image}
-              price={item.price}
-              salePrice={item.salePrice}
-              className="flex-shrink-0 basis-1/2 md:basis-1/3 lg:basis-1/5"
-            />
-          ))}
+          {products
+            ?.filter((item) => item.status === true)
+            .map((item, index) => (
+              <ProductCard
+                discount={item.discount}
+                _id={item._id}
+                key={index}
+                category={item.category}
+                name={item.name}
+                image={item.image}
+                price={item.price}
+                salePrice={item.salePrice}
+                className="flex-shrink-0 basis-1/2 md:basis-1/3 lg:basis-1/5"
+              />
+            ))}
         </CarouselContent>
       </Carousel>
     </MaxWidthWrapper>

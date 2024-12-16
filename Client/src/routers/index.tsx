@@ -52,9 +52,12 @@ const router = createBrowserRouter(
           path: "/shop",
           element: <Shop />,
           children: [
-            { path: ":id", element: <ShopPage /> },
-
-            { path: "", element: <ShopPage /> },
+            { path: "", element: <ShopPage PriceRange={[0, 0]} /> },
+            { path: ":categoryId", element: <ShopPage PriceRange={[0, 0]} /> },
+            {
+              path: ":categoryId/:subCategoryId",
+              element: <ShopPage PriceRange={[0, 0]} />,
+            },
           ],
         },
       ],

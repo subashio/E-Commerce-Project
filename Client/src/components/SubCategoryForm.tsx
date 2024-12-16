@@ -44,8 +44,8 @@ export default function SubCategoryForm({
     resolver: zodResolver(subCategorySchema),
     defaultValues: initialData
       ? {
-          name: initialData?.name,
-          category: initialData?.category,
+          name: initialData.name,
+          category: initialData.category,
           role: initialData.role,
         }
       : {
@@ -59,12 +59,12 @@ export default function SubCategoryForm({
   const categoryTypes = React.useMemo(
     () =>
       Array.isArray(category)
-        ? category.map((category: any) => ({
-            value: category._id || "N/A",
-            label: category.name || "N/A",
+        ? category.map(({ _id, name }: { _id: string; name: string }) => ({
+            value: _id || "N/A",
+            label: name || "N/A",
           }))
         : [],
-    [category],
+    [category], // Dependency array ensures it's recomputed only when category changes
   );
 
   async function handleSubmit(data: z.infer<typeof subCategorySchema>) {
@@ -106,7 +106,10 @@ export default function SubCategoryForm({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Product Category</FormLabel>
-                    <Select onValueChange={field.onChange}>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Product Category" />
