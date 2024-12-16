@@ -7,9 +7,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 
 export default function Footer() {
-  const category = useSelector(
-    (state: RootState) => state.product?.category || [],
-  );
+  const category = useSelector((state: RootState) => state.product.category);
 
   return (
     <footer className="border-t">

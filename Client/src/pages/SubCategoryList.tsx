@@ -30,9 +30,11 @@ export default function SubCategoryList() {
   const { toast } = useToast();
   const [search, setSearch] = React.useState("");
   const [selectedCategory, setSelectedCategory] = React.useState("");
-  const category = useSelector((state: RootState) => state.product?.category);
+  const category = useSelector(
+    (state: RootState) => state.product?.category || [],
+  );
   const Subcategory = useSelector(
-    (state: RootState) => state.product?.subcategory,
+    (state: RootState) => state.product?.subcategory || [],
   );
   let isAddCategory =
     location.pathname == "/dashboard-page/sub-category/add-sub-category";

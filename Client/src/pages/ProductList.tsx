@@ -52,7 +52,7 @@ export default function ProductList() {
   );
 
   const selectedProduct = React.useMemo(() => {
-    return product.find(
+    return product?.find(
       (item) =>
         item._id === selectedId &&
         categoryLookup.has(item.categoryId) &&
