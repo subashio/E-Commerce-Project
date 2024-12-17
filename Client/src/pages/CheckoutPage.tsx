@@ -1,139 +1,3 @@
-// import AddAddress from "@/components/AddAddress";
-// import AddressCard from "@/components/AddressCard";
-// import Breadcrumbs from "@/components/Breadcrumbs";
-// import MaxWidthWrapper from "@/components/MaxWidthWrapper";
-// import {
-//   Accordion,
-//   AccordionContent,
-//   AccordionItem,
-//   AccordionTrigger,
-// } from "@/components/ui/accordion";
-// import { RootState } from "@/store/store";
-// import { MapPin } from "lucide-react";
-// import { useSelector } from "react-redux";
-// import { Link } from "react-router-dom";
-// import {
-//   Card,
-//   CardContent,
-//   CardFooter,
-//   CardHeader,
-//   CardTitle,
-// } from "@/components/ui/card";
-// import GenericTable from "@/components/GenericTable";
-// import { Separator } from "@/components/ui/separator";
-// const invoices = [
-//   {
-//     image: "/banner-1.jpg",
-//     qty: "1",
-//     price: "$250.00",
-//     product: "Milk",
-//   },
-//   {
-//     image: "/banner-1.jpg",
-//     qty: "1",
-//     price: "$150.00",
-//     product: "PayPal",
-//   },
-//   {
-//     image: "/banner-1.jpg",
-//     qty: "1",
-//     price: "$350.00",
-//     product: "Bank Transfer",
-//   },
-//   {
-//     image: "/banner-1.jpg",
-//     qty: "1",
-//     price: "$450.00",
-//     product: "Credit Card",
-//   },
-// ];
-
-// const columns = [
-//   {
-//     key: "image",
-//     render: (value: string | undefined) => (
-//       <img
-//         src={value}
-//         alt="product"
-//         className="h-10 w-10 rounded-md object-cover"
-//       />
-//     ),
-//   },
-//   { key: "product" },
-
-//   { key: "qty" },
-//   { key: "price" },
-// ];
-
-// export default function CheckoutPage() {
-//   const user = useSelector((state: RootState) => state.user);
-//   const isLoggedIn = user?._id;
-
-//   return (
-//     <section>
-//       <MaxWidthWrapper className="my-8 flex flex-col gap-4">
-//         <Breadcrumbs path="/shop" pathName="shop" finalPathName="Checkout" />
-//         <div className="mt-4 flex flex-col gap-2">
-//           <h1 className="text-4xl font-bold">Checkout</h1>
-//           <p className="text-sm text-secondary/80">
-//             {isLoggedIn && "Already have an account? Click here to"}{" "}
-//             <span className="text-primary/70">
-//               <Link to="/login">Sign in</Link>
-//             </span>
-//             .
-//           </p>
-//         </div>
-//         <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
-//           <Accordion type="single" collapsible defaultValue="item-1">
-//             <AccordionItem value="item-1">
-//               <AccordionTrigger className="flex items-center justify-between hover:text-primary/70 hover:no-underline">
-//                 <h2 className="flex justify-between gap-2">
-//                   <MapPin /> Add delivery address
-//                 </h2>
-//                 <AddAddress />
-//               </AccordionTrigger>
-//               <AccordionContent>
-//                 <AddressCard />
-//               </AccordionContent>
-//             </AccordionItem>
-//           </Accordion>
-//           <div>
-//             <Card className="">
-//               <CardHeader>
-//                 <CardTitle className="text-secondary/70">
-//                   Order Details
-//                 </CardTitle>
-//               </CardHeader>
-//               <CardContent className="px-2">
-//                 <GenericTable columns={columns} data={invoices} />
-//               </CardContent>
-//               <Separator />
-//               <CardFooter className="mt-4 flex flex-col justify-between gap-2">
-//                 <p className="flex w-full items-center justify-between text-sm font-semibold text-secondary/80">
-//                   Item Subtotal
-//                   <span className="font-bold">$2000</span>
-//                 </p>
-//                 <p className="flex w-full items-center justify-between text-sm font-semibold text-secondary/80">
-//                   Shipping Fee
-//                   <span className="font-bold">$0.00</span>
-//                 </p>
-//                 <p className="flex w-full items-center justify-between text-sm font-semibold text-secondary/80">
-//                   Tax Vat 18%
-//                   <span className="font-bold">$16.84</span>
-//                 </p>
-//               </CardFooter>
-//               <Separator />
-//               <div className="flex justify-between p-5 font-bold">
-//                 Grand Total <span>$2334</span>
-//               </div>
-//             </Card>
-//           </div>
-//         </div>
-//       </MaxWidthWrapper>
-//     </section>
-//   );
-// }
-
 import AddAddress from "@/components/AddAddress";
 import AddressCard from "@/components/AddressCard";
 import Breadcrumbs from "@/components/Breadcrumbs";
@@ -156,9 +20,10 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { SummaryApi } from "@/constants/SummaryApi";
 import { useGlobleContext } from "@/context/GlobleContextProvider";
+import { useToast } from "@/hooks/use-toast";
 import Axios from "@/lib/Axios";
 import { RootState } from "@/store/store";
-import { CreditCard, MapPin } from "lucide-react";
+import { ChevronRight, CreditCard, MapPin } from "lucide-react";
 import React from "react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
@@ -177,7 +42,6 @@ const paymentMethodList = [
   },
 ];
 
-// const CheckoutPage: React.FC = (): JSX.Element | null => {
 export default function CheckoutPage() {
   const navigate = useNavigate();
   const [paymentMethod, setPaymentMethod] = React.useState("cash");
@@ -187,6 +51,7 @@ export default function CheckoutPage() {
   const isLoggedIn = user?._id;
   const address = useSelector((state: RootState) => state.address.addressList);
 
+  const { toast } = useToast();
   // Prepare table data
   const cartColumns = [
     {
@@ -204,7 +69,7 @@ export default function CheckoutPage() {
     {
       key: "price",
       render: (value: number, row: { qty: number }) =>
-        `$${(value * row.qty).toFixed(2)}`, // Calculate total price per item
+        `₹${(value * row.qty).toFixed(2)}`, // Calculate total price per item
     },
   ];
 
@@ -217,6 +82,7 @@ export default function CheckoutPage() {
       price: product?.price || 0,
     };
   });
+
   const calculateSubtotal = () =>
     cartData.reduce((acc, item) => acc + item.price * item.qty, 0).toFixed(2);
 
@@ -228,52 +94,50 @@ export default function CheckoutPage() {
 
   // Find the address with status true
   const selectedAddress = address.find((address) => address.status === true);
-  // If no address with status true, handle the error
-  // if (typeof selectedAddress !== "object") {
-  //   return console.error("selectedAddress is invalid or does not have _id.");
-  // }
 
   const addressId = selectedAddress?._id;
 
-  const handleCashOnDelivery = async () => {
-    try {
-      const response = await Axios({
-        ...SummaryApi.order_CashOnDelivery,
-        data: {
-          list_items: cart,
-          addressId: addressId,
-          subTotalAmt: subtotal,
-          totalAmt: grandTotal,
-        },
-      });
-
-      const { data: responseData } = response;
-
-      if (responseData.success) {
-        fetchCartItem();
-        navigate("/success");
-        fetchOrder();
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
   const handlePaymentMethodChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setPaymentMethod(event.target.id);
   };
   const handlePlaceOrder = async () => {
-    if (paymentMethod === "stripe") {
-      // Handle Stripe Payment Logic
-      console.log("Redirecting to Stripe payment...");
-      // Add your Stripe payment logic here
-    } else if (paymentMethod === "cash") {
-      // Handle Cash on Delivery Logic
-      await handleCashOnDelivery();
+    // Validate both inputs
+    if (!paymentMethod || !addressId) {
+      toast({
+        variant: "destructive",
+        title: "Please select payment method or Delivery Address",
+      });
+
+      return;
+    }
+
+    // Handle Cash on Delivery
+    if (paymentMethod === "cash") {
+      try {
+        const response = await Axios({
+          ...SummaryApi.order_CashOnDelivery,
+          data: {
+            list_items: cart,
+            addressId: addressId,
+            subTotalAmt: subtotal,
+            totalAmt: grandTotal,
+          },
+        });
+
+        if (response.data.success) {
+          fetchCartItem();
+          fetchOrder();
+          navigate("/success");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    } else if (paymentMethod === "stripe") {
+      alert("online payment comming soon");
     }
   };
-
   return (
     <section>
       <MaxWidthWrapper className="my-8 flex flex-col gap-4">
@@ -293,11 +157,30 @@ export default function CheckoutPage() {
             <AccordionItem value="item-1">
               <AccordionTrigger className="flex items-center justify-between hover:text-primary/70 hover:no-underline">
                 <h2 className="flex justify-between gap-2">
-                  <MapPin /> Add delivery address
+                  <MapPin /> Add Delivery address
                 </h2>
-                <AddAddress />
+                <ChevronRight className="w-4 shrink-0 text-secondary/50" />
               </AccordionTrigger>
-              <AccordionContent>
+              <AccordionContent className="flex flex-col justify-end">
+                <div className="ml-auto">
+                  <AddAddress />
+                </div>
+                {address.map(
+                  (item) =>
+                    item.status === true && (
+                      <div
+                        className={`flex items-center gap-2 ${item.status ? "text-green-600" : ""}`}
+                      >
+                        <svg width={24} height={24} viewBox="0 0 24 24">
+                          <path
+                            fill="currentColor"
+                            d="m10.6 13.8l-2.175-2.175q-.275-.275-.675-.275t-.7.3q-.275.275-.275.7q0 .425.275.7L9.9 15.9q.275.275.7.275q.425 0 .7-.275l5.675-5.675q.275-.275.275-.675t-.3-.7q-.275-.275-.7-.275q-.425 0-.7.275ZM12 22q-2.075 0-3.9-.788q-1.825-.787-3.175-2.137q-1.35-1.35-2.137-3.175Q2 14.075 2 12t.788-3.9q.787-1.825 2.137-3.175q1.35-1.35 3.175-2.138Q9.925 2 12 2t3.9.787q1.825.788 3.175 2.138q1.35 1.35 2.137 3.175Q22 9.925 22 12t-.788 3.9q-.787 1.825-2.137 3.175q-1.35 1.35-3.175 2.137Q14.075 22 12 22Z"
+                          />
+                        </svg>
+                        <label htmlFor="address-check">Address Confirm </label>
+                      </div>
+                    ),
+                )}
                 <AddressCard />
               </AccordionContent>
             </AccordionItem>
@@ -306,6 +189,7 @@ export default function CheckoutPage() {
                 <h2 className="flex justify-between gap-2">
                   <CreditCard /> Payment Method
                 </h2>
+                <ChevronRight className="w-4 shrink-0 text-secondary/50" />
               </AccordionTrigger>
               <AccordionContent>
                 {paymentMethodList.map((item, index) => (
@@ -347,29 +231,31 @@ export default function CheckoutPage() {
               <CardFooter className="mt-4 flex flex-col justify-between gap-2">
                 <p className="flex w-full items-center justify-between text-sm font-semibold text-secondary/80 dark:text-secondary-foreground/80">
                   Item Subtotal
-                  <span className="font-bold">${subtotal}</span>
+                  <span className="font-bold">₹{subtotal}</span>
                 </p>
                 <p className="flex w-full items-center justify-between text-sm font-semibold text-secondary/80 dark:text-secondary-foreground/80">
                   Shipping Fee
-                  <span className="font-bold">${shippingFee.toFixed(2)}</span>
+                  <span className="font-bold">₹{shippingFee.toFixed(2)}</span>
                 </p>
                 <p className="flex w-full items-center justify-between text-sm font-semibold text-secondary/80 dark:text-secondary-foreground/80">
                   Tax VAT 18%
-                  <span className="font-bold">${tax}</span>
+                  <span className="font-bold">₹{tax}</span>
                 </p>
               </CardFooter>
               <Separator />
               <div className="flex justify-between p-5 font-bold">
-                Grand Total <span>${grandTotal}</span>
+                Grand Total <span>₹{grandTotal}</span>
               </div>
             </Card>
 
             <Button
               onClick={handlePlaceOrder}
-              disabled={paymentMethod === ""}
+              // disabled={paymentMethod === "stripe"}
               className="mt-8 w-full"
             >
-              {paymentMethod === "stripe" ? "Online Payment" : "Place Order"}
+              {paymentMethod === "stripe"
+                ? "Online Payment"
+                : "Cash On Delivery"}
             </Button>
           </div>
         </div>
@@ -377,5 +263,3 @@ export default function CheckoutPage() {
     </section>
   );
 }
-
-// export default CheckoutPage;

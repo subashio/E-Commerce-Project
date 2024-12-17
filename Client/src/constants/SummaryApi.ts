@@ -96,6 +96,10 @@ export const SummaryApi = {
     url: "/api/sub-category/create",
     method: "post",
   },
+  get_SubCategory: {
+    url: "/api/sub-category/get",
+    method: "get",
+  },
   filter_SubCategory: {
     url: "/api/sub-category/filter",
     method: "get",
@@ -154,6 +158,14 @@ export const SummaryApi = {
   },
   get_orderDetails: {
     url: "api/order/order-list",
+    method: "get",
+  },
+  create_viewed_products: {
+    url: "/api/viewed-products/create",
+    method: "post",
+  },
+  get_viewed_products: {
+    url: "/api/viewed-products/get",
     method: "get",
   },
 };

@@ -39,6 +39,7 @@ interface productSlice {
   subcategory: Array<SubCategoryProps>;
   product: Array<Products>;
   cartList: Array<Cart>;
+  viewedProduct: Array<Products>;
 }
 
 const initialState: productSlice = {
@@ -46,6 +47,7 @@ const initialState: productSlice = {
   subcategory: [],
   product: [],
   cartList: [],
+  viewedProduct: [],
 };
 
 export const productSlice = createSlice({
@@ -64,10 +66,24 @@ export const productSlice = createSlice({
     setCart: (state, action) => {
       state.cartList = [...action.payload];
     },
+    setViewedProduct: (state, action) => {
+      state.viewedProduct = action.payload;
+    },
+    resetState: (state) => {
+      state.cartList = [];
+      state.viewedProduct = [];
+      state.viewedProduct = [];
+    },
   },
 });
 
-export const { setCategory, setSubCategory, setProduct, setCart } =
-  productSlice.actions;
+export const {
+  setCategory,
+  setSubCategory,
+  setProduct,
+  setCart,
+  setViewedProduct,
+  resetState,
+} = productSlice.actions;
 
 export default productSlice.reducer;

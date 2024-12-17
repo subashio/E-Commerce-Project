@@ -111,6 +111,13 @@ export default function ShopSide({
           <p className="mt-3 px-2 text-xs">
             Price: ₹{priceRange[0]} - ₹{priceRange[1]}
           </p>
+          <div className="mt-8 py-4">
+            <img
+              className="h-[45vh] w-full rounded-lg object-center"
+              src="/ban.png"
+              alt="banner"
+            />
+          </div>
         </div>
       </nav>
     </aside>

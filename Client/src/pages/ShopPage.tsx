@@ -28,7 +28,14 @@ function ShopPage({ PriceRange }: { PriceRange: [number, number] }) {
       </div>
     );
   }
-
+  // Helper function to calculate discount percentage
+  const calculateDiscountPercentage = (
+    listPrice: number,
+    salePrice: number,
+  ): number => {
+    if (!listPrice || !salePrice || listPrice <= salePrice) return 0;
+    return Math.round(((listPrice - salePrice) / listPrice) * 100);
+  };
   const categoryLookup = React.useMemo(
     () => createLookup(category, "_id", "name"),
     [category],
@@ -65,26 +72,32 @@ function ShopPage({ PriceRange }: { PriceRange: [number, number] }) {
 
   if (activeProducts.length === 0) {
     return (
-      <p>
+      <p className="flex h-full w-full items-center justify-center">
         {categoryId
           ? `No products found in this category.`
           : "No products found."}
       </p>
     );
   }
-  const products = activeProducts.map((product: any) => ({
-    _id: product._id,
-    name: product.name,
-    discount: product.discount,
-    to: "/",
-    image: product.image[0] || "default.jpg",
-    category: categoryLookup.get(product.categoryId), // Look
-    subCategory:
-      subCategoryLookup.get(product.sub_categoryId) || "Unknown Subcategory",
-    price: product.price,
-    salePrice: product.salePrice,
-    status: product.status ?? false,
-  }));
+  const products = activeProducts.map((product: any) => {
+    const discount = calculateDiscountPercentage(
+      product.salePrice,
+      product.price,
+    );
+    return {
+      _id: product._id,
+      name: product.name,
+      discount: discount > 0 ? `${discount}%` : null,
+      to: "/",
+      image: product.image[0] || "default.jpg",
+      category: categoryLookup.get(product.categoryId), // Look
+      subCategory:
+        subCategoryLookup.get(product.sub_categoryId) || "Unknown Subcategory",
+      price: product.price,
+      salePrice: product.salePrice,
+      status: product.status ?? false,
+    };
+  });
 
   return (
     <div>
@@ -92,6 +105,7 @@ function ShopPage({ PriceRange }: { PriceRange: [number, number] }) {
         {products.map((product, index) => (
           <ProductCard
             _id={product._id}
+            discount={product.discount}
             name={product.name}
             salePrice={product.salePrice}
             price={product.price}

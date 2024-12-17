@@ -11,17 +11,27 @@ export default function OrderDetailsPage() {
   const [search, setSearch] = React.useState("");
   const orders = useSelector((state: RootState) => state.order.order);
 
-  const orderData = orders.map((item) => {
-    const product = item.product_details;
-    return {
-      image: product?.image[0] || "/placeholder.png", // Default image if not available
-      name: product?.name || "Unknown Product",
-      qty: product.quantity,
-      orderId: item.orderId,
-      status: product.status,
-      price: product?.price || 0,
-    };
-  });
+  const orderData = orders
+    .filter((item) => item.product_details?.status !== false) // Exclude orders with status false
+    .map((item) => {
+      const product = item.product_details;
+      return {
+        image: product?.image[0] || "/placeholder.png",
+        name: product?.name || "Unknown Product",
+        qty: product.quantity,
+        orderId: item.orderId,
+        status: product.status,
+        price: product?.price || 0,
+      };
+    })
+    .filter((order) => {
+      // Apply search filter here
+      return (
+        order.name.toLowerCase().includes(search.toLowerCase()) || // Search by product name
+        order.orderId.toLowerCase().includes(search.toLowerCase()) // Search by order ID
+      );
+    });
+
   return (
     <div className="px-4 pb-10 pt-10 md:pb-10 md:pt-0">
       <h1 className="text-3xl font-semibold">My Orders</h1>

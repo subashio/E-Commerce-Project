@@ -18,7 +18,7 @@ const list = [
     image: "/slide-f-2.PNG",
     tag: "Advanced Tech for Everyday Life",
     className:
-      "  flex flex-col items-start  justify-center gap-y-4 rounded-sm p-5 md:m-0 h-full w-full md:gap-y-6 md:bg-secondary/0  text-secondary",
+      "  flex flex-col items-start  justify-center gap-y-4    w-full sm:gap-y-6 md:bg-secondary/0  text-secondary",
     title: "Experience Superior Sound and Style",
     description: "Premium comfort. Powerful audio.",
   },
@@ -28,7 +28,7 @@ const list = [
     tag: "Stay Connected, Stay Ahead",
     title: "Latest Smartphones at Your Fingertips",
     className:
-      "  flex flex-col items-start justify-center gap-y-4 rounded-sm  p-5 md:m-0 h-full w-full  md:gap-y-6 md:bg-secondary/0  text-secondary",
+      "  flex flex-col items-start justify-center gap-y-4    w-full  sm:gap-y-6 md:bg-secondary/0  text-secondary",
     description:
       "Explore top-brand mobile phones with unbeatable features and prices. Find your perfect match today.",
   },
@@ -64,36 +64,37 @@ export default function HeroSection() {
       <Carousel
         setApi={setApi}
         plugins={[plugin.current]}
-        className="relative max-w-full"
+        className="relative"
         onMouseEnter={plugin.current.stop}
         onMouseLeave={plugin.current.reset}
       >
-        <CarouselContent className="">
+        <CarouselContent className="my-2 ml-1 flex h-[30vh] gap-2 !rounded-xl sm:h-[60vh]">
           {list.map((_item, index) => (
-            <CarouselItem key={index}>
-              <div
-                className="relative flex h-[30vh] flex-col place-items-center rounded-lg bg-cover bg-left bg-no-repeat pb-20 sm:h-[60vh]"
-                style={{ backgroundImage: `url(${_item.image})` }}
-              >
-                <div className={cn("my-10 max-w-screen-xl", _item.className)}>
-                  <Badge className="mr-auto bg-amber-600 px-2 pb-1.5 hover:bg-amber-600">
-                    {_item.tag}
-                  </Badge>
-                  <h1 className="font-semibold sm:max-w-xl sm:text-5xl">
-                    {_item.title}
-                  </h1>
-                  <p className="max-w-sm text-sm text-[#153d11] sm:text-sm md:text-sm">
-                    {_item.description}
-                  </p>
-                  <Link
-                    className="group inline-flex h-10 cursor-pointer items-center justify-center gap-2 rounded-lg border-2 border-transparent bg-secondary px-4 text-center text-sm font-medium text-primary-foreground transition-all duration-500 hover:border-secondary hover:bg-white hover:text-black"
-                    to={_item.to}
-                  >
-                    Show Now
-                    <MoveRight className="w-4 transition-transform duration-300 group-hover:translate-x-2" />
-                  </Link>
-                </div>
-              </div>
+            <CarouselItem
+              className="relative flex items-center justify-center rounded-lg bg-cover bg-left bg-no-repeat"
+              style={{ backgroundImage: `url(${_item.image})` }}
+              key={index}
+            >
+              {/* <div> */}
+              <MaxWidthWrapper className={cn("sm:px-10", _item.className)}>
+                <Badge className="bg-amber-600 px-2 pb-1.5 hover:bg-amber-600">
+                  {_item.tag}
+                </Badge>
+                <h1 className="font-semibold sm:max-w-xl sm:text-5xl">
+                  {_item.title}
+                </h1>
+                <p className="max-w-sm text-sm text-[#153d11] sm:text-sm md:text-sm">
+                  {_item.description}
+                </p>
+                <Link
+                  className="group inline-flex h-10 cursor-pointer items-center justify-center gap-2 rounded-lg border-2 border-transparent bg-secondary px-4 text-center text-sm font-medium text-primary-foreground transition-all duration-500 hover:border-secondary hover:bg-white hover:text-black"
+                  to={_item.to}
+                >
+                  Show Now
+                  <MoveRight className="w-4 transition-transform duration-300 group-hover:translate-x-2" />
+                </Link>
+              </MaxWidthWrapper>
+              {/* </div> */}
             </CarouselItem>
           ))}
         </CarouselContent>

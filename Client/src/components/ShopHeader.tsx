@@ -11,11 +11,24 @@ import {
   AccordionTrigger,
 } from "./ui/accordion";
 import { Button } from "./ui/button";
+import { Slider } from "./ui/slider";
 
-export default function ShopHeader() {
+export default function ShopHeader({
+  setPriceRange,
+}: {
+  setPriceRange: (range: [number, number]) => void;
+}) {
   const [isSheetOpen, isSetSheetOpen] = React.useState<boolean>(false);
   const navigate = useNavigate();
 
+  const [priceRange, setLocalPriceRange] = React.useState<[number, number]>([
+    0, 500000,
+  ]);
+
+  const handlePriceChange = (value: [number, number]) => {
+    setLocalPriceRange(value);
+    setPriceRange(value); // Update the parent component's state
+  };
   // Redux selectors
   const category = useSelector(
     (state: RootState) => state.product?.category || [],
@@ -104,6 +117,18 @@ export default function ShopHeader() {
                     </AccordionItem>
                   ))}
                 </Accordion>
+                <h1 className="mb-4 mt-8 px-2 text-xl"> Price</h1>
+                <Slider
+                  value={priceRange}
+                  onValueChange={handlePriceChange} // Update on change
+                  max={500000}
+                  step={100}
+                  min={0}
+                  className="w-full px-2"
+                />
+                <p className="mt-3 px-2 text-xs">
+                  Price: ₹{priceRange[0]} - ₹{priceRange[1]}
+                </p>
               </div>
             </nav>
           </SheetContent>

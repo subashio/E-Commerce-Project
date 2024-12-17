@@ -37,29 +37,32 @@ export default function Navbar() {
 
   React.useEffect(() => {
     let lastScrollY = window.scrollY;
-    let ticking = false;
 
     const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          if (window.scrollY > lastScrollY + 10) {
-            setHideOnScroll(true); // User is scrolling down
-          } else if (window.scrollY < lastScrollY - 10) {
-            setHideOnScroll(false); // User is scrolling up
-          }
-          lastScrollY = window.scrollY;
-          ticking = false;
-        });
-        ticking = true;
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY > lastScrollY + 20) {
+        // Scrolling down
+        setHideOnScroll(true);
+      } else if (currentScrollY < lastScrollY - 20) {
+        // Scrolling up
+        setHideOnScroll(false);
       }
+
+      // Update the lastScrollY
+      lastScrollY = currentScrollY;
     };
 
-    window.addEventListener("scroll", handleScroll);
+    const throttledHandleScroll = () => {
+      window.requestAnimationFrame(handleScroll);
+    };
+
+    window.addEventListener("scroll", throttledHandleScroll);
+
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("scroll", throttledHandleScroll);
     };
   }, []);
-
   return (
     <header
       className={`sticky top-0 z-50 border-b bg-background shadow-lg transition-all duration-200 ${

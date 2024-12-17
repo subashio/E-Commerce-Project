@@ -6,14 +6,20 @@ import {
 import { createLookup } from "@/lib/lookUpMap";
 import { RootState } from "@/store/store";
 import Autoplay from "embla-carousel-autoplay";
-import { ArrowLeft, ArrowRight, ArrowRightCircleIcon } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import React from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import MaxWidthWrapper from "./MaxWidthWrapper";
 import ProductCard from "./ProductCard";
 
-export default function ProductCarousel({ title }: { title: string }) {
+export default function ProductCarousel({
+  title,
+  viewProduct,
+}: {
+  title: string;
+  viewProduct?: any[];
+}) {
   const [api, setApi] = React.useState<CarouselApi>();
   const product = useSelector(
     (state: RootState) => state.product?.product || [],
@@ -30,17 +36,57 @@ export default function ProductCarousel({ title }: { title: string }) {
     [category],
   );
 
-  const products = product.map((product: any) => ({
-    _id: product._id,
-    name: product.name,
-    discount: product.discount,
-    to: "/",
-    image: product.image[0] || "default.jpg",
-    category: categoryLookup.get(product.categoryId), // Look
-    price: product.price,
-    salePrice: product.salePrice,
-    status: product.status ?? false,
-  }));
+  // Helper function to calculate discount percentage
+  const calculateDiscountPercentage = (
+    listPrice: number,
+    salePrice: number,
+  ): number => {
+    if (!listPrice || !salePrice || listPrice <= salePrice) return 0;
+    return Math.round(((listPrice - salePrice) / listPrice) * 100);
+  };
+
+  const products = React.useMemo(() => {
+    if (viewProduct)
+      return viewProduct.map((product: any) => {
+        const discount = calculateDiscountPercentage(
+          product.salePrice,
+          product.price,
+        );
+        return {
+          _id: product._id,
+          name: product.name,
+          discount: discount > 0 ? `${discount}%` : null,
+          to: "/",
+          image:
+            product.image && product.image[0]
+              ? product.image[0]
+              : "default.jpg",
+          category: categoryLookup.get(product.categoryId),
+          price: product.price,
+          salePrice: product.salePrice,
+          status: product.status ?? false,
+        };
+      }); // Use external data if provided
+
+    // Default: Map products from Redux
+    return product.map((product: any) => {
+      const discount = calculateDiscountPercentage(
+        product.salePrice,
+        product.price,
+      );
+      return {
+        _id: product._id,
+        name: product.name,
+        discount: discount > 0 ? `${discount}%` : null,
+        to: "/",
+        image: product.image[0] || "default.jpg",
+        category: categoryLookup.get(product.categoryId),
+        price: product.price,
+        salePrice: product.salePrice,
+        status: product.status ?? false,
+      };
+    });
+  }, [product, categoryLookup, viewProduct]);
   // Handle navigation for the arrows
   const handleRightClick = () => {
     if (api?.canScrollNext()) {
@@ -67,19 +113,20 @@ export default function ProductCarousel({ title }: { title: string }) {
       <div className="flex w-full items-center justify-between">
         <Link
           to="/shop"
-          className="group flex items-center gap-3 rounded-full px-2 text-3xl font-bold"
+          className="group flex items-center gap-3 rounded-full px-2 py-2 text-xl font-bold hover:underline-offset-2 md:text-3xl"
         >
           {title}
-          <ArrowRightCircleIcon className="mt-2 -translate-x-5 opacity-0 transition-all duration-500 group-hover:translate-x-0 group-hover:opacity-100" />
+          {/* <ArrowRightCircleIcon className="-translate-x-5 opacity-0 transition-all duration-500 group-hover:translate-x-0 group-hover:opacity-100" /> */}
         </Link>
-        <div className="flex gap-4">
-          <ArrowLeft
+        <div className="flex gap-2">
+          <ChevronLeft
             onClick={handleLeftClick}
-            className="h-10 w-10 cursor-pointer rounded-full bg-primary/20 p-2"
+            className="h-8 w-8 cursor-pointer rounded-full bg-accent p-1.5 transition-all duration-500 hover:bg-primary/60"
           />
-          <ArrowRight
+          <ChevronRight
             onClick={handleRightClick}
-            className="h-10 w-10 cursor-pointer rounded-full bg-primary/20 p-2"
+            className="h-8 w-8 cursor-pointer rounded-full bg-accent p-1.5 transition-all duration-500 hover:bg-primary/60"
+            // className="h-10 w-10 cursor-pointer rounded-full bg-primary/20 p-2"
           />
         </div>
       </div>
@@ -91,7 +138,7 @@ export default function ProductCarousel({ title }: { title: string }) {
         onMouseEnter={plugin.current.stop}
         onMouseLeave={plugin.current.reset}
       >
-        <CarouselContent className="ml-1 flex snap-x snap-mandatory items-center py-10">
+        <CarouselContent className="ml-1 flex snap-x snap-mandatory items-center gap-4 py-10">
           {products
             ?.filter((item) => item.status === true)
             .map((item, index) => (
@@ -104,7 +151,7 @@ export default function ProductCarousel({ title }: { title: string }) {
                 image={item.image}
                 price={item.price}
                 salePrice={item.salePrice}
-                className="flex-shrink-0 basis-1/2 md:basis-1/3 lg:basis-1/5"
+                className="flex-shrink-0 basis-1/2 md:basis-1/3 lg:basis-[24%]"
               />
             ))}
         </CarouselContent>

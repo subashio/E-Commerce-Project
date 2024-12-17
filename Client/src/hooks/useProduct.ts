@@ -8,10 +8,12 @@ import Axios from "@/lib/Axios";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { useToast } from "./use-toast";
+import { useGlobleContext } from "@/context/GlobleContextProvider";
 
 export function useProduct() {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { fetchAllViewedProduct } = useGlobleContext();
 
   // add and update  product
   const handleProduct = async (
@@ -140,5 +142,24 @@ export function useProduct() {
     }
   };
 
-  return { handleProduct, handleCategory, handleSubCategory };
+  const createViewiedProducts = async (id: any) => {
+    const response = await Axios({
+      ...SummaryApi.create_viewed_products,
+      data: {
+        productId: id,
+      },
+    });
+    if (response && response.data) {
+      if (fetchAllViewedProduct) {
+        fetchAllViewedProduct();
+      }
+    }
+  };
+
+  return {
+    handleProduct,
+    handleCategory,
+    handleSubCategory,
+    createViewiedProducts,
+  };
 }

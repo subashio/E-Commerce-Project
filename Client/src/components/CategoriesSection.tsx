@@ -4,7 +4,7 @@ import {
   CarouselContent,
 } from "@/components/ui/carousel";
 import { RootState } from "@/store/store";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import React from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -58,13 +58,13 @@ export default function CategoriesSection() {
       <h1 className="text-3xl font-bold">Popular Categories</h1>
 
       <Carousel setApi={setApi} className="w-full">
-        <ArrowLeft
+        <ChevronLeft
           onClick={handleLeftClick}
-          className="absolute z-10 my-24 h-10 w-10 cursor-pointer rounded-full bg-primary/20 p-2 md:my-28 lg:-left-3"
+          className="absolute -left-3 z-10 my-24 h-10 w-10 cursor-pointer rounded-full bg-accent p-1.5 transition-all duration-500 hover:bg-primary/60 md:my-28 lg:-left-3"
         />
-        <ArrowRight
+        <ChevronRight
           onClick={handleRightClick}
-          className="absolute right-0 z-10 my-24 h-10 w-10 cursor-pointer rounded-full bg-primary/20 p-2 md:my-28 lg:-right-3"
+          className="absolute right-0 z-10 my-24 h-10 w-10 cursor-pointer rounded-full bg-accent p-1.5 transition-all duration-500 hover:bg-primary/60 md:my-28 lg:-right-3"
         />
         <CarouselContent className="ml-0 flex w-full">
           {Array.isArray(category) &&

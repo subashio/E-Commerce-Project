@@ -6,7 +6,13 @@ import Axios from "@/lib/Axios";
 import { cn } from "@/lib/utils";
 import { handleAddAddress } from "@/store/addressSlice";
 import { setOrder } from "@/store/orderSlice";
-import { setCart, setCategory, setProduct } from "@/store/ProductSlice";
+import {
+  setCart,
+  setCategory,
+  setProduct,
+  setSubCategory,
+  setViewedProduct,
+} from "@/store/ProductSlice";
 import { RootState } from "@/store/store";
 import React, { ReactNode } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,6 +27,8 @@ type GlobleContextType = {
   fetchOrder: () => Promise<void>;
   // addToCart: (product: any) => void;
   fetchAllCategory: () => Promise<void>;
+  fetchAllSubCategory: () => Promise<void>;
+  fetchAllViewedProduct: () => Promise<void>;
   updateCartItem: (id: string, qty: any) => Promise<void>;
   deleteCartItem: (cartId: string) => Promise<void>;
   // fetchProductByCategory: (id: string, setProduct?: any) => Promise<void>;
@@ -43,7 +51,7 @@ export const useGlobleContext = () => {
 const GlobleProvider = ({ children }: { children: ReactNode }) => {
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.user);
-  const isLoggedIn = user?._id;
+  const isLoggedIn = React.useMemo(() => !!user?._id, [user]);
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -88,10 +96,9 @@ const GlobleProvider = ({ children }: { children: ReactNode }) => {
 
       if (response.data.data) {
         dispatch(setProduct(response.data.data));
-        console.log("this is products:", response.data);
       }
     } catch (error) {
-      console.error(error);
+      console.error("Error fetching product data: ", error);
     }
   };
   //fecth all category
@@ -103,10 +110,22 @@ const GlobleProvider = ({ children }: { children: ReactNode }) => {
 
       if (response.data.data) {
         dispatch(setCategory(response.data.data));
-        console.log("Category data: ", response.data);
       }
     } catch (error) {
-      console.error(error);
+      console.error("Error fetching Category data: ", error);
+    }
+  };
+  //fetch all subCategorys
+  const fetchAllSubCategory = async () => {
+    try {
+      const response = await Axios({
+        ...SummaryApi.get_SubCategory,
+      });
+      if (response.data.data) {
+        dispatch(setSubCategory(response.data.data));
+      }
+    } catch (error) {
+      console.error("Error fetching Sub-category: ", error);
     }
   };
 
@@ -193,13 +212,31 @@ const GlobleProvider = ({ children }: { children: ReactNode }) => {
       });
     }
   };
+  const fetchAllViewedProduct = async () => {
+    try {
+      const response = await Axios({
+        ...SummaryApi.get_viewed_products,
+      });
+      if (response.data.data) {
+        const setData = response.data.data.map((item: any) => item.productId);
+        dispatch(setViewedProduct(setData));
+        console.log(setData);
+      }
+    } catch (error) {
+      console.error("Error fetching ViewedProducts: ", error);
+    }
+  };
 
   React.useEffect(() => {
-    fetchAddress();
-    fetchCartItem();
-    fetchOrder();
+    if (isLoggedIn) {
+      fetchAddress();
+      fetchCartItem();
+      fetchOrder();
+      fetchAllViewedProduct();
+    }
     fetchAllProduct();
     fetchAllCategory();
+    fetchAllSubCategory();
   }, [user]);
 
   const value = {
@@ -211,6 +248,8 @@ const GlobleProvider = ({ children }: { children: ReactNode }) => {
     deleteCartItem,
     fetchOrder,
     fetchAllCategory,
+    fetchAllSubCategory,
+    fetchAllViewedProduct,
     // addToCart,
   };
 

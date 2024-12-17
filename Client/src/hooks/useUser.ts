@@ -7,12 +7,12 @@ import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { useToast } from "./use-toast";
 import { persist } from "@/store/store";
+import { resetState } from "@/store/ProductSlice";
 
 export function useUser() {
   const { toast } = useToast();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
   //fetching user deails
   const fetchUserDetails = async () => {
     try {
@@ -76,7 +76,6 @@ export function useUser() {
         const userDetails = await fetchUserDetails();
         if (userDetails?.data) {
           dispatch(setUserDetails(userDetails.data));
-          console.log("User details fetched successfully:");
         } else {
           console.error("Error fetching user details:");
         }
@@ -103,11 +102,11 @@ export function useUser() {
         ...SummaryApi.logout,
       });
 
-      console.log("Logout", response);
       if (response.data) {
         localStorage.clear();
         persist.purge(); // Ensure purge happens first
         dispatch(logout()); // clear the redux store state
+        dispatch(resetState());
         navigate("/login"); // navigate to loginPage}
       }
     } catch (error) {
@@ -133,14 +132,8 @@ export function useUser() {
         const userDetails = await fetchUserDetails();
         if (userDetails?.data.avatar) {
           dispatch(setUserDetails({ avatar: userDetails.data.avatar }));
-
-          // window.location.reload();
-          console.log(
-            "User details fetched successfully:",
-            userDetails.data.avatar,
-          );
         } else {
-          console.error("Error fetching user details:");
+          console.error("Error fetching user details: ");
         }
         toast({
           title: "Pofile Image Uploaded",

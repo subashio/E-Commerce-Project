@@ -30,7 +30,6 @@ export default function Login() {
     try {
       await loginUser(data);
       form.reset();
-      console.log("data submited:", data);
     } catch (error) {
       console.error("Error submitting form:", error);
     }

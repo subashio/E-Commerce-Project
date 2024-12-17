@@ -13,6 +13,7 @@ import uploadedRouter from "./routes/upload.routes.js";
 import userRouter from "./routes/user.routes.js";
 import cartRouter from "./routes/cart.routes.js";
 import orderRouter from "./routes/order.routes.js";
+import viewedProductRouter from "./routes/viewedProducts.routes.js";
 dotenv.config();
 
 dotenv.config();
@@ -50,6 +51,7 @@ app.use("/api/sub-category", subCategoryRouter);
 app.use("/api/file", uploadedRouter);
 app.use("/api/cart", cartRouter);
 app.use("/api/order", orderRouter);
+app.use("/api/viewed-products", viewedProductRouter);
 
 // Connecting to the database and running server
 connectDB()

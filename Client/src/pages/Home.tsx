@@ -3,7 +3,9 @@ import HeroSection from "@/components/HeroSection";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import ProductCarousel from "@/components/ProductCarousel";
 import { Badge } from "@/components/ui/badge";
+import { RootState } from "@/store/store";
 import { MoveRight } from "lucide-react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 const banners = [
@@ -30,12 +32,16 @@ const banner2 = [
 ];
 
 export default function Home() {
-  // const category = useSelector((state: RootState) => state.product.category);
+  const viewedProduct = useSelector(
+    (state: RootState) => state.product?.viewedProduct || [],
+  );
+
   return (
     <section className="">
       <HeroSection />
-
-      <ProductCarousel title="Resently Viewed" />
+      {viewedProduct.length > 0 && (
+        <ProductCarousel title="Resently Viewed" viewProduct={viewedProduct} />
+      )}
       <ProductCarousel title="Best Sellers" />
       <MaxWidthWrapper className="my-20 grid w-full grid-cols-1 gap-10 md:grid-cols-2">
         {banner2.map((_item, _index) => (
@@ -64,7 +70,7 @@ export default function Home() {
       </MaxWidthWrapper>
 
       <CategoriesSection />
-      <MaxWidthWrapper className="my-20 grid w-full grid-flow-row gap-10">
+      <MaxWidthWrapper className="my-10 grid w-full grid-flow-row gap-10">
         {banners.map((_item, _index) => (
           <div
             key={_index}

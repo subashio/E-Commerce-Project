@@ -3,7 +3,7 @@ import { useGlobleContext } from "@/context/GlobleContextProvider";
 import { useToast } from "@/hooks/use-toast";
 import Axios from "@/lib/Axios";
 import { RootState } from "@/store/store";
-import { ShoppingBag } from "lucide-react";
+import { Plus } from "lucide-react";
 import React from "react";
 import { useSelector } from "react-redux";
 import { Button } from "./ui/button";
@@ -80,9 +80,8 @@ export default function AddToCartButton({ id }: ProductCartProps) {
 
   return (
     <div>
-      <Button className="mr-auto" size="sm" onClick={AddtoCart}>
-        <ShoppingBag />
-        Cart
+      <Button className="mr-auto h-8 gap-1 p-2" onClick={AddtoCart}>
+        Add <Plus />
         {/* {isLoading ? <Loader className="animate-spin" /> : "Cart"} */}
       </Button>
       {/* )} */}

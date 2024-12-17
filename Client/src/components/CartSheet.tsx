@@ -57,12 +57,13 @@ export default function CartSheet({ button }: { button: ReactNode }) {
       cartList.reduce((total, item) => {
         const product =
           typeof item.productId === "object" ? item.productId : null;
+
         if (!product) return total;
+
         const quantity = itemQuantities[item._id] || item.quantity;
-        const discountedPrice = product.salePrice
-          ? product.salePrice - product.price / 100
-          : product.price;
-        return total + quantity * discountedPrice;
+
+        // Use product.price directly without considering salePrice
+        return total + quantity * product.price;
       }, 0),
     [cartList, itemQuantities],
   );

@@ -9,6 +9,14 @@ export async function CashOnDeliveryOrderController(req, res) {
     const userId = req.userId; //auth middleware
     const { list_items, totalAmt, addressId, subTotalAmt } = req.body;
 
+    if (!addressId) {
+      return res.status(404).json({
+        message: "Provide Delivery address",
+        success: false,
+        error: true,
+      });
+    }
+
     const payload = list_items.map((el) => {
       return {
         userId: userId,

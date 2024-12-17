@@ -12,9 +12,9 @@ export default function Footer() {
   return (
     <footer className="border-t">
       <MaxWidthWrapper>
-        <div className="mx-auto p-2 py-6">
-          <div className="grid gap-8 md:grid-cols-1">
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-3 md:grid-cols-4">
+        <div className="mx-auto p-2 py-16">
+          <div className="grid w-full md:grid-cols-1 md:place-content-center">
+            <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4">
               {/* <div className="grid grid-cols-1 sm:grid-cols-2"> */}
               <nav>
                 <h1 className="mb-6 text-sm font-semibold text-gray-900 dark:text-white">

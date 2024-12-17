@@ -24,7 +24,7 @@ declare global {
     name: string;
     image: string;
     category: any;
-    discount?: number | undefined;
+    discount?: string | null;
     price: number;
     salePrice: number;
     className?: string;

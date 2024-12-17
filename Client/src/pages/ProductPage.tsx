@@ -8,6 +8,8 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { useProduct } from "@/hooks/useProduct";
+// import { setViewedProduct } from "@/store/ProductSlice";
 import { RootState } from "@/store/store";
 import Autoplay from "embla-carousel-autoplay";
 import React from "react";
@@ -17,9 +19,8 @@ import { useParams } from "react-router-dom";
 export default function ProductPage() {
   const product = useSelector((state: RootState) => state.product.product);
   const { id: selectedId } = useParams();
-
   const category = useSelector((state: RootState) => state.product.category);
-
+  const { createViewiedProducts } = useProduct();
   const categoryLookup = (categoryId: string | undefined) => {
     return category.find((cat) => cat._id === categoryId)?.name;
   };
@@ -36,6 +37,19 @@ export default function ProductPage() {
   const handleThumbnailClick = (index: number) => {
     setActiveIndex(index);
   };
+
+  try {
+    createViewiedProducts(selectedId);
+  } catch (error) {
+    console.log("errror sending data");
+  }
+
+  // React.useEffect(() => {
+  //   if (selectedProduct) {
+
+  //   }
+  // }, [dispatch, selectedProduct]);
+
   return (
     <section>
       <Breadcrumbs
