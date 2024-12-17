@@ -25,8 +25,8 @@ export default function ProductCard({
         <Badge className="absolute right-3 top-3 hidden bg-red-600 px-4 hover:bg-red-500">
           {discount}%
         </Badge>
-        <div className="flex h-[30vh] w-full items-center justify-center rounded-lg bg-gray-50 p-20">
-          <img src={image} className="mx-auto object-center" />
+        <div className="flex h-[30vh] w-full items-center justify-center rounded-lg bg-gray-50 p-10">
+          <img src={image} className="mx-auto w-52 object-center" />
         </div>
         {/* <div className="w-ful mt-4 flex flex-col justify-between gap-2 px-2"> */}
         <div className="mt-2 flex w-full items-start justify-between px-4">
