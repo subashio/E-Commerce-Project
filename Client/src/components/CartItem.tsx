@@ -35,7 +35,7 @@ const CartItem = React.memo(function CartItem({
           src={product?.image[0] || "/default_image.png"}
         />
       </div>
-      <div className="my-auto mr-auto flex h-full max-w-60 flex-col items-start justify-center gap-2 text-sm font-semibold sm:max-w-xs">
+      <div className="my-auto mr-auto flex h-full max-w-44 flex-col items-start justify-center gap-2 truncate text-sm font-semibold">
         {product?.name}
         <div className="font-bold">
           ₹{product?.price}

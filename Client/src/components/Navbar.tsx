@@ -2,8 +2,10 @@ import { useUser } from "@/hooks/useUser";
 import { RootState } from "@/store/store";
 import {
   AlignRight,
+  Heart,
   House,
   LogOut,
+  MapPin,
   SearchIcon,
   ShoppingBag,
   ShoppingCartIcon,
@@ -17,12 +19,11 @@ import MaxWidthWrapper from "./MaxWidthWrapper";
 import MobileNav from "./MobileNav";
 import SearchInput from "./SearchInput";
 import { Badge } from "./ui/badge";
-// import debounce from "lodash";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
@@ -33,6 +34,7 @@ export default function Navbar() {
   const { handleLogout } = useUser();
   const isLoggedIn = user?._id;
   const isAdmin = user.role == "ADMIN";
+
   const [hideOnScroll, setHideOnScroll] = React.useState(false);
 
   React.useEffect(() => {
@@ -83,30 +85,59 @@ export default function Navbar() {
         <div className="flex h-full w-full flex-row items-center justify-evenly gap-x-10 gap-y-2">
           <div className="grid w-full grid-flow-col">
             <Link to="/" className="col-span-1 py-4">
-              <img src="/logo.png" className="w-44" alt="Globo-green logo" />
+              <img
+                src="/logo.png"
+                className="w-44 lg:w-36 xl:w-44"
+                alt="Globo-green logo"
+              />
             </Link>
             <div className="col-span-3 hidden items-center gap-3 lg:flex">
               <SearchInput />
             </div>
-            <div className="col-span-1 flex items-center justify-end gap-1.5 md:gap-2.5">
+
+            <div className="col-span-1 flex items-center justify-end gap-3 lg:-mr-2 lg:gap-3">
               <DropdownMenu>
-                <DropdownMenuTrigger>
-                  <Link
-                    className="hidden items-center gap-2 text-primary lg:flex"
-                    to={isLoggedIn ? "/profile-page" : "/login"}
-                  >
-                    <User className="h-10 w-10 rounded-full bg-primary/20 p-2" />
-                  </Link>
+                <DropdownMenuTrigger className="hidden lg:flex">
+                  {isLoggedIn ? (
+                    <Avatar className="h-9 w-9">
+                      <AvatarImage src={user.avatar} alt="@shadcn" />
+                      <AvatarFallback className="text-lg">
+                        {user.name?.charAt(0)}
+                      </AvatarFallback>
+                    </Avatar>
+                  ) : (
+                    <Link
+                      className="items-center gap-2 text-primary"
+                      to={isLoggedIn ? "/profile-page" : "/login"}
+                    >
+                      <User className="borer h-9 w-9 rounded-full bg-primary/20 p-2" />
+                    </Link>
+                  )}
                 </DropdownMenuTrigger>
                 {isLoggedIn ? (
                   <DropdownMenuContent
                     align="end"
-                    className="hidden px-2.5 sm:block"
+                    className="hidden px-2.5 lg:block"
                   >
-                    <DropdownMenuLabel className="text-md">
-                      Hi! {user.name}
-                      <p className="text-xs">{user.email}</p>
-                    </DropdownMenuLabel>
+                    <DropdownMenuItem className="">
+                      <Link
+                        to="/profile-page"
+                        className="flex h-full w-full cursor-pointer items-center gap-2"
+                      >
+                        <Avatar className="h-9 w-9">
+                          <AvatarImage src={user.avatar} alt="@shadcn" />
+                          <AvatarFallback className="text-sm font-medium">
+                            {user.name?.charAt(0)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="-mt-1">
+                          <p className="flex items-center gap-2 text-sm">
+                            {user.name}
+                          </p>
+                          <p className="text-xs">{user.email}</p>
+                        </div>
+                      </Link>
+                    </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     {isAdmin && (
                       <DropdownMenuItem className="mt-1">
@@ -133,8 +164,8 @@ export default function Navbar() {
                         className="flex w-full items-center gap-2 hover:text-primary dark:hover:text-primary-foreground"
                         to="/profile-page"
                       >
-                        <User />
-                        Profile
+                        <MapPin />
+                        Address
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator className="text-secondary" />
@@ -152,22 +183,22 @@ export default function Navbar() {
                   </DropdownMenuContent>
                 ) : undefined}
               </DropdownMenu>
-
-              <SearchInput
-                button={
-                  <SearchIcon className="h-10 w-10 rounded-full bg-primary/20 p-2 text-primary lg:hidden" />
-                }
-              />
-              {/* <Link
-                to="/profile-page/address-details"
-                className="relative flex items-center gap-4 text-primary lg:hidden"
+              <Link
+                to="/"
+                className="relative flex items-center gap-4 text-primary"
               >
-                <MapPin className="h-10 w-10 rounded-full bg-primary/20 p-2" />
-              </Link> */}
+                <Heart className="h-9 w-9 rounded-full bg-primary/20 p-2" />
+                <Badge
+                  className="absolute -right-2 -top-1 p-0.5 px-1.5"
+                  variant="secondary"
+                >
+                  {cartList.length}
+                </Badge>
+              </Link>
               <CartSheet
                 button={
                   <button className="relative flex items-center gap-4 text-primary">
-                    <ShoppingCartIcon className="h-10 w-10 rounded-full bg-primary/20 p-2" />
+                    <ShoppingCartIcon className="borer h-9 w-9 rounded-full bg-primary/20 p-2" />
                     <Badge
                       className="absolute -right-2 -top-1 p-0.5 px-1.5"
                       variant="secondary"
@@ -178,80 +209,18 @@ export default function Navbar() {
                 }
               />
 
+              <SearchInput
+                button={
+                  <SearchIcon className="borer h-9 w-9 rounded-full bg-primary/20 p-2 text-primary lg:hidden" />
+                }
+              />
+
               <MobileNav button={<AlignRight className="ml-2" />} />
             </div>
           </div>
         </div>
       </MaxWidthWrapper>
 
-      {/* <DropdownMenu>
-            <DropdownMenuTrigger className="h-full border-none">
-              <Link
-                className="flex h-full items-center gap-2 bg-accent/30 px-5"
-                to="/"
-                // to={isLoggedIn ? "/profile-page" : "/login"}
-              >
-                <User className="h-10 w-10 rounded-full bg-accent/40 p-2" />{" "}
-                Account <ChevronDown />
-              </Link>
-            </DropdownMenuTrigger>
-
-            {isLoggedIn ? (
-              <DropdownMenuContent
-                align="center"
-                className="hidden px-2.5 lg:block"
-              >
-                <DropdownMenuLabel className="text-md">
-                  Hi! {user.name}
-                  <p className="text-xs">{user.email}</p>
-                </DropdownMenuLabel>
-
-                <DropdownMenuSeparator />
-                {isAdmin && (
-                  <DropdownMenuItem className="mt-1">
-                    <Link
-                      className="flex w-full items-center gap-2 hover:text-primary dark:hover:text-primary-foreground"
-                      to="/dashboard-page"
-                    >
-                      <House />
-                      Dasboard
-                    </Link>
-                  </DropdownMenuItem>
-                )}
-                <DropdownMenuItem className="">
-                  <Link
-                    className="flex w-full items-center gap-2 hover:text-primary dark:hover:text-primary-foreground"
-                    to="/profile-page/order-details"
-                  >
-                    <ShoppingBag />
-                    Orders
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem className="mb-3">
-                  <Link
-                    className="flex w-full items-center gap-2 hover:text-primary dark:hover:text-primary-foreground"
-                    to="/profile-page"
-                  >
-                    <User />
-                    Profile
-                  </Link>
-                </DropdownMenuItem>
-
-                <DropdownMenuSeparator className="text-secondary" />
-                <DropdownMenuItem>
-                  {isLoggedIn && (
-                    <Link
-                      to="/login"
-                      onClick={handleLogout}
-                      className="flex w-full items-start gap-2 py-1 text-primary"
-                    >
-                      <LogOut /> Logout
-                    </Link>
-                  )}
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            ) : undefined}
-          </DropdownMenu> */}
       {/* </MaxWidthWrapper> */}
       {/* </div> */}
     </header>
@@ -317,7 +286,7 @@ export default function Navbar() {
                       className="hidden items-center gap-2 text-primary md:flex"
                       to={isLoggedIn ? "/profile-page" : "/login"}
                     >
-                      <User className="h-10 w-10 rounded-full bg-primary/20 p-2" />
+                      <User className="h-10 w-10 rounded-full borer bg-primary/20 p-2" />
                     </Link>
                   </DropdownMenuTrigger>
 

@@ -1,15 +1,15 @@
+import AddToCartButton from "@/components/AddToCartButton";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
 import { useProduct } from "@/hooks/useProduct";
-// import { setViewedProduct } from "@/store/ProductSlice";
 import { RootState } from "@/store/store";
 import Autoplay from "embla-carousel-autoplay";
 import React from "react";
@@ -24,15 +24,29 @@ export default function ProductPage() {
   const categoryLookup = (categoryId: string | undefined) => {
     return category.find((cat) => cat._id === categoryId)?.name;
   };
+  const [activeIndex, setActiveIndex] = React.useState(0);
+  const plugin = React.useRef(
+    Autoplay({ delay: 2000, stopOnInteraction: true }),
+  );
+  // Helper function to calculate discount percentage
+  const calculateDiscountPercentage = (
+    listPrice: number,
+    salePrice: number,
+  ): number => {
+    if (!listPrice || !salePrice || listPrice <= salePrice) return 0;
+    return Math.round(((listPrice - salePrice) / listPrice) * 100);
+  };
 
   const selectedProduct = product.find((product) => {
     return product._id === selectedId;
   });
 
-  const [activeIndex, setActiveIndex] = React.useState(0);
-  const plugin = React.useRef(
-    Autoplay({ delay: 2000, stopOnInteraction: true }),
-  );
+  const discountPercentage = selectedProduct?.salePrice
+    ? calculateDiscountPercentage(
+        selectedProduct.salePrice,
+        selectedProduct.price,
+      )
+    : 0;
 
   const handleThumbnailClick = (index: number) => {
     setActiveIndex(index);
@@ -44,12 +58,6 @@ export default function ProductPage() {
     console.log("errror sending data");
   }
 
-  // React.useEffect(() => {
-  //   if (selectedProduct) {
-
-  //   }
-  // }, [dispatch, selectedProduct]);
-
   return (
     <section>
       <Breadcrumbs
@@ -60,20 +68,20 @@ export default function ProductPage() {
         pathName2={`${categoryLookup(selectedProduct?.categoryId)} /`}
         finalPathName={selectedProduct?.name}
       />
-      <MaxWidthWrapper className="mx-auto grid w-full grid-cols-1 gap-4 p-4 md:grid-cols-3">
+      <MaxWidthWrapper className="mx-auto grid w-full grid-cols-1 gap-4 p-4 md:grid-cols-2 lg:grid-cols-3">
         <Carousel
           plugins={[plugin.current]}
           onMouseEnter={plugin.current.stop}
           onMouseLeave={plugin.current.reset}
-          className="group grid w-full md:col-span-2 lg:h-[70vh] lg:grid-cols-[100px_1fr]"
+          className="w- group grid md:col-span-1 lg:col-span-2 lg:grid-cols-[100px_1fr]"
         >
           <ScrollArea
-            className="row-start-2 whitespace-nowrap lg:row-auto"
+            className="row-start-2 my-2 whitespace-nowrap lg:row-auto"
             style={{
-              height: "calc(100% - 20px)", // Makes the height dynamic
+              height: "calc(100% - 2px)", // Makes the height dynamic
             }}
           >
-            <div className="my-5 flex flex-row gap-2 lg:my-0 lg:flex-col">
+            <div className="flex flex-row gap-2 lg:flex-col">
               {selectedProduct?.image.map((image, index) => (
                 <div
                   key={index}
@@ -102,53 +110,76 @@ export default function ProductPage() {
                 key={index}
                 className="!w-full cursor-grab pl-1 active:cursor-grabbing"
               >
-                <Card className="p-4">
-                  <div className="aspect-square">
-                    <img
-                      alt="Product image"
-                      className="w-full rounded-lg object-contain object-center lg:h-[70vh]"
-                      src={image}
-                    />
-                  </div>
-                </Card>
+                <AspectRatio ratio={16 / 12} className="bg-gray-100">
+                  <img
+                    alt="Product image"
+                    className="h-full w-full rounded-md object-contain"
+                    src={image}
+                  />
+                </AspectRatio>
               </CarouselItem>
             ))}
           </CarouselContent>
           {/* </div> */}
         </Carousel>
 
-        <div className="border px-8 py-4 text-start md:col-span-1">
+        <div className="py-4 text-start md:col-span-1">
           <div>
-            <p>{categoryLookup(selectedProduct?.categoryId)}</p>
-            <h1 className="py-2 text-xl font-bold">{selectedProduct?.name} </h1>
+            <p className="text-md capitalize text-primary">
+              {categoryLookup(selectedProduct?.categoryId)}
+            </p>
+            <h1 className="py-2 text-3xl font-semibold capitalize">
+              {selectedProduct?.name}
+            </h1>
           </div>
 
-          <div className="flex flex-col items-start justify-start text-2xl font-bold">
+          <div className="mb-4 flex flex-col items-start justify-start text-2xl font-bold">
             <p className="text-md ml-2 flex items-center">
               <span className="relative">
                 <b className="absolute -left-2 top-1 text-sm font-normal">₹</b>
                 {selectedProduct?.price}
               </span>
             </p>
+
             {selectedProduct?.salePrice && (
               <span className="my-1.5 text-xs font-semibold text-secondary/70">
                 M.R.P: <del>₹{selectedProduct.salePrice} </del>
-                {/* {selectedProduct?. && (
+                {discountPercentage > 0 && (
                   <b className="ml-2 text-primary/90">
-                    {selectedProduct?.discount} % OFF
+                    {discountPercentage}% OFF
                   </b>
-                )} */}
-                <b className="ml-2 text-primary/90">20 % OFF</b>
+                )}
               </span>
             )}
           </div>
-
-          <p>{selectedProduct?.description}</p>
+          <Separator className="mb-4" />
+          <p>{selectedProduct?.brandName}</p>
+          <p className="max-w-xl truncate text-sm">
+            {selectedProduct?.description}
+          </p>
           <div className="flex flex-col gap-3 py-4">
-            <Button className="w-full rounded-full">Buy</Button>
-            <Button variant="outline" className="rounded-full">
-              Add to cart
-            </Button>
+            {/* <div className="flex">
+              <button
+                onClick={(e) => decreaseQty(e, selectedProduct?._id || "")}
+                className="rounded-l-md border-b border-l border-t px-3 py-1"
+              >
+                -
+              </button>
+              <p className="border px-2 py-1 text-sm font-medium">
+                {loadingItems[selectedProduct?._id ?? ""] ? (
+                  <Loader className="animate-spin p-1.5" />
+                ) : (
+                  itemQuantities[selectedProduct?._id ?? ""] || 0
+                )}
+              </p>
+              <button
+                onClick={(e) => increaseQty(e, selectedProduct?._id ?? "")}
+                className="rounded-r-md border-b border-r border-t px-3 py-1"
+              >
+                +
+              </button>
+            </div> */}
+            <AddToCartButton id={selectedProduct?._id} />
           </div>
         </div>
       </MaxWidthWrapper>

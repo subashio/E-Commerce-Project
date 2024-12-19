@@ -101,7 +101,7 @@ function ShopPage({ PriceRange }: { PriceRange: [number, number] }) {
 
   return (
     <div>
-      <div className="mb-20 grid grid-cols-1 gap-4 md:grid-cols-3 xl:grid-cols-4">
+      <div className="mb-20 grid grid-cols-2 gap-6 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4">
         {products.map((product, index) => (
           <ProductCard
             _id={product._id}

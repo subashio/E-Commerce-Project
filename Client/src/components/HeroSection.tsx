@@ -60,7 +60,7 @@ export default function HeroSection() {
   };
 
   return (
-    <MaxWidthWrapper className="mt-10">
+    <MaxWidthWrapper className="mt-4">
       <Carousel
         setApi={setApi}
         plugins={[plugin.current]}
@@ -106,8 +106,8 @@ export default function HeroSection() {
               className={cn(
                 "h-3 w-3 cursor-pointer transition-colors",
                 current === index
-                  ? "scale-x-[1.8] rounded-sm fill-accent"
-                  : "rounded-full border fill-secondary/50",
+                  ? "scale-x-[1.8] rounded-sm fill-primary/50"
+                  : "rounded-full border fill-secondary/70",
               )}
               viewBox="0 0 24 24"
               onClick={() => handleDotClick(index)}

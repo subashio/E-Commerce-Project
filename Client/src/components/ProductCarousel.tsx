@@ -134,11 +134,11 @@ export default function ProductCarousel({
       <Carousel
         setApi={setApi}
         plugins={[plugin.current]}
-        className="w-full"
+        className="w-full p-2"
         onMouseEnter={plugin.current.stop}
         onMouseLeave={plugin.current.reset}
       >
-        <CarouselContent className="ml-1 flex snap-x snap-mandatory items-center gap-4 py-10">
+        <CarouselContent className="ml-1 flex snap-x snap-mandatory items-center gap-4">
           {products
             ?.filter((item) => item.status === true)
             .map((item, index) => (
@@ -151,7 +151,7 @@ export default function ProductCarousel({
                 image={item.image}
                 price={item.price}
                 salePrice={item.salePrice}
-                className="flex-shrink-0 basis-1/2 md:basis-1/3 lg:basis-[24%]"
+                className="flex-shrink-0 basis-[70%] sm:basis-1/2 md:basis-1/3 lg:basis-[19%]"
               />
             ))}
         </CarouselContent>

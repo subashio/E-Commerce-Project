@@ -2,7 +2,7 @@ import { RootState } from "@/store/store";
 import { ChevronRight } from "lucide-react";
 import React from "react";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Accordion,
   AccordionContent,
@@ -83,17 +83,13 @@ export default function ShopSide({
                 </AccordionTrigger>
                 <AccordionContent className="flex flex-col rounded-md">
                   {category.subcategories.map((subcategory) => (
-                    <button
+                    <Link
+                      to={`/shop/${subcategory.categoryId}/${subcategory._id}`}
                       key={subcategory._id}
-                      onClick={() =>
-                        navigate(
-                          `/shop/${subcategory.categoryId}/${subcategory._id}`,
-                        )
-                      }
                       className="!justify-start !p-2 text-left hover:text-primary"
                     >
                       {subcategory.name}
-                    </button>
+                    </Link>
                   ))}
                 </AccordionContent>
               </AccordionItem>

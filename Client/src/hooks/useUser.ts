@@ -1,18 +1,19 @@
 import { imageSchema, loginSchema, RegisterSchema } from "@/constants/schema";
 import { SummaryApi } from "@/constants/SummaryApi";
 import Axios from "@/lib/Axios";
+import { resetState } from "@/store/ProductSlice";
+import { persist } from "@/store/store";
 import { logout, setUserDetails } from "@/store/userSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { useToast } from "./use-toast";
-import { persist } from "@/store/store";
-import { resetState } from "@/store/ProductSlice";
 
 export function useUser() {
   const { toast } = useToast();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   //fetching user deails
   const fetchUserDetails = async () => {
     try {
@@ -22,12 +23,6 @@ export function useUser() {
       if (res.status === 200 && res.data) {
         // Handle success response
         return res.data; // Return data to the calling function
-      } else {
-        // Handle unexpected status codes
-        return {
-          error: true,
-          message: res?.data?.message || "Unexpected response structure.",
-        };
       }
     } catch (error) {
       console.error("Error fetching user details:", error);
@@ -43,6 +38,7 @@ export function useUser() {
       });
 
       if (response) {
+        navigate("/login");
         return toast({
           variant: "default",
           title: "Registration Successful ",
@@ -50,8 +46,6 @@ export function useUser() {
             "Your account has been created successfully. Welcome aboard!",
         });
       }
-
-      navigate("/login");
     } catch (error) {
       toast({
         variant: "destructive",
@@ -84,6 +78,7 @@ export function useUser() {
           title: "Login successful ",
           description: "Welcome back! You have successfully logged in.",
         });
+
         navigate("/");
       }
     } catch (error) {

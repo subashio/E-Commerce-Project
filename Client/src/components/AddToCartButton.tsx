@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 import { Button } from "./ui/button";
 
 interface ProductCartProps {
-  id: string;
+  id: string | undefined;
 }
 
 export default function AddToCartButton({ id }: ProductCartProps) {
@@ -80,8 +80,12 @@ export default function AddToCartButton({ id }: ProductCartProps) {
 
   return (
     <div>
-      <Button className="mr-auto h-8 gap-1 p-2" onClick={AddtoCart}>
-        Add <Plus />
+      <Button
+        className="h-9 w-full gap-1 rounded-lg p-2 capitalize"
+        onClick={AddtoCart}
+      >
+        <Plus />
+        Add to Cart
         {/* {isLoading ? <Loader className="animate-spin" /> : "Cart"} */}
       </Button>
       {/* )} */}

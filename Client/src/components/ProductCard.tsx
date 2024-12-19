@@ -1,16 +1,13 @@
+import { cn } from "@/lib/utils";
+import { Eye, Heart } from "lucide-react";
 import { Link } from "react-router-dom";
 import AddToCartButton from "./AddToCartButton";
-import { Badge } from "./ui/badge";
-import { Card } from "./ui/card";
-import { cn } from "@/lib/utils";
-import { Button } from "./ui/button";
 
 //
 export default function ProductCard({
   className,
   _id,
   name,
-  category,
   image,
   price,
   discount,
@@ -19,47 +16,40 @@ export default function ProductCard({
   return (
     <Link
       to={`/shop/product/${_id}`}
-      className={cn("group relative rounded-lg border", className)}
+      className={cn("group relative rounded-lg", className)}
     >
-      <Card className="border-none p-0 shadow-none">
-        <Badge className="absolute right-3 top-3 hidden bg-red-600 px-4 hover:bg-red-500">
-          {discount}%
-        </Badge>
-        <div className="flex h-[30vh] w-full items-center justify-center rounded-lg bg-gray-50 p-10">
-          <img src={image} className="mx-auto w-52 object-center" />
-        </div>
-        {/* <div className="w-ful mt-4 flex flex-col justify-between gap-2 px-2"> */}
-        <div className="mt-2 flex w-full items-start justify-between px-4">
-          <div className="flex flex-col gap-1.5">
-            <p className="text-md max-w-44 truncate font-semibold">{name}</p>
-            <p className="flex gap-2 text-xs">
-              {category}
-              <span className="text-xs font-normal text-destructive">
-                stock
-              </span>
-            </p>
-          </div>
+      <div className="w-full rounded-lg border-none p-0 pb-4 shadow-none">
+        <div className="relative flex h-[26vh] items-center justify-center rounded-lg bg-gray-50 p-2 sm:hover:shadow-[rgba(7,_65,_210,_0.1)_0px_9px_30px]">
+          <img
+            src={image}
+            className="mx-auto w-36 object-center duration-300 group-hover:scale-105"
+          />
           {discount && (
-            <p className="rounded-md bg-primary/10 p-1 text-sm">
+            <p className="absolute bottom-3 left-3 rounded-md bg-primary/10 p-1 text-sm">
               {discount}OFF
             </p>
           )}
         </div>
-        {/* </div> */}
+        <div className="mt-2 flex w-full items-start justify-between px-2">
+          <div className="flex w-full flex-col gap-1">
+            <p className="text-md max-w-44 truncate font-semibold">{name}</p>
+            <div className="flex w-full flex-col gap-2">
+              <p className="flex w-full flex-col font-bold">
+                ₹{price}
+                <del className="text-xs text-secondary/50 dark:text-secondary-foreground/70">
+                  ₹{salePrice}
+                </del>
+              </p>
 
-        <div className="flex w-full items-center justify-between gap-2 p-4">
-          <p className="flex flex-col font-bold">
-            ₹{price}
-            <del className="text-xs text-secondary/50 dark:text-secondary-foreground/70">
-              ₹{salePrice}
-            </del>
-          </p>
-          <div className="flex items-center gap-2">
-            <Button className="mr-auto h-8 gap-1 p-2">Buy Now</Button>
-            <AddToCartButton id={_id} />
+              <AddToCartButton id={_id} />
+            </div>
+          </div>
+          <div className="absolute right-3 top-3 flex items-center gap-2 rounded-lg bg-white p-2 shadow-md group-hover:opacity-100 sm:opacity-0">
+            <Heart className="h-4 w-4 text-primary" />
+            <Eye className="h-4 w-4 text-primary" />
           </div>
         </div>
-      </Card>
+      </div>
     </Link>
   );
 }

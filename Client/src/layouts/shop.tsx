@@ -93,7 +93,7 @@ export default function Shop() {
         finalPathName={(subCategoryName && `/ ${subCategoryName}`) || ""}
       />
 
-      <MaxWidthWrapper className="grid w-full grid-flow-col gap-10 lg:grid-cols-[300px_1fr] xl:grid-cols-[300px_1fr]">
+      <MaxWidthWrapper className="grid w-full grid-flow-col gap-10 lg:grid-cols-[250px_1fr] xl:grid-cols-[270px_1fr]">
         {/* <div className="col-span-0 hidden justify-center rounded-lg border-r md:w-[300px] lg:flex lg:min-h-screen lg:w-[250px]"> */}
         <ShopSide setPriceRange={setPriceRange} />
         <div className="flex w-full flex-col">
