@@ -19,13 +19,14 @@ import {
   CardTitle,
 } from "./ui/card";
 import { ScrollArea } from "./ui/scroll-area";
+import { useCart } from "@/hooks/useCart";
 
 export default function CartSheet({ button }: { button: ReactNode }) {
   const [isSheetOpen, isSetSheetOpen] = React.useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
-  const { updateCartItem, deleteCartItem, fetchCartItem, handleToast } =
-    useGlobleContext();
+  const { updateCartItem, deleteCartItem } = useCart();
+  const { fetchCartItem, handleToast } = useGlobleContext();
   const cartList = useSelector((state: RootState) => state.product.cartList);
   const user = useSelector((state: RootState) => state.user);
   const isLoggedIn = user?._id;

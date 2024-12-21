@@ -60,7 +60,7 @@ export default function ProductList() {
         subCategoryLookup.has(item.sub_categoryId),
     );
   // }, [product, selectedId, categoryLookup, subCategoryLookup]);
-  console.log("look up:", subCategoryLookup);
+
   const productsData = product.map((product: any) => ({
     id: product._id,
     image: product.image[0],

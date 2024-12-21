@@ -168,4 +168,16 @@ export const SummaryApi = {
     url: "/api/viewed-products/get",
     method: "get",
   },
+  create_wishlist: {
+    url: "/api/wishlist/create",
+    method: "post",
+  },
+  get_wishlist: {
+    url: "/api/wishlist/get",
+    method: "get",
+  },
+  delete_wishlist: {
+    url: "/api/wishlist/delete",
+    method: "delete",
+  },
 };

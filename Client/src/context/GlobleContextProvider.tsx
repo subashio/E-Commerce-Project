@@ -12,6 +12,7 @@ import {
   setProduct,
   setSubCategory,
   setViewedProduct,
+  setWishlist,
 } from "@/store/ProductSlice";
 import { RootState } from "@/store/store";
 import React, { ReactNode } from "react";
@@ -29,8 +30,9 @@ type GlobleContextType = {
   fetchAllCategory: () => Promise<void>;
   fetchAllSubCategory: () => Promise<void>;
   fetchAllViewedProduct: () => Promise<void>;
-  updateCartItem: (id: string, qty: any) => Promise<void>;
-  deleteCartItem: (cartId: string) => Promise<void>;
+  fetchAllWishlist: () => Promise<void>;
+  // updateCartItem: (id: string, qty: any) => Promise<void>;
+  // deleteCartItem: (cartId: string) => Promise<void>;
   // fetchProductByCategory: (id: string, setProduct?: any) => Promise<void>;
 };
 
@@ -158,42 +160,43 @@ const GlobleProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const updateCartItem = async (id: string, qty: any) => {
-    try {
-      const response = await Axios({
-        ...SummaryApi.update_cart,
-        data: {
-          _id: id,
-          qty: qty,
-        },
-      });
-      const { data: responseData } = response;
+  // const updateCartItem = async (id: string, qty: any) => {
+  //   try {
+  //     const response = await Axios({
+  //       ...SummaryApi.update_cart,
+  //       data: {
+  //         _id: id,
+  //         qty: qty,
+  //       },
+  //     });
+  //     const { data: responseData } = response;
 
-      if (responseData) {
-        fetchCartItem();
-        return responseData;
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  const deleteCartItem = async (cartId: string) => {
-    try {
-      const response = await Axios({
-        ...SummaryApi.delete_cart,
-        data: {
-          _id: cartId,
-        },
-      });
-      const { data: responseData } = response;
-      if (responseData.success) {
-        dispatch(setCart([]));
-        fetchCartItem();
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  //     if (responseData) {
+  //       fetchCartItem();
+  //       return responseData;
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
+
+  // const deleteCartItem = async (cartId: string) => {
+  //   try {
+  //     const response = await Axios({
+  //       ...SummaryApi.delete_cart,
+  //       data: {
+  //         _id: cartId,
+  //       },
+  //     });
+  //     const { data: responseData } = response;
+  //     if (responseData.success) {
+  //       dispatch(setCart([]));
+  //       fetchCartItem();
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
   const handleToast = () => {
     if (!isLoggedIn) {
       toast({
@@ -220,7 +223,22 @@ const GlobleProvider = ({ children }: { children: ReactNode }) => {
       if (response.data.data) {
         const setData = response.data.data.map((item: any) => item.productId);
         dispatch(setViewedProduct(setData));
-        console.log(setData);
+        // console.log(setData);
+      }
+    } catch (error) {
+      console.error("Error fetching ViewedProducts: ", error);
+    }
+  };
+  const fetchAllWishlist = async () => {
+    try {
+      const response = await Axios({
+        ...SummaryApi.get_wishlist,
+      });
+      if (response.data.data) {
+        const getWishlist = response.data.data.map(
+          (item: any) => item.productId,
+        );
+        dispatch(setWishlist(getWishlist));
       }
     } catch (error) {
       console.error("Error fetching ViewedProducts: ", error);
@@ -233,6 +251,7 @@ const GlobleProvider = ({ children }: { children: ReactNode }) => {
       fetchCartItem();
       fetchOrder();
       fetchAllViewedProduct();
+      fetchAllWishlist();
     }
     fetchAllProduct();
     fetchAllCategory();
@@ -244,11 +263,12 @@ const GlobleProvider = ({ children }: { children: ReactNode }) => {
     fetchAddress,
     handleToast,
     fetchAllProduct,
-    updateCartItem,
-    deleteCartItem,
+    // updateCartItem,
+    // deleteCartItem,
     fetchOrder,
     fetchAllCategory,
     fetchAllSubCategory,
+    fetchAllWishlist,
     fetchAllViewedProduct,
     // addToCart,
   };

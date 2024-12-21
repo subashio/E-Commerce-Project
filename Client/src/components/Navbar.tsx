@@ -31,6 +31,7 @@ import {
 export default function Navbar() {
   const user = useSelector((state: RootState) => state.user);
   const cartList = useSelector((state: RootState) => state.product.cartList);
+  const wishlist = useSelector((state: RootState) => state.product.wishlist);
   const { handleLogout } = useUser();
   const isLoggedIn = user?._id;
   const isAdmin = user.role == "ADMIN";
@@ -131,7 +132,7 @@ export default function Navbar() {
                           </AvatarFallback>
                         </Avatar>
                         <div className="-mt-1">
-                          <p className="flex items-center gap-2 text-sm">
+                          <p className="flex items-center gap-2 text-sm font-semibold">
                             {user.name}
                           </p>
                           <p className="text-xs">{user.email}</p>
@@ -184,7 +185,7 @@ export default function Navbar() {
                 ) : undefined}
               </DropdownMenu>
               <Link
-                to="/"
+                to="/profile-page/wishlist"
                 className="relative flex items-center gap-4 text-primary"
               >
                 <Heart className="h-9 w-9 rounded-full bg-primary/20 p-2" />
@@ -192,7 +193,7 @@ export default function Navbar() {
                   className="absolute -right-2 -top-1 p-0.5 px-1.5"
                   variant="secondary"
                 >
-                  {cartList.length}
+                  {wishlist.length}
                 </Badge>
               </Link>
               <CartSheet

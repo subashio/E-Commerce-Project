@@ -25,7 +25,7 @@ interface Products {
   brandName: string;
   salePrice: number;
   wholesalePrice: number;
-  description: string;
+  description: string | TrustedHTML | undefined;
 }
 interface Cart {
   _id: string;
@@ -40,6 +40,7 @@ interface productSlice {
   product: Array<Products>;
   cartList: Array<Cart>;
   viewedProduct: Array<Products>;
+  wishlist: Array<Products>;
 }
 
 const initialState: productSlice = {
@@ -48,6 +49,7 @@ const initialState: productSlice = {
   product: [],
   cartList: [],
   viewedProduct: [],
+  wishlist: [],
 };
 
 export const productSlice = createSlice({
@@ -69,10 +71,13 @@ export const productSlice = createSlice({
     setViewedProduct: (state, action) => {
       state.viewedProduct = action.payload;
     },
+    setWishlist: (state, action) => {
+      state.wishlist = action.payload;
+    },
     resetState: (state) => {
       state.cartList = [];
       state.viewedProduct = [];
-      state.viewedProduct = [];
+      state.wishlist = [];
     },
   },
 });
@@ -83,6 +88,7 @@ export const {
   setProduct,
   setCart,
   setViewedProduct,
+  setWishlist,
   resetState,
 } = productSlice.actions;
 

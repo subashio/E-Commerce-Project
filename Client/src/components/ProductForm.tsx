@@ -19,6 +19,7 @@ import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { z } from "zod";
 import DropzoneImageField from "./DropzoneImageField";
+import RichTextEditor from "./RichTextEditor";
 import { Card, CardContent } from "./ui/card";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import {
@@ -28,7 +29,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { Textarea } from "./ui/textarea";
 interface ProductProps {
   initialData?: {
     name: string;
@@ -42,7 +42,7 @@ interface ProductProps {
     price: number | undefined;
     salePrice: number | undefined;
     wholesalePrice: number | undefined;
-    description: string;
+    description: string | TrustedHTML | undefined;
     role: "edit" | "add";
   };
   id?: string;
@@ -64,7 +64,7 @@ export default function ProductForm({ initialData, id }: ProductProps) {
           name: initialData.name,
           image: initialData.image,
           minQuantity: initialData.minQuantity ?? undefined,
-          description: initialData.description,
+          description: initialData.description || undefined,
           status: initialData.status,
           categoryId: initialData.categoryId,
           sub_categoryId: initialData.sub_categoryId,
@@ -255,10 +255,11 @@ export default function ProductForm({ initialData, id }: ProductProps) {
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Textarea
-                      placeholder="Tell a little bit about your product"
-                      className="h-32 resize-none"
-                      {...field}
+                    <RichTextEditor
+                      content={
+                        typeof field.value === "string" ? field.value : ""
+                      }
+                      onChange={(value: any) => field.onChange(value)}
                     />
                   </FormControl>
                   <FormMessage />

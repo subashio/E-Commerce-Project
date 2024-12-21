@@ -114,6 +114,28 @@
     @apply scroll-smooth;
     @apply scroll-mt-52;
   }
+  h1 {
+    @apply text-2xl font-bold;
+  }
+  h2 {
+    @apply text-xl font-bold;
+  }
+  h3 {
+    @apply text-lg font-bold;
+  }
+  pre {
+    @apply rounded-md bg-foreground p-2 text-background;
+  }
+  table {
+    @apply m-0 w-full border-collapse overflow-hidden;
+  }
+  td,
+  th {
+    @apply border p-2;
+  }
+  th {
+    @apply bg-secondary/10 text-left font-normal;
+  }
 }
 
 .carousel-content {

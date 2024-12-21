@@ -1,26 +1,45 @@
 import AddToCartButton from "@/components/AddToCartButton";
+import AddToWishlistButton from "@/components/AddToWishlistButton";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import Logos from "@/components/Logos";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
+import { ProductTabs } from "@/components/ProductTabs";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Lens } from "@/components/ui/lens";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { footerSvg } from "@/constants/details";
 import { useProduct } from "@/hooks/useProduct";
 import { RootState } from "@/store/store";
 import Autoplay from "embla-carousel-autoplay";
+import { ChevronDown } from "lucide-react";
 import React from "react";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 export default function ProductPage() {
   const product = useSelector((state: RootState) => state.product.product);
   const { id: selectedId } = useParams();
   const category = useSelector((state: RootState) => state.product.category);
   const { createViewiedProducts } = useProduct();
+  const [hovering, setHovering] = React.useState(false);
   const categoryLookup = (categoryId: string | undefined) => {
     return category.find((cat) => cat._id === categoryId)?.name;
   };
@@ -37,7 +56,7 @@ export default function ProductPage() {
     return Math.round(((listPrice - salePrice) / listPrice) * 100);
   };
 
-  const selectedProduct = product.find((product) => {
+  const selectedProduct = product.find((product: any) => {
     return product._id === selectedId;
   });
 
@@ -68,7 +87,7 @@ export default function ProductPage() {
         pathName2={`${categoryLookup(selectedProduct?.categoryId)} /`}
         finalPathName={selectedProduct?.name}
       />
-      <MaxWidthWrapper className="mx-auto grid w-full grid-cols-1 gap-4 p-4 md:grid-cols-2 lg:grid-cols-3">
+      <MaxWidthWrapper className="mx-auto grid w-full grid-cols-1 gap-10 p-4 md:grid-cols-2 lg:grid-cols-3">
         <Carousel
           plugins={[plugin.current]}
           onMouseEnter={plugin.current.stop}
@@ -108,19 +127,20 @@ export default function ProductPage() {
             {selectedProduct?.image.map((image, index) => (
               <CarouselItem
                 key={index}
-                className="!w-full cursor-grab pl-1 active:cursor-grabbing"
+                className="!w-full cursor-zoom-in pl-1 active:cursor-grabbing"
               >
-                <AspectRatio ratio={16 / 12} className="bg-gray-100">
-                  <img
-                    alt="Product image"
-                    className="h-full w-full rounded-md object-contain"
-                    src={image}
-                  />
-                </AspectRatio>
+                <Lens hovering={hovering} setHovering={setHovering}>
+                  <AspectRatio ratio={16 / 12} className="bg-gray-100">
+                    <img
+                      src={image}
+                      alt="Product image"
+                      className="h-full w-full rounded-md object-contain"
+                    />
+                  </AspectRatio>
+                </Lens>
               </CarouselItem>
             ))}
           </CarouselContent>
-          {/* </div> */}
         </Carousel>
 
         <div className="py-4 text-start md:col-span-1">
@@ -132,8 +152,9 @@ export default function ProductPage() {
               {selectedProduct?.name}
             </h1>
           </div>
+          <Separator className="my-2" />
 
-          <div className="mb-4 flex flex-col items-start justify-start text-2xl font-bold">
+          <div className="flex flex-col items-start justify-start text-2xl font-bold">
             <p className="text-md ml-2 flex items-center">
               <span className="relative">
                 <b className="absolute -left-2 top-1 text-sm font-normal">₹</b>
@@ -151,37 +172,93 @@ export default function ProductPage() {
                 )}
               </span>
             )}
+            {selectedProduct?.minQuantity && (
+              <p className="text-xs font-semibold text-amber-500">
+                Buy up to 10 for wholesale availability.
+              </p>
+            )}
           </div>
-          <Separator className="mb-4" />
-          <p>{selectedProduct?.brandName}</p>
-          <p className="max-w-xl truncate text-sm">
-            {selectedProduct?.description}
-          </p>
-          <div className="flex flex-col gap-3 py-4">
-            {/* <div className="flex">
+
+          <div className="flex flex-wrap items-center gap-3 py-4">
+            <div className="flex">
               <button
-                onClick={(e) => decreaseQty(e, selectedProduct?._id || "")}
+                // onClick={(e) => decreaseQty(e, item._id)}
                 className="rounded-l-md border-b border-l border-t px-3 py-1"
               >
                 -
               </button>
               <p className="border px-2 py-1 text-sm font-medium">
-                {loadingItems[selectedProduct?._id ?? ""] ? (
-                  <Loader className="animate-spin p-1.5" />
-                ) : (
-                  itemQuantities[selectedProduct?._id ?? ""] || 0
-                )}
+                {/* {isLoading ? <Loader className="animate-spin p-1.5" /> : quantity} */}{" "}
+                1
               </p>
               <button
-                onClick={(e) => increaseQty(e, selectedProduct?._id ?? "")}
+                // onClick={(e) => increaseQty(e, item._id)}
                 className="rounded-r-md border-b border-r border-t px-3 py-1"
               >
                 +
               </button>
-            </div> */}
-            <AddToCartButton id={selectedProduct?._id} />
+            </div>
+
+            <div className="flex items-center gap-2">
+              <AddToCartButton
+                className="h-9 w-[200px]"
+                id={selectedProduct?._id}
+              />
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <AddToWishlistButton
+                      id={selectedProduct?._id}
+                      className="h-9 rounded-lg bg-accent hover:bg-accent"
+                    />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Wishlist</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
           </div>
+          <Separator className="mb-2" />
+          <div className="mb-2 flex flex-col gap-4 p-2">
+            {selectedProduct?.wholesalePrice ? (
+              <p className="text-sm font-semibold text-secondary/70">
+                Availability: Wholesale & Retail
+              </p>
+            ) : (
+              <p className="text-sm font-semibold text-secondary/70">
+                Availability: stock
+              </p>
+            )}
+            <p className="text-sm font-semibold text-secondary/70">
+              Type: Samsung
+            </p>
+            <p className="text-sm font-semibold text-secondary/70">
+              Brand: Samsung
+            </p>
+          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger className="flex items-center gap-2 rounded-lg border p-2 px-4 text-sm font-semibold text-secondary/70 hover:bg-secondary hover:text-secondary-foreground">
+              Share <ChevronDown className="h-3 w-3" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {footerSvg.map((item) => (
+                <DropdownMenuItem>
+                  <Link
+                    to="#"
+                    className="mt-2 flex items-center gap-2 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+                  >
+                    <Logos d={item.d} className="h-4 w-4 border-none" />
+                    {item.name}
+                  </Link>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
+      </MaxWidthWrapper>
+      <MaxWidthWrapper className="lg:my-8">
+        <ProductTabs description={selectedProduct?.description} />
       </MaxWidthWrapper>
     </section>
   );

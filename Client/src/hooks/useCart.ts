@@ -1,8 +1,12 @@
 import { SummaryApi } from "@/constants/SummaryApi";
 import { useGlobleContext } from "@/context/GlobleContextProvider";
 import Axios from "@/lib/Axios";
+import { setCart } from "@/store/ProductSlice";
+import { useDispatch } from "react-redux";
 
 export function useCart() {
+  const dispatch = useDispatch();
+  const { fetchCartItem } = useGlobleContext();
   const addToCart = async (id: string) => {
     const { fetchCartItem } = useGlobleContext();
     try {
@@ -23,5 +27,43 @@ export function useCart() {
       console.error(error);
     }
   };
-  return { addToCart };
+
+  const updateCartItem = async (id: string, qty: any) => {
+    try {
+      const response = await Axios({
+        ...SummaryApi.update_cart,
+        data: {
+          _id: id,
+          qty: qty,
+        },
+      });
+      const { data: responseData } = response;
+
+      if (responseData) {
+        fetchCartItem();
+        return responseData;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const deleteCartItem = async (cartId: string) => {
+    try {
+      const response = await Axios({
+        ...SummaryApi.delete_cart,
+        data: {
+          _id: cartId,
+        },
+      });
+      const { data: responseData } = response;
+      if (responseData.success) {
+        dispatch(setCart([]));
+        fetchCartItem();
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  return { addToCart, deleteCartItem, updateCartItem };
 }

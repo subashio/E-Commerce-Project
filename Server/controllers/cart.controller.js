@@ -1,5 +1,6 @@
 import cartModel from "../models/cart.model.js";
 import userModel from "../models/user.model.js";
+import mongoose from "mongoose";
 
 export async function addToCartController(req, res) {
   try {
@@ -7,8 +8,15 @@ export async function addToCartController(req, res) {
     const { productId } = req.body;
 
     if (!productId) {
-      return res.status(402).json({
+      return res.status(400).json({
         message: "Provide the reqied fields",
+        success: false,
+        error: true,
+      });
+    }
+    if (!mongoose.Types.ObjectId.isValid(productId)) {
+      return res.status(400).json({
+        message: "Invalid productId format",
         success: false,
         error: true,
       });

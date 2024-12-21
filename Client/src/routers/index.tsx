@@ -24,6 +24,7 @@ import ShopPage from "@/pages/ShopPage";
 import SubCategoryList from "@/pages/SubCategoryList";
 import SuccessPage from "@/pages/SuccessPage";
 import VerfiyEmail from "@/pages/VerfiyEmail";
+import WishlistPage from "@/pages/WishlistPage";
 import { createBrowserRouter } from "react-router-dom";
 
 const router = createBrowserRouter(
@@ -46,6 +47,7 @@ const router = createBrowserRouter(
             { path: "", element: <ProfilePage /> },
             { path: "order-details", element: <OrderDetailsPage /> },
             { path: "address-details", element: <AddressPage /> },
+            { path: "wishlist", element: <WishlistPage /> },
           ],
         },
         {

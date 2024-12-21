@@ -1,3 +1,4 @@
+import AddToCartButton from "@/components/AddToCartButton";
 import { Badge } from "@/components/ui/badge";
 import {
   DropdownMenu,
@@ -5,7 +6,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Ellipsis } from "lucide-react";
+import { useProduct } from "@/hooks/useProduct";
+import { Ellipsis, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export const actions = (
@@ -29,6 +31,24 @@ export const actions = (
     </DropdownMenuContent>
   </DropdownMenu>
 );
+export const addToAction = (id: string | undefined) => (
+  <AddToCartButton className="w-[100px]" id={id} />
+);
+
+export function RemoveWislistButton({ id }: { id: string }) {
+  const { deleteWishlist } = useProduct();
+
+  return (
+    <button
+      onClick={() => deleteWishlist(id)}
+      className="flex items-center gap-1 !p-0 text-xs text-secondary !no-underline dark:text-secondary-foreground"
+    >
+      <Trash2 className="w-3.5 text-destructive" />
+    </button>
+  );
+}
+
+export const removeAction = (id: string) => <RemoveWislistButton id={id} />;
 
 export const categoryColumns = [
   {
@@ -135,4 +155,33 @@ export const orderColumn = [
     ),
   },
   { header: "Price", key: "price" },
+];
+
+export const wishlistColumn = [
+  {
+    header: "Image",
+    key: "image",
+    render: (value: string | undefined) => (
+      <img
+        src={value}
+        alt="product"
+        className="h-10 w-10 rounded-md object-cover"
+      />
+    ),
+  },
+
+  { header: "Product Name", key: "name" },
+
+  { header: "Price", key: "price" },
+  {
+    header: "Actions",
+    key: "action",
+    render: (_: unknown, row: { id: string | undefined }) =>
+      addToAction(row.id),
+  },
+  {
+    header: "Remove",
+    key: "remove",
+    render: (_: unknown, row: { id: string }) => removeAction(row.id),
+  },
 ];

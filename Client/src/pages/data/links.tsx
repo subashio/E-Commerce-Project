@@ -1,4 +1,5 @@
 import {
+  Heart,
   List,
   ListTree,
   MapPin,
@@ -15,14 +16,19 @@ export const links: LinksProps[] = [
     logo: <User className="h-5 w-5" />,
   },
   {
+    name: "Address",
+    to: "/profile-page/address-details",
+    logo: <MapPin className="h-5 w-5" />,
+  },
+  {
     name: "Orders",
     to: "/profile-page/order-details",
     logo: <ShoppingBag className="h-5 w-5" />,
   },
   {
-    name: "Address",
-    to: "/profile-page/address-details",
-    logo: <MapPin className="h-5 w-5" />,
+    name: "Wishlist",
+    to: "/profile-page/wishlist",
+    logo: <Heart className="h-5 w-5" />,
   },
 ];
 

@@ -1,22 +1,25 @@
 import { SummaryApi } from "@/constants/SummaryApi";
 import { useGlobleContext } from "@/context/GlobleContextProvider";
 import { useToast } from "@/hooks/use-toast";
+import { useCart } from "@/hooks/useCart";
 import Axios from "@/lib/Axios";
+import { cn } from "@/lib/utils";
 import { RootState } from "@/store/store";
-import { Plus } from "lucide-react";
 import React from "react";
 import { useSelector } from "react-redux";
 import { Button } from "./ui/button";
 
 interface ProductCartProps {
   id: string | undefined;
+  className?: string;
 }
 
-export default function AddToCartButton({ id }: ProductCartProps) {
+export default function AddToCartButton({ id, className }: ProductCartProps) {
   const cartList = useSelector((state: RootState) => state.product.cartList);
   const { toast } = useToast();
   const [isAvailableCart, setIsAvailableCart] = React.useState(false);
-  const { fetchCartItem, handleToast, updateCartItem } = useGlobleContext();
+  const { fetchCartItem, handleToast } = useGlobleContext();
+  const { updateCartItem } = useCart();
   const [cartItemDetails, setCartItemsDetails] = React.useState<any>(null);
   const [qty, setQty] = React.useState<number>(0);
 
@@ -58,7 +61,7 @@ export default function AddToCartButton({ id }: ProductCartProps) {
   };
 
   React.useEffect(() => {
-    const productInCart = cartList.find((item) => {
+    const productInCart = cartList.find((item: any) => {
       if (typeof item.productId === "string") {
         return item.productId === id;
       } else if (item.productId && typeof item.productId === "object") {
@@ -81,14 +84,12 @@ export default function AddToCartButton({ id }: ProductCartProps) {
   return (
     <div>
       <Button
-        className="h-9 w-full gap-1 rounded-lg p-2 capitalize"
+        className={cn("h-8 w-full gap-1 rounded-lg p-2 capitalize", className)}
         onClick={AddtoCart}
       >
-        <Plus />
+        {/* <Plus /> */}
         Add to Cart
-        {/* {isLoading ? <Loader className="animate-spin" /> : "Cart"} */}
       </Button>
-      {/* )} */}
     </div>
   );
 }

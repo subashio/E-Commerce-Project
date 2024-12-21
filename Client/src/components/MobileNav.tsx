@@ -31,37 +31,38 @@ export default function MobileNav({ button }: { button: ReactNode }) {
   return (
     <Sheet open={isSheetOpen} onOpenChange={(isOpen) => setIsSheetOpen(isOpen)}>
       <SheetTrigger className="block lg:hidden">{button}</SheetTrigger>
-      <SheetContent side="left" className="w-full p-2 pt-0">
-        {/* <Link to="/">
-          <img
-            src="/logo.png"
-            className="my-4 ml-2 h-12 w-52"
-            alt="Globo-green logo"
-          />
-        </Link> */}
-
-        <div className="p-2">
-          <Link
-            to="/profile-page"
-            className="my-3 flex h-full w-full cursor-pointer items-center gap-2"
-          >
-            <Avatar className="h-10 w-10">
-              <AvatarImage src={user.avatar} alt="@shadcn" />
-              <AvatarFallback className="text-sm font-medium">
-                {user.name?.charAt(0)}
-              </AvatarFallback>
-            </Avatar>
-            <div className="-mt-1">
-              <p className="flex items-center gap-2 text-sm">{user.name}</p>
-              <p className="text-xs">{user.email}</p>
+      <SheetContent
+        side="left"
+        className={`w-full p-2 pt-6 ${isLoggedIn ? "pt-0" : "pt-6"}`}
+      >
+        {isLoggedIn && (
+          <>
+            <div className="p-2">
+              <Link
+                to="/profile-page"
+                className="my-3 flex h-full w-full cursor-pointer items-center gap-2"
+              >
+                <Avatar className="h-10 w-10">
+                  <AvatarImage src={user.avatar} alt="@shadcn" />
+                  <AvatarFallback className="text-sm font-medium">
+                    {user.name?.charAt(0)}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="-mt-1">
+                  <p className="flex items-center gap-2 text-sm font-semibold">
+                    {user.name}
+                  </p>
+                  <p className="text-xs">{user.email}</p>
+                </div>
+              </Link>
             </div>
-          </Link>
-        </div>
-        <Separator />
+            <Separator />
+          </>
+        )}
         <Accordion type="single" collapsible>
           <AccordionItem className="!border-none" value="item-1 ">
             <AccordionTrigger className="mt-4 h-10 rounded-lg border bg-primary/20 px-4 py-2 text-sm hover:no-underline">
-              All categories{" "}
+              All categories
               <ChevronRight className="w-4 shrink-0 text-secondary/50" />
             </AccordionTrigger>
             <AccordionContent className="mt-2 flex flex-col rounded-md">

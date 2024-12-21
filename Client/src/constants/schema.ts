@@ -33,8 +33,25 @@ export const ProductSchema = z.object({
     .optional(),
 
   description: z
-    .string()
-    .min(10, { message: "Description must be at least 10 characters long." }),
+    .union([
+      z
+        .string()
+        .min(10, {
+          message: "Description must be at least 10 characters long.",
+        }),
+      z.custom<TrustedHTML>(), // Allows TrustedHTML
+      z.undefined(), // Allows undefined
+    ])
+    .refine(
+      (value) =>
+        typeof value === "undefined" ||
+        typeof value !== "string" ||
+        value.length >= 10,
+      {
+        message:
+          "Description must be at least 10 characters long when provided as a string.",
+      },
+    ),
 
   stock: z
     .number()

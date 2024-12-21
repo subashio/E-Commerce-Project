@@ -38,16 +38,21 @@ export default function ProductCarousel({
 
   // Helper function to calculate discount percentage
   const calculateDiscountPercentage = (
-    listPrice: number,
-    salePrice: number,
+    listPrice: number | null | undefined,
+    salePrice: number | null | undefined,
   ): number => {
     if (!listPrice || !salePrice || listPrice <= salePrice) return 0;
     return Math.round(((listPrice - salePrice) / listPrice) * 100);
   };
 
+  const validProducts = (data: any[]) =>
+    data.filter((item) => item && typeof item.salePrice === "number");
+
   const products = React.useMemo(() => {
+    const source = viewProduct || product;
+    const filteredProducts = validProducts(source);
     if (viewProduct)
-      return viewProduct.map((product: any) => {
+      return filteredProducts.map((product: any) => {
         const discount = calculateDiscountPercentage(
           product.salePrice,
           product.price,
@@ -62,8 +67,8 @@ export default function ProductCarousel({
               ? product.image[0]
               : "default.jpg",
           category: categoryLookup.get(product.categoryId),
-          price: product.price,
-          salePrice: product.salePrice,
+          price: product.price || 0,
+          salePrice: product.salePrice || 0,
           status: product.status ?? false,
         };
       }); // Use external data if provided
@@ -113,10 +118,9 @@ export default function ProductCarousel({
       <div className="flex w-full items-center justify-between">
         <Link
           to="/shop"
-          className="group flex items-center gap-3 rounded-full px-2 py-2 text-xl font-bold hover:underline-offset-2 md:text-3xl"
+          className="flex items-center gap-3 px-2 py-2 text-xl font-medium md:text-3xl"
         >
           {title}
-          {/* <ArrowRightCircleIcon className="-translate-x-5 opacity-0 transition-all duration-500 group-hover:translate-x-0 group-hover:opacity-100" /> */}
         </Link>
         <div className="flex gap-2">
           <ChevronLeft
@@ -151,7 +155,7 @@ export default function ProductCarousel({
                 image={item.image}
                 price={item.price}
                 salePrice={item.salePrice}
-                className="flex-shrink-0 basis-[70%] sm:basis-1/2 md:basis-1/3 lg:basis-[19%]"
+                className="flex-shrink-0 basis-[70%] sm:basis-1/2 md:basis-1/3 lg:basis-[24%] xl:basis-[19%]"
               />
             ))}
         </CarouselContent>

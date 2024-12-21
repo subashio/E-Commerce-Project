@@ -13,7 +13,7 @@ import { useGlobleContext } from "@/context/GlobleContextProvider";
 export function useProduct() {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { fetchAllViewedProduct } = useGlobleContext();
+  const { fetchAllViewedProduct, fetchAllWishlist } = useGlobleContext();
 
   // add and update  product
   const handleProduct = async (
@@ -156,10 +156,39 @@ export function useProduct() {
     }
   };
 
+  const createWishlist = async (id: string | undefined) => {
+    const response = await Axios({
+      ...SummaryApi.create_wishlist,
+      data: {
+        productId: id,
+      },
+    });
+    if (response && response.data) {
+      if (fetchAllWishlist) {
+        fetchAllWishlist();
+      }
+    }
+  };
+  const deleteWishlist = async (id: string) => {
+    const response = await Axios({
+      ...SummaryApi.delete_wishlist,
+      data: {
+        productId: id,
+      },
+    });
+    if (response && response.data) {
+      if (fetchAllWishlist) {
+        fetchAllWishlist();
+      }
+    }
+  };
+
   return {
     handleProduct,
     handleCategory,
     handleSubCategory,
     createViewiedProducts,
+    createWishlist,
+    deleteWishlist,
   };
 }
