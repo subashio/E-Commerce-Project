@@ -52,6 +52,7 @@ export default function ProductCarousel({
           product.salePrice,
           product.price,
         );
+
         return {
           _id: product._id,
           name: product.name,

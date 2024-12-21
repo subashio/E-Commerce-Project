@@ -39,7 +39,7 @@ export default function Home() {
   return (
     <section className="">
       <HeroSection />
-      {viewedProduct.length > 0 && (
+      {viewedProduct?.length > 0 && (
         <ProductCarousel title="Resently Viewed" viewProduct={viewedProduct} />
       )}
       <ProductCarousel title="Best Sellers" />
