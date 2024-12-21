@@ -38,21 +38,16 @@ export default function ProductCarousel({
 
   // Helper function to calculate discount percentage
   const calculateDiscountPercentage = (
-    listPrice: number | null | undefined,
-    salePrice: number | null | undefined,
+    listPrice: number,
+    salePrice: number,
   ): number => {
     if (!listPrice || !salePrice || listPrice <= salePrice) return 0;
     return Math.round(((listPrice - salePrice) / listPrice) * 100);
   };
 
-  const validProducts = (data: any[]) =>
-    data.filter((item) => item && typeof item.salePrice === "number");
-
   const products = React.useMemo(() => {
-    const source = viewProduct || product;
-    const filteredProducts = validProducts(source);
     if (viewProduct)
-      return filteredProducts.map((product: any) => {
+      return viewProduct.map((product: any) => {
         const discount = calculateDiscountPercentage(
           product.salePrice,
           product.price,
