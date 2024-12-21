@@ -33,13 +33,13 @@ const banner2 = [
 
 export default function Home() {
   const viewedProduct = useSelector(
-    (state: RootState) => state.product?.viewedProduct || [],
+    (state: RootState) => state.product.viewedProduct,
   );
 
   return (
     <section className="">
       <HeroSection />
-      {viewedProduct?.length > 0 && (
+      {viewedProduct.length > 0 && (
         <ProductCarousel title="Resently Viewed" viewProduct={viewedProduct} />
       )}
       <ProductCarousel title="Best Sellers" />
