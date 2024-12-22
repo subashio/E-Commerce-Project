@@ -103,6 +103,11 @@ export default function ProductCarousel({
       });
     }
   }, [api]);
+  React.useEffect(() => {
+    console.log("viewProduct:", viewProduct);
+    console.log("Redux products:", product);
+    console.log("Calculated products:", products);
+  }, [viewProduct, product, products]);
 
   return (
     <MaxWidthWrapper className="my-10 flex flex-col gap-4">
