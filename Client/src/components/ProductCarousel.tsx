@@ -18,7 +18,7 @@ export default function ProductCarousel({
   viewProduct,
 }: {
   title: string;
-  viewProduct?: any[];
+  viewProduct?: any[] | undefined;
 }) {
   const [api, setApi] = React.useState<CarouselApi>();
   const product = useSelector(
