@@ -21,8 +21,12 @@ export default function ProductCarousel({
   viewProduct?: any[] | undefined;
 }) {
   const [api, setApi] = React.useState<CarouselApi>();
-  const product = useSelector((state: RootState) => state.product.product);
-  const category = useSelector((state: RootState) => state.product.category);
+  const product = useSelector(
+    (state: RootState) => state.product?.product || [],
+  );
+  const category = useSelector(
+    (state: RootState) => state.product?.category || [],
+  );
   const plugin = React.useRef(
     Autoplay({ delay: 2000, stopOnInteraction: true }),
   );
@@ -103,11 +107,6 @@ export default function ProductCarousel({
       });
     }
   }, [api]);
-  React.useEffect(() => {
-    console.log("viewProduct:", viewProduct);
-    console.log("Redux products:", product);
-    console.log("Calculated products:", products);
-  }, [viewProduct, product, products]);
 
   return (
     <MaxWidthWrapper className="my-10 flex flex-col gap-4">
