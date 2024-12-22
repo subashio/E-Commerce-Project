@@ -33,9 +33,9 @@ const banner2 = [
 
 export default function Home() {
   const viewedProduct = useSelector(
-    (state: RootState) => state.product?.viewedProduct ?? [],
+    (state: RootState) => state.product.viewedProduct ?? [],
   );
-
+  console.log("viewedProduct:", viewedProduct);
   return (
     <section className="">
       <HeroSection />
