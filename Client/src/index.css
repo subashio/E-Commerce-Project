@@ -131,7 +131,7 @@
   }
   td,
   th {
-    @apply border p-2;
+    @apply border-b p-1;
   }
   th {
     @apply bg-secondary/10 text-left font-normal;

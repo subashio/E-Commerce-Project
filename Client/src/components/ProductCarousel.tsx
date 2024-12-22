@@ -45,50 +45,6 @@ export default function ProductCarousel({
     return Math.round(((listPrice - salePrice) / listPrice) * 100);
   };
 
-  // const products = React.useMemo(() => {
-  //   const source = Array.isArray(viewProduct) ? viewProduct : product || [];
-
-  //   return source.map((product: any) => {
-  //     const discount = calculateDiscountPercentage(
-  //       product.salePrice,
-  //       product.price,
-  //     );
-
-  //     return {
-  //       _id: product._id,
-  //       name: product.name,
-  //       discount: discount > 0 ? `${discount}%` : null,
-  //       to: "/",
-  //       image:
-  //         product.image && product.image[0] ? product.image[0] : "default.jpg",
-  //       category: categoryLookup.get(product.categoryId),
-  //       price: product.price || 0,
-  //       salePrice: product.salePrice || 0,
-  //       status: product.status ?? false,
-  //     };
-  //   }); // Use external data if provided
-
-  //   // // Default: Map products from Redux
-  //   // return product.map((product: any) => {
-  //   //   const discount = calculateDiscountPercentage(
-  //   //     product.salePrice,
-  //   //     product.price,
-  //   //   );
-  //   //   return {
-  //   //     _id: product._id,
-  //   //     name: product.name,
-  //   //     discount: discount > 0 ? `${discount}%` : null,
-  //   //     to: "/",
-  //   //     image: product.image[0] || "default.jpg",
-  //   //     category: categoryLookup.get(product.categoryId),
-  //   //     price: product.price,
-  //   //     salePrice: product.salePrice,
-  //   //     status: product.status ?? false,
-  //   //   };
-  //   // });
-  // }, [product, categoryLookup, viewProduct]);
-  // Handle navigation for the arrows
-
   const products = React.useMemo(() => {
     const source = Array.isArray(viewProduct) ? viewProduct : product || [];
 
