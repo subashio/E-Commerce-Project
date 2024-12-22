@@ -46,47 +46,46 @@ export default function ProductCarousel({
   };
 
   const products = React.useMemo(() => {
-    if (viewProduct)
-      return viewProduct.map((product: any) => {
-        const discount = calculateDiscountPercentage(
-          product.salePrice,
-          product.price,
-        );
+    const source = Array.isArray(viewProduct) ? viewProduct : product || [];
 
-        return {
-          _id: product._id,
-          name: product.name,
-          discount: discount > 0 ? `${discount}%` : null,
-          to: "/",
-          image:
-            product.image && product.image[0]
-              ? product.image[0]
-              : "default.jpg",
-          category: categoryLookup.get(product.categoryId),
-          price: product.price || 0,
-          salePrice: product.salePrice || 0,
-          status: product.status ?? false,
-        };
-      }); // Use external data if provided
-
-    // Default: Map products from Redux
-    return product.map((product: any) => {
+    return source.map((product: any) => {
       const discount = calculateDiscountPercentage(
         product.salePrice,
         product.price,
       );
+
       return {
         _id: product._id,
         name: product.name,
         discount: discount > 0 ? `${discount}%` : null,
         to: "/",
-        image: product.image[0] || "default.jpg",
+        image:
+          product.image && product.image[0] ? product.image[0] : "default.jpg",
         category: categoryLookup.get(product.categoryId),
-        price: product.price,
-        salePrice: product.salePrice,
+        price: product.price || 0,
+        salePrice: product.salePrice || 0,
         status: product.status ?? false,
       };
-    });
+    }); // Use external data if provided
+
+    // // Default: Map products from Redux
+    // return product.map((product: any) => {
+    //   const discount = calculateDiscountPercentage(
+    //     product.salePrice,
+    //     product.price,
+    //   );
+    //   return {
+    //     _id: product._id,
+    //     name: product.name,
+    //     discount: discount > 0 ? `${discount}%` : null,
+    //     to: "/",
+    //     image: product.image[0] || "default.jpg",
+    //     category: categoryLookup.get(product.categoryId),
+    //     price: product.price,
+    //     salePrice: product.salePrice,
+    //     status: product.status ?? false,
+    //   };
+    // });
   }, [product, categoryLookup, viewProduct]);
   // Handle navigation for the arrows
   const handleRightClick = () => {
