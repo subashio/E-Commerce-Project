@@ -10,7 +10,9 @@ import { useSelector } from "react-redux";
 
 export default function WishlistPage() {
   const [search, setSearch] = React.useState("");
-  const wishlist = useSelector((state: RootState) => state.product.wishlist);
+  const wishlist = useSelector(
+    (state: RootState) => state.product?.wishlist || [],
+  );
 
   const wishlistData = wishlist
     .map((item) => {

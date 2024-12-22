@@ -22,10 +22,10 @@ export default function ProductCarousel({
 }) {
   const [api, setApi] = React.useState<CarouselApi>();
   const product = useSelector(
-    (state: RootState) => state.product?.product || [],
+    (state: RootState) => state.product.product || [],
   );
   const category = useSelector(
-    (state: RootState) => state.product?.category || [],
+    (state: RootState) => state.product.category || [],
   );
   const plugin = React.useRef(
     Autoplay({ delay: 2000, stopOnInteraction: true }),
@@ -45,51 +45,48 @@ export default function ProductCarousel({
     return Math.round(((listPrice - salePrice) / listPrice) * 100);
   };
 
-  if ((!viewProduct || viewProduct.length === 0) && product.length === 0) {
-    console.warn("No products available");
-    return null; // Or render a placeholder
-  }
   const products = React.useMemo(() => {
-    const source = Array.isArray(viewProduct) ? viewProduct : product;
+    if (viewProduct)
+      return viewProduct.map((product: any) => {
+        const discount = calculateDiscountPercentage(
+          product.salePrice,
+          product.price,
+        );
 
-    return source.map((product: any) => {
+        return {
+          _id: product._id,
+          name: product.name,
+          discount: discount > 0 ? `${discount}%` : null,
+          to: "/",
+          image:
+            product.image && product.image[0]
+              ? product.image[0]
+              : "default.jpg",
+          category: categoryLookup.get(product.categoryId),
+          price: product.price || 0,
+          salePrice: product.salePrice || 0,
+          status: product.status ?? false,
+        };
+      }); // Use external data if provided
+
+    // Default: Map products from Redux
+    return product.map((product: any) => {
       const discount = calculateDiscountPercentage(
         product.salePrice,
         product.price,
       );
-
       return {
         _id: product._id,
         name: product.name,
         discount: discount > 0 ? `${discount}%` : null,
         to: "/",
-        image:
-          product.image && product.image[0] ? product.image[0] : "default.jpg",
-        category: categoryLookup.get(product.categoryId) || "Unknown Category",
-        price: product.price || 0,
-        salePrice: product.salePrice || 0,
+        image: product.image[0] || "default.jpg",
+        category: categoryLookup.get(product.categoryId),
+        price: product.price,
+        salePrice: product.salePrice,
         status: product.status ?? false,
       };
-    }); // Use external data if provided
-
-    // // Default: Map products from Redux
-    // return product.map((product: any) => {
-    //   const discount = calculateDiscountPercentage(
-    //     product.salePrice,
-    //     product.price,
-    //   );
-    //   return {
-    //     _id: product._id,
-    //     name: product.name,
-    //     discount: discount > 0 ? `${discount}%` : null,
-    //     to: "/",
-    //     image: product.image[0] || "default.jpg",
-    //     category: categoryLookup.get(product.categoryId) || "Unknown Category",
-    //     price: product.price,
-    //     salePrice: product.salePrice,
-    //     status: product.status ?? false,
-    //   };
-    // });
+    });
   }, [product, categoryLookup, viewProduct]);
   // Handle navigation for the arrows
   const handleRightClick = () => {
@@ -142,8 +139,8 @@ export default function ProductCarousel({
         onMouseLeave={plugin.current.reset}
       >
         <CarouselContent className="ml-1 flex snap-x snap-mandatory items-center gap-4">
-          {(products || [])
-            .filter((item) => item.status === true)
+          {products
+            ?.filter((item) => item.status === true)
             .map((item, index) => (
               <ProductCard
                 discount={item.discount}
