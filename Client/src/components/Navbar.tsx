@@ -30,8 +30,12 @@ import {
 
 export default function Navbar() {
   const user = useSelector((state: RootState) => state.user);
-  const cartList = useSelector((state: RootState) => state.product.cartList);
-  const wishlist = useSelector((state: RootState) => state.product.wishlist);
+  const cartList = useSelector(
+    (state: RootState) => state.product?.cartList || [],
+  );
+  const wishlist = useSelector(
+    (state: RootState) => state.product?.wishlist || [],
+  );
   const { handleLogout } = useUser();
   const isLoggedIn = user?._id;
   const isAdmin = user.role == "ADMIN";
@@ -193,7 +197,7 @@ export default function Navbar() {
                   className="absolute -right-2 -top-1 p-0.5 px-1.5"
                   variant="secondary"
                 >
-                  {wishlist.length}
+                  {wishlist.length || 0}
                 </Badge>
               </Link>
               <CartSheet
