@@ -45,6 +45,10 @@ export default function ProductCarousel({
     return Math.round(((listPrice - salePrice) / listPrice) * 100);
   };
 
+  if ((!viewProduct || viewProduct.length === 0) && product.length === 0) {
+    console.warn("No products available");
+    return null; // Or render a placeholder
+  }
   const products = React.useMemo(() => {
     const source = Array.isArray(viewProduct) ? viewProduct : product;
 
