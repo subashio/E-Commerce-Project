@@ -19,7 +19,9 @@ export default function AddToWishlistButton({
     React.useState<boolean>(false);
 
   const { handleToast } = useGlobleContext();
-  const wishlist = useSelector((state: RootState) => state.product.wishlist);
+  const wishlist = useSelector(
+    (state: RootState) => state.product?.wishlist || [],
+  );
 
   async function Addtowishlist(e: React.MouseEvent) {
     e.preventDefault();
@@ -47,7 +49,7 @@ export default function AddToWishlistButton({
   }
 
   React.useEffect(() => {
-    const productInWishlist = wishlist.find((item: any) => {
+    const productInWishlist = wishlist?.find((item: any) => {
       return item._id === id; // Compare directly with _id
     });
 
