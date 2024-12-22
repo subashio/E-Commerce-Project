@@ -1,7 +1,7 @@
 import CategoriesSection from "@/components/CategoriesSection";
 import HeroSection from "@/components/HeroSection";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
-import ProductCarousel from "@/components/ProductCarousel";
+// import ProductCarousel from "@/components/ProductCarousel";
 import { Badge } from "@/components/ui/badge";
 import { RootState } from "@/store/store";
 import { MoveRight } from "lucide-react";
@@ -42,7 +42,7 @@ export default function Home() {
       {/* {Array.isArray(viewedProduct) && viewedProduct.length > 0 && (
         <ProductCarousel title="Resently Viewed" viewProduct={viewedProduct} />
       )} */}
-      <ProductCarousel title="Best Sellers" />
+      {/* <ProductCarousel title="Best Sellers" /> */}
       <MaxWidthWrapper className="my-20 grid w-full grid-cols-1 gap-10 md:grid-cols-2">
         {banner2.map((_item, _index) => (
           <div
