@@ -16,7 +16,7 @@ export default function ProductCard({
 }: ProductCartProps) {
   return (
     <Link
-      to={`/shop/product/${_id}`}
+      to={`/product/${_id}`}
       className={cn(
         "group relative rounded-lg sm:hover:shadow-[rgba(7,_65,_210,_0.1)_0px_9px_30px]",
         className,

@@ -35,11 +35,11 @@ const router = createBrowserRouter(
       children: [
         { path: "", element: <Home /> },
         { path: "search", element: <SearchPage /> },
-        { path: "shop/checkout", element: <CheckoutPage /> },
+        { path: "checkout", element: <CheckoutPage /> },
         { path: "success", element: <SuccessPage /> },
 
         { path: "reset-password", element: <ResetPassword /> },
-        { path: "shop/product/:id", element: <ProductPage /> },
+        { path: "product/:id", element: <ProductPage /> },
         {
           path: "profile-page",
           element: <Profile />,

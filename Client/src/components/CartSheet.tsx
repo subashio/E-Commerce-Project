@@ -173,7 +173,7 @@ export default function CartSheet({ button }: { button: ReactNode }) {
               </h2>
               <CardFooter className="mt-2 flex w-full flex-col items-center justify-between gap-3 p-0 sm:flex-row">
                 <Link
-                  to={isLoggedIn ? "/shop/checkout" : "/login"}
+                  to={isLoggedIn ? "/checkout" : "/login"}
                   onClick={() => isSetSheetOpen(false)}
                   className={cn(
                     "w-full sm:w-auto",
