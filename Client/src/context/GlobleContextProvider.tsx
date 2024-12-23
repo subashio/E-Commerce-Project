@@ -26,14 +26,10 @@ type GlobleContextType = {
   fetchAllProduct: () => Promise<void>;
   handleToast: () => void;
   fetchOrder: () => Promise<void>;
-  // addToCart: (product: any) => void;
   fetchAllCategory: () => Promise<void>;
   fetchAllSubCategory: () => Promise<void>;
   fetchAllViewedProduct: () => Promise<void>;
   fetchAllWishlist: () => Promise<void>;
-  // updateCartItem: (id: string, qty: any) => Promise<void>;
-  // deleteCartItem: (cartId: string) => Promise<void>;
-  // fetchProductByCategory: (id: string, setProduct?: any) => Promise<void>;
 };
 
 // Creating the context
@@ -70,24 +66,6 @@ const GlobleProvider = ({ children }: { children: ReactNode }) => {
       console.error(error);
     }
   };
-  // //fetching products by category
-  // const fetchProductByCategory = async (id: string, setProduct?: any) => {
-  //   try {
-  //     const response = await Axios({
-  //       ...SummaryApi.filter_product_by_category,
-  //       params: {
-  //         id: id, // Make sure this is correctly passed
-  //       },
-  //     });
-
-  //     if (response.data?.data) {
-  //       setProduct(response.data.data);
-  //       console.log("this is the filter data : ", response.data);
-  //     }
-  //   } catch (error) {
-  //     console.error("error fetching product by categoryId");
-  //   }
-  // };
 
   // fetching the all the product
   const fetchAllProduct = async () => {
@@ -160,43 +138,6 @@ const GlobleProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  // const updateCartItem = async (id: string, qty: any) => {
-  //   try {
-  //     const response = await Axios({
-  //       ...SummaryApi.update_cart,
-  //       data: {
-  //         _id: id,
-  //         qty: qty,
-  //       },
-  //     });
-  //     const { data: responseData } = response;
-
-  //     if (responseData) {
-  //       fetchCartItem();
-  //       return responseData;
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
-
-  // const deleteCartItem = async (cartId: string) => {
-  //   try {
-  //     const response = await Axios({
-  //       ...SummaryApi.delete_cart,
-  //       data: {
-  //         _id: cartId,
-  //       },
-  //     });
-  //     const { data: responseData } = response;
-  //     if (responseData.success) {
-  //       dispatch(setCart([]));
-  //       fetchCartItem();
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
   const handleToast = () => {
     if (!isLoggedIn) {
       toast({

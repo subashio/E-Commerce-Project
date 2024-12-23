@@ -15,6 +15,7 @@ import { SummaryApi } from "@/constants/SummaryApi";
 import { useToast } from "@/hooks/use-toast";
 import { actions, productColumns } from "@/lib/Actions";
 import Axios from "@/lib/Axios";
+import { createLookup } from "@/lib/lookUpMap";
 import { setProduct } from "@/store/ProductSlice";
 import { RootState } from "@/store/store";
 import { Plus } from "lucide-react";
@@ -22,7 +23,6 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { Card, CardContent, CardHeader } from "../components/ui/card";
-import { createLookup } from "@/lib/lookUpMap";
 
 export default function ProductList() {
   const location = useLocation();
@@ -93,6 +93,7 @@ export default function ProductList() {
 
       if (response.data) {
         // Update Redux state and filtered data
+
         dispatch(setProduct(response.data.data));
         setFilteredData(
           response.data.data.map((product: any) => ({
