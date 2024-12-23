@@ -30,7 +30,7 @@ import { createBrowserRouter } from "react-router-dom";
 const router = createBrowserRouter(
   [
     {
-      path: "/",
+      path: "",
       element: <App />, // Layout wraps all pages
       children: [
         { path: "", element: <Home /> },
@@ -51,7 +51,7 @@ const router = createBrowserRouter(
           ],
         },
         {
-          path: "/shop",
+          path: "shop",
           element: <Shop />,
           children: [
             { path: "", element: <ShopPage PriceRange={[0, 0]} /> },
@@ -66,7 +66,7 @@ const router = createBrowserRouter(
     },
 
     {
-      path: "/dashboard-page",
+      path: "dashboard-page",
       element: <Dashboard />,
       children: [
         { path: "", element: <DashboardPage /> },
@@ -99,11 +99,11 @@ const router = createBrowserRouter(
       ],
     },
     {
-      path: "/verify-email",
+      path: "verify-email",
       element: <VerfiyEmail />,
     },
     {
-      path: "/",
+      path: "",
       element: <AuthLayout />,
       children: [
         {
