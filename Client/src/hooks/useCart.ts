@@ -7,7 +7,7 @@ import { useDispatch } from "react-redux";
 export function useCart() {
   const dispatch = useDispatch();
   const { fetchCartItem } = useGlobleContext();
-  const addToCart = async (id: string) => {
+  const addToCart = async (id: string | undefined) => {
     const { fetchCartItem } = useGlobleContext();
     try {
       const response = await Axios({
@@ -28,7 +28,7 @@ export function useCart() {
     }
   };
 
-  const updateCartItem = async (id: string, qty: any) => {
+  const updateCartItem = async (id: string | undefined, qty: number) => {
     try {
       const response = await Axios({
         ...SummaryApi.update_cart,
@@ -48,7 +48,7 @@ export function useCart() {
     }
   };
 
-  const deleteCartItem = async (cartId: string) => {
+  const deleteCartItem = async (cartId: string | undefined) => {
     try {
       const response = await Axios({
         ...SummaryApi.delete_cart,

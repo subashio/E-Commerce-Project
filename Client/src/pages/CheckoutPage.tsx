@@ -156,9 +156,9 @@ export default function CheckoutPage() {
           <Accordion type="single" collapsible defaultValue="">
             <AccordionItem value="item-1">
               <AccordionTrigger className="flex items-center justify-between hover:text-primary/70 hover:no-underline">
-                <h2 className="flex justify-between gap-2">
+                <h3 className="flex items-center gap-2 font-medium">
                   <MapPin /> Add Delivery address
-                </h2>
+                </h3>
                 <ChevronRight className="w-4 shrink-0 text-secondary/50" />
               </AccordionTrigger>
               <AccordionContent className="flex flex-col justify-end">
@@ -186,9 +186,9 @@ export default function CheckoutPage() {
             </AccordionItem>
             <AccordionItem value="item-2">
               <AccordionTrigger className="flex items-center justify-between hover:text-primary/70 hover:no-underline">
-                <h2 className="flex justify-between gap-2">
+                <h3 className="flex items-center gap-2 font-medium">
                   <CreditCard /> Payment Method
-                </h2>
+                </h3>
                 <ChevronRight className="w-4 shrink-0 text-secondary/50" />
               </AccordionTrigger>
               <AccordionContent>
@@ -200,7 +200,7 @@ export default function CheckoutPage() {
                         className="relative flex h-24 w-full select-none items-center justify-between gap-x-3 rounded-lg px-8 font-medium hover:bg-zinc-100 has-[:checked]:bg-blue-50 has-[:checked]:text-blue-500 has-[:checked]:ring-1 has-[:checked]:ring-blue-300 dark:has-[:checked]:bg-accent"
                       >
                         <div className="flex flex-col justify-center gap-1.5">
-                          <h1 className="">{item.name}</h1>
+                          <p className="text-md font-semibold">{item.name}</p>
                           <p className="max-w-sm text-xs">{item.description}</p>
                         </div>
                         <input

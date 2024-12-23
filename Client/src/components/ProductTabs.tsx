@@ -12,7 +12,7 @@ export function ProductTabs({
   description: string | TrustedHTML | undefined;
 }) {
   return (
-    <Tabs defaultValue="account" className="w-full">
+    <Tabs defaultValue="details" className="w-full">
       <TabsList className="my-4 w-full gap-4 border-b bg-transparent">
         <TabsTrigger
           className="p-0 text-sm data-[state=active]:text-primary data-[state=active]:underline data-[state=active]:underline-offset-[14px]"
@@ -34,10 +34,7 @@ export function ProductTabs({
           Seller Info
         </TabsTrigger>
       </TabsList>
-      <TabsContent
-        value="details"
-        className="mb-10 max-w-4xl whitespace-pre-wrap"
-      >
+      <TabsContent value="details" className="mb-10 whitespace-pre-wrap">
         <div
           className="rich-text-content"
           style={{ whiteSpace: "pre-wrap" }}

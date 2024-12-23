@@ -57,7 +57,7 @@ export default function ShopHeader({
           </SheetTrigger>
           <SheetContent
             side="left"
-            className="flex w-full flex-col p-0 sm:max-w-[500px]"
+            className="flex w-full flex-col overflow-y-auto p-0 sm:max-w-[500px]"
           >
             <h1 className="p-4 text-xl font-medium">Filter</h1>
             <nav className="text-lg font-medium">
@@ -129,6 +129,13 @@ export default function ShopHeader({
                 <p className="mt-3 px-2 text-xs">
                   Price: ₹{priceRange[0]} - ₹{priceRange[1]}
                 </p>
+                <div className="mt-8 py-4">
+                  <img
+                    className="h-[45vh] w-[300px] rounded-lg object-center"
+                    src="/ban.png"
+                    alt="banner"
+                  />
+                </div>
               </div>
             </nav>
           </SheetContent>

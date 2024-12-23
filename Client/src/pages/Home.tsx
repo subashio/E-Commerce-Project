@@ -35,12 +35,11 @@ export default function Home() {
   const viewedProduct = useSelector(
     (state: RootState) => state.product?.viewedProduct || [],
   );
-  console.log("viewedProduct:", viewedProduct);
   return (
     <section className="">
       <HeroSection />
       {Array.isArray(viewedProduct) && viewedProduct.length > 0 && (
-        <ProductCarousel title="Resently Viewed" viewProduct={viewedProduct} />
+        <ProductCarousel title="Recently Viewed" viewProduct={viewedProduct} />
       )}
       <ProductCarousel title="Best Sellers" />
       <MaxWidthWrapper className="my-20 grid w-full grid-cols-1 gap-10 md:grid-cols-2">

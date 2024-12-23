@@ -8,12 +8,10 @@ import router from "./routers";
 import { persist, store } from "./store/store";
 
 createRoot(document.getElementById("root")!).render(
-  // <React.StrictMode>
   <Provider store={store}>
     <PersistGate loading={<div>Loading...</div>} persistor={persist}>
       <RouterProvider router={router} />
     </PersistGate>
     <Toaster />
   </Provider>,
-  // </React.StrictMode>,
 );

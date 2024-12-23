@@ -49,7 +49,6 @@ export default function ProductCard({
             </div>
           </div>
           <div className="absolute right-3 top-3 flex items-center gap-2 rounded-lg bg-white p-2 shadow-md group-hover:opacity-100 sm:opacity-0">
-            {/* <Heart className="h-4 w-4 text-primary" /> */}
             <AddToWishlistButton id={_id} />
             <Eye className="h-4 w-4 text-primary" />
           </div>

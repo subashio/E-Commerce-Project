@@ -18,7 +18,7 @@ export default function () {
         <main className="flex-grow">
           <Outlet />
         </main>
-        {location.pathname === "/" && <Footer />}
+        {location.pathname == "/" && <Footer />}
       </div>
     </GlobleContextProvider>
   );

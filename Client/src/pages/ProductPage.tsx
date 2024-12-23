@@ -1,10 +1,12 @@
-import AddToCartButton from "@/components/AddToCartButton";
 import AddToWishlistButton from "@/components/AddToWishlistButton";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import Footer from "@/components/Footer";
 import Logos from "@/components/Logos";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
+import ProductCarousel from "@/components/ProductCarousel";
 import { ProductTabs } from "@/components/ProductTabs";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { Button } from "@/components/ui/button";
 import {
   Carousel,
   CarouselContent,
@@ -26,7 +28,12 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { footerSvg } from "@/constants/details";
+import { SummaryApi } from "@/constants/SummaryApi";
+import { useGlobleContext } from "@/context/GlobleContextProvider";
+import { useToast } from "@/hooks/use-toast";
+import { useCart } from "@/hooks/useCart";
 import { useProduct } from "@/hooks/useProduct";
+import Axios from "@/lib/Axios";
 import { RootState } from "@/store/store";
 import Autoplay from "embla-carousel-autoplay";
 import { ChevronDown } from "lucide-react";
@@ -36,10 +43,18 @@ import { Link, useParams } from "react-router-dom";
 
 export default function ProductPage() {
   const product = useSelector((state: RootState) => state.product.product);
-  const { id: selectedId } = useParams();
+  const { id } = useParams();
   const category = useSelector((state: RootState) => state.product.category);
   const { createViewiedProducts } = useProduct();
   const [hovering, setHovering] = React.useState(false);
+  const [quantity, setQuantity] = React.useState(1);
+  const { updateCartItem } = useCart();
+  const cartList = useSelector((state: RootState) => state.product.cartList);
+  const { toast } = useToast();
+  const { handleToast, fetchCartItem } = useGlobleContext();
+  const [isAvailableCart, setIsAvailableCart] = React.useState(false);
+  const [cartItemDetails, setCartItemsDetails] = React.useState<any>(null);
+
   const categoryLookup = (categoryId: string | undefined) => {
     return category.find((cat) => cat._id === categoryId)?.name;
   };
@@ -57,14 +72,16 @@ export default function ProductPage() {
   };
 
   const selectedProduct = product.find((product: any) => {
-    return product._id === selectedId;
+    return product._id === id;
   });
 
+  if (!selectedProduct) {
+    return <div>Loading...</div>; // Or a loading state if the product is not available
+  }
+  const [price, setPrice] = React.useState(selectedProduct?.price);
+
   const discountPercentage = selectedProduct?.salePrice
-    ? calculateDiscountPercentage(
-        selectedProduct.salePrice,
-        selectedProduct.price,
-      )
+    ? calculateDiscountPercentage(selectedProduct.salePrice, price ?? 0)
     : 0;
 
   const handleThumbnailClick = (index: number) => {
@@ -72,11 +89,101 @@ export default function ProductPage() {
   };
 
   try {
-    createViewiedProducts(selectedId);
+    createViewiedProducts(id);
+    console.log(id);
   } catch (error) {
     console.log("errror sending data");
   }
 
+  const handleAddToCart = async (productId: string) => {
+    if (!isAvailableCart) {
+      try {
+        const response = await Axios({
+          ...SummaryApi.add_cart,
+          data: {
+            productId: productId,
+          },
+        });
+
+        if (response.data) {
+          fetchCartItem(); // Fetch the latest cart items
+          toast({
+            variant: "default",
+            title: "Product added to cart ✅",
+          });
+        }
+      } catch (error) {
+        console.error(error);
+        handleToast();
+      }
+    }
+  };
+
+  const handleIncreaseQty = async () => {
+    if (isAvailableCart) {
+      try {
+        await updateCartItem(cartItemDetails._id, quantity + 1);
+        toast({
+          variant: "default",
+          title: "Quantity Increased!✅",
+        });
+      } catch (error) {
+        console.error(error);
+        handleToast();
+      }
+    } else {
+      handleAddToCart(selectedProduct._id);
+    }
+  };
+
+  const handleDecreaseQty = async () => {
+    if (isAvailableCart) {
+      try {
+        await updateCartItem(cartItemDetails._id, quantity - 1);
+        toast({
+          variant: "default",
+          title: "Quantity Increased!✅",
+        });
+      } catch (error) {
+        console.error(error);
+        handleToast();
+      }
+    }
+  };
+
+  const updatePrice = (newQuantity: number) => {
+    if (newQuantity >= selectedProduct?.minQuantity) {
+      setPrice(selectedProduct?.wholesalePrice ?? selectedProduct?.price);
+    } else {
+      setPrice(selectedProduct?.price);
+    }
+  };
+
+  React.useEffect(() => {
+    const productInCart = cartList.find((item: any) => {
+      if (typeof item.productId === "string") {
+        return item.productId === selectedProduct._id;
+      } else if (item.productId && typeof item.productId === "object") {
+        return item.productId._id === selectedProduct._id;
+      }
+      return false;
+    });
+
+    if (productInCart) {
+      setQuantity(productInCart.quantity);
+      setIsAvailableCart(true);
+      setCartItemsDetails(productInCart);
+      updatePrice(productInCart.quantity);
+    } else {
+      setQuantity(0);
+      setIsAvailableCart(false);
+      setCartItemsDetails(null);
+    }
+  }, [selectedProduct._id, cartList]);
+
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <section>
       <Breadcrumbs
@@ -92,7 +199,7 @@ export default function ProductPage() {
           plugins={[plugin.current]}
           onMouseEnter={plugin.current.stop}
           onMouseLeave={plugin.current.reset}
-          className="w- group grid md:col-span-1 lg:col-span-2 lg:grid-cols-[100px_1fr]"
+          className="group grid md:col-span-1 lg:col-span-2 lg:grid-cols-[100px_1fr]"
         >
           <ScrollArea
             className="row-start-2 my-2 whitespace-nowrap lg:row-auto"
@@ -121,13 +228,13 @@ export default function ProductPage() {
           </ScrollArea>
 
           <CarouselContent
-            className="mx-auto"
+            className="ml-auto"
             style={{ transform: `translateX(-${activeIndex * 100}%)` }}
           >
             {selectedProduct?.image.map((image, index) => (
               <CarouselItem
                 key={index}
-                className="!w-full cursor-zoom-in pl-1 active:cursor-grabbing"
+                className="mx-auto !w-full cursor-zoom-in active:cursor-grabbing"
               >
                 <Lens hovering={hovering} setHovering={setHovering}>
                   <AspectRatio ratio={16 / 12} className="bg-gray-100">
@@ -148,7 +255,7 @@ export default function ProductPage() {
             <p className="text-md capitalize text-primary">
               {categoryLookup(selectedProduct?.categoryId)}
             </p>
-            <h1 className="py-2 text-3xl font-semibold capitalize">
+            <h1 className="py-2 text-2xl font-semibold capitalize">
               {selectedProduct?.name}
             </h1>
           </div>
@@ -158,7 +265,7 @@ export default function ProductPage() {
             <p className="text-md ml-2 flex items-center">
               <span className="relative">
                 <b className="absolute -left-2 top-1 text-sm font-normal">₹</b>
-                {selectedProduct?.price}
+                {price}
               </span>
             </p>
 
@@ -174,36 +281,43 @@ export default function ProductPage() {
             )}
             {selectedProduct?.minQuantity && (
               <p className="text-xs font-semibold text-amber-500">
-                Buy up to 10 for wholesale availability.
+                Buy up to {selectedProduct.minQuantity} for wholesale
+                availability.
               </p>
             )}
           </div>
 
           <div className="flex flex-wrap items-center gap-3 py-4">
-            <div className="flex">
-              <button
-                // onClick={(e) => decreaseQty(e, item._id)}
-                className="rounded-l-md border-b border-l border-t px-3 py-1"
-              >
-                -
-              </button>
-              <p className="border px-2 py-1 text-sm font-medium">
-                {/* {isLoading ? <Loader className="animate-spin p-1.5" /> : quantity} */}{" "}
-                1
-              </p>
-              <button
-                // onClick={(e) => increaseQty(e, item._id)}
-                className="rounded-r-md border-b border-r border-t px-3 py-1"
-              >
-                +
-              </button>
-            </div>
+            {selectedProduct && (
+              <div className="flex">
+                <button
+                  onClick={() => handleDecreaseQty()}
+                  className="rounded-l-md border-b border-l border-t px-3 py-1"
+                >
+                  -
+                </button>
+                <p className="border px-2 py-1 text-sm font-medium">
+                  {/* {isLoading ? <Loader className="animate-spin p-1.5" /> : quantity} */}{" "}
+                  {quantity}
+                </p>
+                <button
+                  onClick={() => handleIncreaseQty()}
+                  className="rounded-r-md border-b border-r border-t px-3 py-1"
+                >
+                  +
+                </button>
+              </div>
+            )}
 
             <div className="flex items-center gap-2">
-              <AddToCartButton
-                className="h-9 w-[200px]"
-                id={selectedProduct?._id}
-              />
+              {selectedProduct && (
+                <Button
+                  className="h-9 w-[200px] gap-1 rounded-lg p-2 capitalize"
+                  onClick={() => handleAddToCart(selectedProduct._id)}
+                >
+                  Add to Cart
+                </Button>
+              )}
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger>
@@ -260,6 +374,8 @@ export default function ProductPage() {
       <MaxWidthWrapper className="lg:my-8">
         <ProductTabs description={selectedProduct?.description} />
       </MaxWidthWrapper>
+      <ProductCarousel title="Similar Items" />
+      <Footer />
     </section>
   );
 }
