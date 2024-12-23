@@ -250,7 +250,7 @@ export default function CheckoutPage() {
 
             <Button
               onClick={handlePlaceOrder}
-              // disabled={paymentMethod === "stripe"}
+              disabled={cartData.length === 0}
               className="mt-8 w-full"
             >
               {paymentMethod === "stripe"

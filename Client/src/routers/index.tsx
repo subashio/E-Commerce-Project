@@ -11,6 +11,7 @@ import DashboardPage from "@/pages/DashboardPage";
 import ForgotPassword from "@/pages/ForgotPassword";
 import Home from "@/pages/Home";
 import Login from "@/pages/Login";
+import NotFound from "@/pages/NotFound";
 import OrderDetailsPage from "@/pages/OrderDetailsPage";
 import Orders from "@/pages/Orders";
 import OtpVerification from "@/pages/OtpVerification";
@@ -122,6 +123,10 @@ const router = createBrowserRouter(
       path: "",
       element: <AuthLayout />,
       children: authRoutes,
+    },
+    {
+      path: "*",
+      element: <NotFound />,
     },
   ],
   {
