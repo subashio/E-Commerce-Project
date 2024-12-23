@@ -47,7 +47,7 @@ export default function Breadcrumbs({
         <>
           <BreadcrumbItem>
             <BreadcrumbLink>
-              <BreadcrumbSeparator className="max-w-xl truncate">
+              <BreadcrumbSeparator className="max-w-44 truncate">
                 {" "}
                 {finalPathName}
               </BreadcrumbSeparator>
