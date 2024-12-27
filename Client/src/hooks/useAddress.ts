@@ -17,7 +17,7 @@ export function useAddress() {
   const dispatch = useDispatch();
   const address = useSelector((state: RootState) => state.address.addressList);
 
-  const user = useSelector((state: RootState) => state.user);
+  const user = useSelector((state: RootState) => state.user.currentUser);
 
   const fetchAddress = async () => {
     try {

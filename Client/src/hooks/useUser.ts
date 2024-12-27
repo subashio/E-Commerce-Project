@@ -22,6 +22,7 @@ export function useUser() {
       });
       if (res.status === 200 && res.data) {
         // Handle success response
+
         return res.data; // Return data to the calling function
       }
     } catch (error) {
@@ -81,7 +82,29 @@ export function useUser() {
 
         navigate("/");
       }
-    } catch (error) {
+    } catch (error: any) {
+      if (error.response) {
+        const statusCode = error.response.status;
+
+        if (statusCode === 400) {
+          // Render specific error for wholesalers not approved
+          toast({
+            variant: "destructive",
+            title: "Wholesaler not approved",
+            description:
+              "Your wholesaler account is pending approval. Please contact support.",
+          });
+          return; // Stop further execution
+        }
+      }
+      if (error.response.status === 401) {
+        toast({
+          variant: "destructive",
+          title: "Login",
+          description: "User not Register",
+        });
+        return;
+      }
       toast({
         variant: "destructive",
         title: "Something went Wrong",

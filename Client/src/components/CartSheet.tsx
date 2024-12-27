@@ -9,6 +9,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button, buttonVariants } from "./ui/button";
 
 import { useGlobleContext } from "@/context/GlobleContextProvider";
+import { useCart } from "@/hooks/useCart";
 import CartItem from "./CartItem";
 import {
   Card,
@@ -19,7 +20,6 @@ import {
   CardTitle,
 } from "./ui/card";
 import { ScrollArea } from "./ui/scroll-area";
-import { useCart } from "@/hooks/useCart";
 
 export default function CartSheet({ button }: { button: ReactNode }) {
   const [isSheetOpen, isSetSheetOpen] = React.useState(false);
@@ -28,7 +28,7 @@ export default function CartSheet({ button }: { button: ReactNode }) {
   const { updateCartItem, deleteCartItem } = useCart();
   const { fetchCartItem, handleToast } = useGlobleContext();
   const cartList = useSelector((state: RootState) => state.product.cartList);
-  const user = useSelector((state: RootState) => state.user);
+  const user = useSelector((state: RootState) => state.user.currentUser);
   const isLoggedIn = user?._id;
   const location = useLocation();
 
@@ -72,7 +72,25 @@ export default function CartSheet({ button }: { button: ReactNode }) {
   const increaseQty = (e: React.MouseEvent, itemId: string) => {
     e.preventDefault();
     e.stopPropagation();
-    const newQuantity = (itemQuantities[itemId] || 0) + 1;
+
+    // Find the item in the cart list
+    const item = cartList.find((item) => item._id === itemId);
+    // Extract maxQuantity from the productId object, default to 1 if not available
+    const maxQuantity =
+      typeof item?.productId === "object" ? item.productId.maxQuantity || 1 : 1;
+
+    const currentQuantity = itemQuantities[itemId] || 0;
+
+    // Return early if currentQuantity is already at maxQuantity
+    if (currentQuantity >= maxQuantity) {
+      toast({
+        variant: "default",
+        title: "Maximum quantity reached",
+      });
+      return;
+    }
+
+    const newQuantity = currentQuantity + 1;
     setItemLoading(itemId, true);
     updateCartItem(itemId, newQuantity)
       .then(() => {
@@ -159,7 +177,7 @@ export default function CartSheet({ button }: { button: ReactNode }) {
                     <CartItem
                       key={item._id}
                       item={item}
-                      quantity={itemQuantities[item._id] || 0}
+                      quantity={item.quantity || 0}
                       isLoading={loadingItems[item._id] || false}
                       increaseQty={increaseQty}
                       decreaseQty={decreaseQty}

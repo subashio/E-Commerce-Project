@@ -11,7 +11,7 @@ declare global {
     price: number;
     salePrice: number;
     wholsalePrice: number;
-    minQuantity: number;
+    maxQuantity: number;
     description: string;
   }
   interface LinksProps {

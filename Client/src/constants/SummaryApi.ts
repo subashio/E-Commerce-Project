@@ -47,6 +47,10 @@ export const SummaryApi = {
     url: "/api/user/user-details",
     method: "get",
   },
+  get_allUserDetails: {
+    url: "/api/user/all-user-details",
+    method: "get",
+  },
   update_user_details: {
     url: "/api/user/update-user",
     method: "put",
@@ -161,6 +165,10 @@ export const SummaryApi = {
     url: "api/order/order-list",
     method: "get",
   },
+  get_all_orderDetails: {
+    url: "api/order/all-order",
+    method: "get",
+  },
   create_viewed_products: {
     url: "/api/viewed-products/create",
     method: "post",
@@ -180,5 +188,25 @@ export const SummaryApi = {
   delete_wishlist: {
     url: "/api/wishlist/delete",
     method: "delete",
+  },
+  add_variant: {
+    url: "/api/variant/add",
+    method: "post",
+  },
+  delete_variant: {
+    url: "/api/variant/delete",
+    method: "delete",
+  },
+  filter_variant: {
+    url: "/api/variant/filter",
+    method: "get",
+  },
+  update_variant: {
+    url: "/api/variant/update",
+    method: "put",
+  },
+  get_variant: {
+    url: "/api/variant/get",
+    method: "get",
   },
 };

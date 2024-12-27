@@ -12,13 +12,31 @@ import cloudinaryImageUpload from "../utils/cloudinaryImageUpload.js";
 //user registration
 export async function registerController(req, res) {
   try {
-    const { name, email, password } = req.body;
+    const {
+      name,
+      email,
+      password,
+      isWholesale,
+      officeAddress,
+      companyName,
+      officePhone,
+    } = req.body;
     if (!name || !email || !password) {
       return res.status(400).json({
         message: "Provide name,email,password",
         error: true,
         success: false,
       });
+    }
+    if (isWholesale === true) {
+      if (!companyName || !officeAddress || !officePhone) {
+        return res.status(400).json({
+          message:
+            "Provide company name, office address, and office phone for wholesale users",
+          error: true,
+          success: false,
+        });
+      }
     }
 
     //checking exsiting user
@@ -35,11 +53,29 @@ export async function registerController(req, res) {
     const salt = await bcrypt.genSalt(10);
     const passwordHashed = await bcrypt.hash(password, salt);
 
-    const payload = {
-      name,
-      email,
-      password: passwordHashed,
-    };
+    // const payload = {
+    //   name,
+    //   email,
+    //   password: passwordHashed,
+    // };
+    const payload =
+      isWholesale === true
+        ? {
+            name,
+            email,
+            password: passwordHashed,
+            isWholesaler: true,
+            isApprovedWholsale: false,
+            companyName,
+            officeAddress,
+            officePhone,
+          }
+        : {
+            name,
+            email,
+            password: passwordHashed,
+            isWholesaler: false,
+          };
     //creating new user
     const newUser = new userModel(payload);
     const save = await newUser.save();
@@ -49,7 +85,7 @@ export async function registerController(req, res) {
 
     const verifyEmail = await sendEmail({
       sendTo: email,
-      subject: "Verify email from Shopme",
+      subject: "Verify email from Globo Green",
       html: emailVerificationTemplate({
         name,
         url: VerifyEmailUrl,
@@ -123,7 +159,7 @@ export async function LoginController(request, response) {
     const user = await userModel.findOne({ email });
 
     if (!user) {
-      return response.status(400).json({
+      return response.status(401).json({
         message: "User not register",
         error: true,
         success: false,
@@ -135,6 +171,14 @@ export async function LoginController(request, response) {
         message: "Contact to Admin",
         error: true,
         success: false,
+      });
+    }
+
+    if (user.isApprovedWholsale === false && user.isWholesaler === true) {
+      return response.status(400).json({
+        message: "Wholesaler not approved",
+        success: false,
+        error: true,
       });
     }
 
@@ -533,6 +577,24 @@ export async function updatedUserDetails(req, res) {
       success: true,
       error: false,
       data: updateUser,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message || error,
+      success: false,
+      error: true,
+    });
+  }
+}
+
+export async function getAllUsersController(req, res) {
+  try {
+    const allUsers = await userModel.find().sort({ createdAt: -1 });
+    return res.json({
+      message: "all users details",
+      data: allUsers,
+      error: false,
+      success: true,
     });
   } catch (error) {
     return res.status(500).json({

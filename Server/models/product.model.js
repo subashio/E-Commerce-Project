@@ -29,6 +29,16 @@ const productSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    productType: {
+      type: String,
+      enum: ["retail", "wholesale"],
+      default: "retail",
+    },
+    variantId: {
+      type: mongoose.Schema.ObjectId,
+      ref: "variant",
+    },
+
     price: {
       type: Number,
       default: null,
@@ -41,13 +51,17 @@ const productSchema = new mongoose.Schema(
       type: Number,
       default: null,
     },
-    minQuantity: {
+    maxQuantity: {
       type: Number,
       default: null,
     },
     description: {
       type: String,
       default: "",
+    },
+    discount: {
+      type: Number,
+      default: null,
     },
   },
   { timestamps: true }

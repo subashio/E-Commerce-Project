@@ -38,7 +38,7 @@ const CartItem = React.memo(function CartItem({
       <div className="my-auto mr-auto flex h-full max-w-44 flex-col items-start justify-center gap-2 truncate text-sm font-semibold">
         {product?.name}
         <div className="font-bold">
-          ₹{product?.price}
+          ₹{product?.wholesalePrice || product?.price}
           {product?.salePrice && (
             <del className="ml-1 text-secondary/50 dark:text-secondary-foreground/70">
               ₹{product?.salePrice}
@@ -59,6 +59,7 @@ const CartItem = React.memo(function CartItem({
           >
             -
           </button>
+
           <p className="border px-2 py-1 text-sm font-medium">
             {isLoading ? <Loader className="animate-spin p-1.5" /> : quantity}
           </p>

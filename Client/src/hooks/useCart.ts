@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 export function useCart() {
   const dispatch = useDispatch();
   const { fetchCartItem } = useGlobleContext();
+
   const addToCart = async (id: string | undefined) => {
     const { fetchCartItem } = useGlobleContext();
     try {

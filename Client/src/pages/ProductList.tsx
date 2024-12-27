@@ -13,7 +13,11 @@ import {
 import { statusTypes } from "@/constants/details";
 import { SummaryApi } from "@/constants/SummaryApi";
 import { useToast } from "@/hooks/use-toast";
-import { actions, productColumns } from "@/lib/Actions";
+import {
+  actions,
+  productColumns,
+  wholesaleproductColumns,
+} from "@/lib/Actions";
 import Axios from "@/lib/Axios";
 import { createLookup } from "@/lib/lookUpMap";
 import { setProduct } from "@/store/ProductSlice";
@@ -23,11 +27,13 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { Card, CardContent, CardHeader } from "../components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function ProductList() {
   const location = useLocation();
   const { id: selectedId } = useParams();
   const dispatch = useDispatch();
+
   const [search, setSearch] = React.useState("");
   const [status, setStatus] = React.useState("");
   const { toast } = useToast();
@@ -69,8 +75,9 @@ export default function ProductList() {
     subCategory: subCategoryLookup.get(product.sub_categoryId) || "NA", // Look
     status: product.status,
     brandName: product.brandName,
+    productType: product.productType,
     wholesalePrice: product.wholesalePrice,
-    minQuantity: product.minQuantity,
+    maxQuantity: product.maxQuantity,
     price: product.price,
     createdAt: new Date().toISOString().split("T")[0],
   }));
@@ -100,9 +107,11 @@ export default function ProductList() {
             id: product._id,
             image: product.image[0],
             name: product.name,
+            productType: product.productType,
             category: categoryLookup.get(product.categoryId),
             subCategory: subCategoryLookup.get(product.sub_categoryId),
             status: product.status,
+            wholesalePrice: product.wholesalePrice,
             price: product.price,
             createdAt: new Date(product.createdAt).toISOString().split("T")[0], // Use actual date
           })),
@@ -199,54 +208,114 @@ export default function ProductList() {
                   price: selectedProduct.price,
                   salePrice: selectedProduct.salePrice,
                   brandName: selectedProduct.brandName,
-                  minQuantity: selectedProduct.minQuantity,
+                  maxQuantity: selectedProduct.maxQuantity,
                   description: selectedProduct.description,
                   role: "edit",
+                  variantId: selectedProduct?.variantId,
+                  productType: selectedProduct.productType || "retail",
                 }
               : undefined
           }
         />
       ) : (
-        <Card className="my-10">
-          <CardHeader className="w-full items-center justify-between gap-2 sm:flex-row">
-            <Input
-              placeholder="search"
-              className="w-full sm:w-[300px]"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-            <Select
-              onValueChange={(value) => setStatus(value)} // Update status on selection
-            >
-              <SelectTrigger className="w-full sm:w-[140px]">
-                <SelectValue placeholder="Status" />
-              </SelectTrigger>
-              <SelectContent>
-                {statusTypes.map((item, index) => (
-                  <SelectItem key={index} value={item.value}>
-                    {item.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </CardHeader>
-          <CardContent className="p-0">
-            <ScrollArea className="min-w-full max-w-sm whitespace-nowrap sm:max-w-xl md:max-w-2xl lg:max-w-4xl xl:max-w-xl">
-              {filteredData?.length > 0 ? (
-                <GenericTable
-                  columns={productColumns}
-                  data={filteredData}
-                  actions={(row) => renderActions(row.id)}
+        <Tabs defaultValue="retail" className="w-full">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="retail">Retail Products</TabsTrigger>
+            <TabsTrigger value="wholesale">Wholesale Products</TabsTrigger>
+          </TabsList>
+          <TabsContent value="retail">
+            <Card className="my-10">
+              <CardHeader className="w-full items-center justify-between gap-2 sm:flex-row">
+                <Input
+                  placeholder="search"
+                  className="w-full sm:w-[300px]"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
                 />
-              ) : (
-                <div className="p-4 text-center text-gray-500">
-                  No Products found.
-                </div>
-              )}
-              <ScrollBar orientation="horizontal" />
-            </ScrollArea>
-          </CardContent>
-        </Card>
+                <Select
+                  onValueChange={(value) => setStatus(value)} // Update status on selection
+                >
+                  <SelectTrigger className="w-full sm:w-[140px]">
+                    <SelectValue placeholder="Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {statusTypes.map((item, index) => (
+                      <SelectItem key={index} value={item.value}>
+                        {item.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </CardHeader>
+              <CardContent className="p-0">
+                <ScrollArea className="min-w-full max-w-sm whitespace-nowrap sm:max-w-xl md:max-w-2xl lg:max-w-4xl xl:max-w-xl">
+                  {filteredData?.filter(
+                    (product) => product.productType === "retail",
+                  ).length > 0 ? (
+                    <GenericTable
+                      columns={productColumns}
+                      data={filteredData?.filter(
+                        (product) => product.productType === "retail",
+                      )}
+                      actions={(row) => renderActions(row.id)}
+                    />
+                  ) : (
+                    <div className="p-4 text-center text-gray-500">
+                      No Products found.
+                    </div>
+                  )}
+                  <ScrollBar orientation="horizontal" />
+                </ScrollArea>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          <TabsContent value="wholesale">
+            <Card className="my-10">
+              <CardHeader className="w-full items-center justify-between gap-2 sm:flex-row">
+                <Input
+                  placeholder="search"
+                  className="w-full sm:w-[300px]"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+                <Select
+                  onValueChange={(value) => setStatus(value)} // Update status on selection
+                >
+                  <SelectTrigger className="w-full sm:w-[140px]">
+                    <SelectValue placeholder="Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {statusTypes.map((item, index) => (
+                      <SelectItem key={index} value={item.value}>
+                        {item.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </CardHeader>
+              <CardContent className="p-0">
+                <ScrollArea className="min-w-full max-w-sm whitespace-nowrap sm:max-w-xl md:max-w-2xl lg:max-w-4xl xl:max-w-xl">
+                  {filteredData?.filter(
+                    (product) => product.productType === "wholesale",
+                  ).length > 0 ? (
+                    <GenericTable
+                      columns={wholesaleproductColumns}
+                      data={filteredData.filter(
+                        (product) => product.productType === "wholesale",
+                      )}
+                      actions={(row) => renderActions(row.id)}
+                    />
+                  ) : (
+                    <div className="p-4 text-center text-gray-500">
+                      No Wholesale Products found.
+                    </div>
+                  )}
+                  <ScrollBar orientation="horizontal" />
+                </ScrollArea>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       )}
     </div>
   );

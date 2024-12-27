@@ -17,6 +17,26 @@ const userSchema = new mongoose.Schema(
       type: String,
       requried: [true, "Provide password"],
     },
+    companyName: {
+      type: String,
+      default: "",
+    },
+    officeAddress: {
+      type: String,
+      default: "",
+    },
+    isWholesaler: {
+      type: Boolean,
+      default: false,
+    },
+    isApprovedWholsale: {
+      type: Boolean,
+      default: false,
+    },
+    officePhone: {
+      type: Number,
+      default: null,
+    },
     avatar: {
       type: String,
       default: "",
@@ -44,18 +64,14 @@ const userSchema = new mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       ref: "address",
     },
-    shopping_cart: [
-      {
-        type: mongoose.Schema.ObjectId,
-        ref: "cart",
-      },
-    ],
-    order_history: [
-      {
-        type: mongoose.Schema.ObjectId,
-        ref: "order",
-      },
-    ],
+    shopping_cart: {
+      type: mongoose.Schema.ObjectId,
+      ref: "cart",
+    },
+    order_history: {
+      type: mongoose.Schema.ObjectId,
+      ref: "order",
+    },
     forgot_password_otp: {
       type: String,
       default: null,

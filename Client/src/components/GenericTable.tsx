@@ -23,10 +23,14 @@ const GenericTable = ({ columns, data, actions }: TableProps) => {
   return (
     <Table>
       <TableHeader className="border-none">
-        <TableRow className="w-full border-none bg-secondary/10 hover:bg-secondary/10">
+        <TableRow className="w-full border-none hover:bg-gray-50">
           {columns.map(
             (col) =>
-              col.header && <TableHead key={col.key}>{col.header}</TableHead>,
+              col.header && (
+                <TableHead className="text-left text-secondary" key={col.key}>
+                  {col.header}
+                </TableHead>
+              ),
           )}
           {actions && <TableHead className="border-none">Actions</TableHead>}
         </TableRow>
@@ -36,7 +40,7 @@ const GenericTable = ({ columns, data, actions }: TableProps) => {
           <TableRow key={rowIndex}>
             {columns.map((col) => (
               <TableCell
-                className="max-w-xs overflow-hidden text-ellipsis border-none"
+                className="max-w-44 overflow-hidden text-ellipsis border-none font-semibold text-secondary/70"
                 key={col.key}
               >
                 {col.render ? col.render(row[col.key], row) : row[col.key]}

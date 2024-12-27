@@ -5,16 +5,18 @@ import { useToast } from "@/hooks/use-toast";
 import Axios from "@/lib/Axios";
 import { cn } from "@/lib/utils";
 import { handleAddAddress } from "@/store/addressSlice";
-import { setOrder } from "@/store/orderSlice";
+import { setallOrders, setOrder } from "@/store/orderSlice";
 import {
   setCart,
   setCategory,
   setProduct,
   setSubCategory,
+  setVariant,
   setViewedProduct,
   setWishlist,
 } from "@/store/ProductSlice";
 import { RootState } from "@/store/store";
+import { setAllUsers } from "@/store/userSlice";
 import React, { ReactNode } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -26,6 +28,9 @@ type GlobleContextType = {
   fetchAllProduct: () => Promise<void>;
   handleToast: () => void;
   fetchOrder: () => Promise<void>;
+  fetchAllOrders: () => Promise<void>;
+  getAllUsers: () => Promise<void>;
+  fetchAllVariant: () => Promise<void>;
   fetchAllCategory: () => Promise<void>;
   fetchAllSubCategory: () => Promise<void>;
   fetchAllViewedProduct: () => Promise<void>;
@@ -48,8 +53,9 @@ export const useGlobleContext = () => {
 
 const GlobleProvider = ({ children }: { children: ReactNode }) => {
   const dispatch = useDispatch();
-  const user = useSelector((state: RootState) => state.user);
+  const user = useSelector((state: RootState) => state.user.currentUser);
   const isLoggedIn = React.useMemo(() => !!user?._id, [user]);
+  const isAdmin = user?.role === "ADMIN";
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -122,6 +128,35 @@ const GlobleProvider = ({ children }: { children: ReactNode }) => {
       console.error(error);
     }
   };
+  // for  addmin panel
+  const fetchAllOrders = async () => {
+    try {
+      const response = await Axios({
+        ...SummaryApi.get_all_orderDetails,
+      });
+      const { data: responseData } = response;
+      if (response) {
+        dispatch(setallOrders(responseData.data));
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  // for admin panel
+  const getAllUsers = async () => {
+    try {
+      const response = await Axios({
+        ...SummaryApi.get_allUserDetails,
+      });
+      const { data: responseData } = response;
+      if (response) {
+        dispatch(setAllUsers(responseData.data));
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   //fetching the address
   const fetchAddress = async () => {
     try {
@@ -164,7 +199,6 @@ const GlobleProvider = ({ children }: { children: ReactNode }) => {
       if (response.data.data) {
         const setData = response.data.data.map((item: any) => item.productId);
         dispatch(setViewedProduct(setData));
-        // console.log(setData);
       }
     } catch (error) {
       console.error("Error fetching ViewedProducts: ", error);
@@ -186,6 +220,18 @@ const GlobleProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const fetchAllVariant = async () => {
+    try {
+      const response = await Axios({
+        ...SummaryApi.get_variant,
+      });
+      if (response.data.data) {
+        dispatch(setVariant(response.data.data));
+      }
+    } catch (error) {
+      console.error("Error fetching Variant: ", error);
+    }
+  };
   React.useEffect(() => {
     if (isLoggedIn) {
       fetchAddress();
@@ -194,8 +240,13 @@ const GlobleProvider = ({ children }: { children: ReactNode }) => {
       fetchAllViewedProduct();
       fetchAllWishlist();
     }
+    if (isLoggedIn && isAdmin) {
+      fetchAllOrders();
+      getAllUsers();
+    }
     fetchAllProduct();
     fetchAllCategory();
+    fetchAllVariant();
     fetchAllSubCategory();
   }, [user]);
 
@@ -204,14 +255,14 @@ const GlobleProvider = ({ children }: { children: ReactNode }) => {
     fetchAddress,
     handleToast,
     fetchAllProduct,
-    // updateCartItem,
-    // deleteCartItem,
     fetchOrder,
     fetchAllCategory,
     fetchAllSubCategory,
+    fetchAllVariant,
     fetchAllWishlist,
     fetchAllViewedProduct,
-    // addToCart,
+    fetchAllOrders,
+    getAllUsers,
   };
 
   return (

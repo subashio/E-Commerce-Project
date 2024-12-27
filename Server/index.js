@@ -15,6 +15,7 @@ import cartRouter from "./routes/cart.routes.js";
 import orderRouter from "./routes/order.routes.js";
 import viewedProductRouter from "./routes/viewedProducts.routes.js";
 import wishlistRouter from "./routes/wishlist.routes.js";
+import variantRouter from "./routes/variant.routes.js";
 dotenv.config();
 
 dotenv.config();
@@ -54,7 +55,7 @@ app.use("/api/cart", cartRouter);
 app.use("/api/order", orderRouter);
 app.use("/api/viewed-products", viewedProductRouter);
 app.use("/api/wishlist", wishlistRouter);
-
+app.use("/api/variant", variantRouter);
 // Connecting to the database and running server
 connectDB()
   .then(() => {

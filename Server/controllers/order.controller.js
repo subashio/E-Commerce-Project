@@ -1,8 +1,6 @@
-import mongoose from "mongoose";
-import userModel from "../models/user.model.js";
-import orderModel from "../models/order.model.js";
 import cartModel from "../models/cart.model.js";
-import addressModel from "../models/address.model.js";
+import orderModel from "../models/order.model.js";
+import userModel from "../models/user.model.js";
 
 export async function CashOnDeliveryOrderController(req, res) {
   try {
@@ -40,9 +38,13 @@ export async function CashOnDeliveryOrderController(req, res) {
     const generatedOrder = await orderModel.insertMany(payload);
 
     const removeCartItems = await cartModel.deleteMany({ userId: userId });
-    const updateUser = await userModel.updateMany(
+    const updateUserCart = await userModel.updateOne(
       { _id: userId },
       { $set: { shopping_cart: [] } }
+    );
+    const updateUserOrder = await userModel.updateOne(
+      { _id: userId },
+      { $push: { order_history: generatedOrder._id } }
     );
 
     return res.json({
@@ -133,6 +135,28 @@ export async function getOrderDetailsController(req, res) {
     return res.json({
       message: "order List",
       data: orderList,
+      error: false,
+      success: true,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message || error,
+      error: true,
+      success: false,
+    });
+  }
+}
+
+export async function getAllOrdersController(req, res) {
+  try {
+    const orders = await orderModel
+      .find()
+      .sort({ createdAt: -1 })
+      .populate("userId");
+
+    return res.json({
+      message: "order details",
+      data: orders,
       error: false,
       success: true,
     });

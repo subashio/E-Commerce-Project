@@ -9,50 +9,81 @@ export async function createProductController(req, res) {
       categoryId,
       sub_categoryId,
       brandName,
-      minQuantity,
+      maxQuantity,
       wholesalePrice,
+      isWholesale,
+      variantId,
       stock,
       status,
       price,
       salePrice,
-      discount,
       description,
     } = req.body;
 
     console.log("Request body:", req.body);
-    if (
-      !name ||
-      !image[0] ||
-      !categoryId[0] ||
-      !sub_categoryId[0] ||
-      !salePrice ||
-      !price ||
-      !description
-    ) {
+
+    if (!name || !image[0] || !categoryId[0] || !sub_categoryId[0]) {
       return res.status(400).json({
-        message: "Enter required fields",
+        message:
+          "Enter required fields name, image, categoryId, sub_categoryId, isWholesale",
         error: true,
         success: false,
       });
     }
+    if (isWholesale === false) {
+      if (!salePrice || !price || !description) {
+        return res.status(400).json({
+          message:
+            "Enter required fields name, image, categoryId, sub_categoryId, salePrice, price, description",
+          error: true,
+          success: false,
+        });
+      }
+    }
+    if (isWholesale === true) {
+      if (!maxQuantity || !wholesalePrice) {
+        return res.status(400).json({
+          message: "Enter required fields  maxQuantity, wholesalePrice",
+          error: true,
+          success: false,
+        });
+      }
+    }
 
     const category = await catergoryModel.find({ _id: categoryId });
 
-    const product = new productModel({
-      name,
-      image, // Save array of image URLs
-      categoryId,
-      sub_categoryId,
-      brandName,
-      stock,
-      wholesalePrice,
-      minQuantity,
-      status,
-      price,
-      salePrice,
-      discount,
-      description,
-    });
+    const payload =
+      isWholesale === true
+        ? {
+            name,
+            image,
+            categoryId,
+            sub_categoryId,
+            productType: "wholesale",
+            variantId,
+            brandName,
+            maxQuantity,
+            wholesalePrice,
+            salePrice,
+            stock,
+            status,
+            description,
+          }
+        : {
+            name,
+            image,
+            categoryId,
+            sub_categoryId,
+            productType: "retail",
+            brandName,
+            stock,
+            status,
+            price,
+            salePrice,
+            description,
+          };
+
+    const product = new productModel(payload);
 
     const saveProduct = await product.save();
 

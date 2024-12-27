@@ -6,10 +6,16 @@ export function createLookup<T>(
   return new Map(array.map((item) => [String(item[key]), String(item[value])]));
 }
 
-// export const createLookup = (array: any, key: any, value: any) => {
-//   const map = new Map();
-//   array.forEach((item: any) => {
-//     map.set(item[key], item[value]);
-//   });
-//   return map;
-// };
+function userLookup<T, K extends keyof T>(
+  array: T[],
+  key: K,
+  value: keyof T,
+): Map<T[K], T[typeof value]> {
+  const map = new Map<T[K], T[typeof value]>();
+  array.forEach((item) => {
+    if (item[key] !== undefined && item[value] !== undefined) {
+      map.set(item[key], item[value]);
+    }
+  });
+  return map;
+}

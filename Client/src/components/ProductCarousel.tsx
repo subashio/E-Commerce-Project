@@ -35,6 +35,7 @@ export default function ProductCarousel({
     () => createLookup(category, "_id", "name"),
     [category],
   );
+  const user = useSelector((state: RootState) => state.user.currentUser);
 
   // Helper function to calculate discount percentage
   const calculateDiscountPercentage = (
@@ -50,6 +51,14 @@ export default function ProductCarousel({
 
     return source
       .filter((product: any) => product !== null && product !== undefined) // Filter out null or undefined entries
+      .filter((product: any) => {
+        // Check if the user is a wholesaler and filter accordingly
+        if (user?.isWholesaler) {
+          return product.productType === "wholesale";
+        } else {
+          return product.productType !== "wholesale";
+        }
+      })
       .map((product: any) => {
         const discount = calculateDiscountPercentage(
           product.salePrice,
@@ -66,6 +75,7 @@ export default function ProductCarousel({
             categoryLookup.get(product.categoryId) || "Unknown Category",
           price: product.price || 0,
           salePrice: product.salePrice || 0,
+          wholesalePrice: product.wholesalePrice || 0,
           status: product.status ?? false,
         };
       });
@@ -131,7 +141,7 @@ export default function ProductCarousel({
                 category={item.category}
                 name={item.name}
                 image={item.image}
-                price={item.price}
+                price={user?.isWholesaler ? item.wholesalePrice : item.price}
                 salePrice={item.salePrice}
                 className="flex-shrink-0 basis-[70%] sm:basis-1/2 md:basis-1/3 lg:basis-[24%] xl:basis-[19%]"
               />

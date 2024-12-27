@@ -39,6 +39,11 @@ export const dashboardLinks = [
     logo: <ShoppingCartIcon className="h-4 w-4" />,
   },
   {
+    name: "Add Variant",
+    to: "/dashboard-page/variant",
+    logo: <ShoppingCartIcon className="h-4 w-4" />,
+  },
+  {
     name: "Category",
     to: "/dashboard-page/category",
     logo: <List className="h-4 w-4" />,

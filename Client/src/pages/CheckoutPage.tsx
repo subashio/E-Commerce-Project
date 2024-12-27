@@ -46,7 +46,7 @@ export default function CheckoutPage() {
   const navigate = useNavigate();
   const [paymentMethod, setPaymentMethod] = React.useState("cash");
   const { fetchCartItem, fetchOrder } = useGlobleContext();
-  const user = useSelector((state: RootState) => state.user);
+  const user = useSelector((state: RootState) => state.user.currentUser);
   const cart = useSelector((state: RootState) => state.product.cartList); // Assuming cart.items contains the cart data
   const isLoggedIn = user?._id;
   const address = useSelector((state: RootState) => state.address.addressList);

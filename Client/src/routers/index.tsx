@@ -4,6 +4,7 @@ import Dashboard from "@/layouts/Dashboard";
 import Profile from "@/layouts/Profile";
 import Shop from "@/layouts/shop";
 import AddressPage from "@/pages/AddressPage";
+import VariantList from "@/pages/VariantList";
 import CategoryList from "@/pages/CategoryList";
 import CheckoutPage from "@/pages/CheckoutPage";
 import Customers from "@/pages/Customers";
@@ -53,6 +54,14 @@ const dashboardRoutes = [
     children: [
       { path: "add-product", element: <ProductList /> },
       { path: "edit-product/:id", element: <ProductList /> },
+    ],
+  },
+  {
+    path: "variant",
+    element: <VariantList />,
+    children: [
+      { path: "add-variant", element: <VariantList /> },
+      { path: "edit-variant/:id", element: <VariantList /> },
     ],
   },
   {

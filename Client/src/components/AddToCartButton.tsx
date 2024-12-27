@@ -26,16 +26,25 @@ export default function AddToCartButton({ id, className }: ProductCartProps) {
   const AddtoCart = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+
     if (isAvailableCart) {
-      try {
-        await updateCartItem(cartItemDetails._id, qty + 1);
+      const maxQuantity = cartItemDetails.productId.maxQuantity || Infinity;
+      if (qty + 1 <= maxQuantity) {
+        try {
+          await updateCartItem(cartItemDetails._id, qty + 1);
+          toast({
+            variant: "default",
+            title: "Quantity Increased!✅",
+          });
+        } catch (error) {
+          console.error(error);
+          handleToast();
+        }
+      } else {
         toast({
           variant: "default",
-          title: "Quantity Increased!✅",
+          title: "Maximum quantity reached!❌",
         });
-      } catch (error) {
-        console.error(error);
-        handleToast();
       }
     } else {
       try {
@@ -71,7 +80,11 @@ export default function AddToCartButton({ id, className }: ProductCartProps) {
     });
 
     if (productInCart) {
-      setQty(productInCart.quantity);
+      const maxQuantity =
+        typeof productInCart.productId === "object"
+          ? productInCart.productId.maxQuantity || 0
+          : 0;
+      setQty(Math.max(productInCart.quantity, maxQuantity));
       setIsAvailableCart(true);
       setCartItemsDetails(productInCart);
     } else {

@@ -8,8 +8,8 @@ import {
 
 type DashboardBreadcrumbProps = {
   path: string;
-  isAdd: boolean;
-  isEdit: boolean;
+  isAdd?: boolean;
+  isEdit?: boolean;
   pathName: string;
 };
 export default function DashboardBreadcrumb({

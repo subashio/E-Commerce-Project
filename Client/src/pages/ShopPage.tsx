@@ -5,7 +5,13 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
-function ShopPage({ PriceRange }: { PriceRange: [number, number] }) {
+function ShopPage({
+  PriceRange,
+  userType,
+}: {
+  PriceRange: [number, number];
+  userType?: string;
+}) {
   const { categoryId, subCategoryId } = useParams<{
     categoryId: string;
     subCategoryId: string;
@@ -28,6 +34,7 @@ function ShopPage({ PriceRange }: { PriceRange: [number, number] }) {
       </div>
     );
   }
+  const user = useSelector((state: RootState) => state.user?.currentUser);
   // Helper function to calculate discount percentage
   const calculateDiscountPercentage = (
     listPrice: number,
@@ -63,8 +70,18 @@ function ShopPage({ PriceRange }: { PriceRange: [number, number] }) {
       (prod: any) => prod.price >= PriceRange[0] && prod.price <= PriceRange[1],
     );
 
+    // Filter by user type
+    if (user?.isWholesaler) {
+      filtered = filtered.filter(
+        (prod: any) => prod.productType === "wholesale",
+      );
+    } else {
+      filtered = filtered.filter(
+        (prod: any) => prod.productType !== "wholesale",
+      );
+    }
     return filtered;
-  }, [categoryId, subCategoryId, product, PriceRange]);
+  }, [categoryId, subCategoryId, product, PriceRange, userType]);
 
   const activeProducts = filteredProducts.filter(
     (prod: any) => prod.status === true,

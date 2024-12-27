@@ -15,10 +15,10 @@ interface SubCategoryProps {
 interface Products {
   _id: string;
   name: string;
-  image: Array<any>;
+  image: string[];
   categoryId: string;
   sub_categoryId: string;
-  minQuantity: number;
+  maxQuantity: number;
   stock: number;
   status: boolean;
   price: number;
@@ -26,6 +26,14 @@ interface Products {
   salePrice: number;
   wholesalePrice: number;
   description: string | TrustedHTML | undefined;
+  productType: string;
+  variantId: string;
+}
+interface Variant {
+  _id: string;
+  variant_name: string;
+  brand_name: string[];
+  material_type: string[];
 }
 interface Cart {
   _id: string;
@@ -36,6 +44,7 @@ interface Cart {
 
 interface productSlice {
   category: Array<Category>;
+  variant: Array<Variant>;
   subcategory: Array<SubCategoryProps>;
   product: Array<Products>;
   cartList: Array<Cart>;
@@ -45,6 +54,7 @@ interface productSlice {
 
 const initialState: productSlice = {
   category: [],
+  variant: [],
   subcategory: [],
   product: [],
   cartList: [],
@@ -62,7 +72,7 @@ export const productSlice = createSlice({
     setSubCategory: (state, action: PayloadAction<Array<SubCategoryProps>>) => {
       state.subcategory = [...action.payload]; // set sub categoty to the payload  directly
     },
-    setProduct: (state, action) => {
+    setProduct: (state, action: PayloadAction<Array<Products>>) => {
       state.product = [...action.payload];
     },
     setCart: (state, action) => {
@@ -73,6 +83,9 @@ export const productSlice = createSlice({
     },
     setWishlist: (state, action) => {
       state.wishlist = action.payload;
+    },
+    setVariant: (state, action) => {
+      state.variant = action.payload;
     },
     resetState: (state) => {
       state.cartList = [];
@@ -90,6 +103,7 @@ export const {
   setViewedProduct,
   setWishlist,
   resetState,
+  setVariant,
 } = productSlice.actions;
 
 export default productSlice.reducer;

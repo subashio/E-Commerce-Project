@@ -24,21 +24,13 @@ export const ProductSchema = z.object({
     .string()
     .min(2, { message: "Sub-Category must be seleted.." }),
 
-  minQuantity: z
-    .number()
-    // .transform((val) => Number(val))
-    // .refine((val) => !isNaN(val), {
-    //   message: "Discount must be a valid number.",
-    // })
-    .optional(),
+  maxQuantity: z.number().nullable().optional(),
 
   description: z
     .union([
-      z
-        .string()
-        .min(10, {
-          message: "Description must be at least 10 characters long.",
-        }),
+      z.string().min(10, {
+        message: "Description must be at least 10 characters long.",
+      }),
       z.custom<TrustedHTML>(), // Allows TrustedHTML
       z.undefined(), // Allows undefined
     ])
@@ -53,38 +45,24 @@ export const ProductSchema = z.object({
       },
     ),
 
-  stock: z
-    .number()
-    .transform((val) => Number(val))
-    .refine((val) => !isNaN(val), { message: "Stock must be a valid number." }),
+  stock: z.number().nullable().optional(),
 
-  price: z
-    .number()
-    .transform((val) => Number(val))
-    .refine((val) => !isNaN(val), { message: "Price must be a valid number." }),
+  price: z.number().nullable().optional(),
 
-  salePrice: z
-    .number()
-    .transform((val) => Number(val))
-    .refine((val) => !isNaN(val), {
-      message: "Sale price must be a valid number.",
-    }),
+  salePrice: z.number().nullable().optional(),
 
   brandName: z
     .string()
     // .min(2, { message: "Brand Name must be at least 2 characters." })
     .optional(),
-  wholesalePrice: z
-    .number()
-    // .transform((val) => Number(val))
-    // .refine((val) => !isNaN(val), {
-    //   message: "Discount must be a valid number.",
-    // })
-    .optional(),
+  wholesalePrice: z.number().nullable().optional(),
 
   status: z.boolean(),
 
   role: z.union([z.literal("edit"), z.literal("add")]),
+
+  isWholesale: z.boolean().default(false),
+  variantId: z.string().optional(),
 });
 
 export const categorySchema = z.object({
@@ -129,6 +107,41 @@ export const RegisterSchema = z
     path: ["confirm"],
   });
 
+export const WholesaleRegisterSchema = z
+  .object({
+    name: z.string().min(2, {
+      message: "Name must be at least 2 characters.",
+    }),
+    email: z
+      .string()
+      .min(1, { message: "This field has to be filled." })
+      .email("This is not a valid Email."),
+    password: z
+      .string()
+      .min(8, { message: "Password must be at least 8 characters long." }),
+    confirmPassword: z
+      .string()
+      .max(8, { message: "This field has to be filled." }),
+    isWholesale: z.boolean(),
+
+    companyName: z
+      .string()
+      .min(1, "Company Name is required") // Updated from nonempty
+      .min(2, "Company Name must be at least 2 characters long"),
+    officeAddress: z
+      .string()
+      .min(1, "Office Address is required") // Updated from nonempty
+      .min(5, "Office Address must be at least 5 characters long"),
+    officePhone: z
+      .string()
+      .length(10, { message: "Mobile number must be exactly 10 digits long." })
+      .regex(/^\d+$/, { message: "Mobile number must contain only numbers." }),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirm"],
+  });
+
 export const loginSchema = z.object({
   email: z
     .string()
@@ -163,4 +176,13 @@ export const addressSchema = z.object({
     .string()
     .length(10, { message: "Mobile number must be exactly 10 digits long." })
     .regex(/^\d+$/, { message: "Mobile number must contain only numbers." }),
+});
+
+export const variantSchema = z.object({
+  variant_name: z
+    .string()
+    .min(2, { message: "Name must be at least 2 characters." }),
+  brand_name: z.array(z.string()),
+  material_type: z.array(z.string()),
+  role: z.union([z.literal("edit"), z.literal("add")]),
 });

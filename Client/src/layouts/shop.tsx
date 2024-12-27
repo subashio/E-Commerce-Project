@@ -34,6 +34,7 @@ export default function Shop() {
     subCategoryId: string;
   }>();
   const location = useLocation();
+  const user = useSelector((state: RootState) => state.user?.currentUser);
   const category = useSelector(
     (state: RootState) => state.product?.category || [],
   );
@@ -55,6 +56,11 @@ export default function Shop() {
     if (categoryId) {
       // Otherwise, filter by category
       return product.filter((prod: any) => prod.categoryId === categoryId);
+    }
+    if (user?.isWholesaler) {
+      return product.filter((prod: any) => prod.productType === "wholesale");
+    } else {
+      return product.filter((prod: any) => prod.productType !== "wholesale");
     }
     // Default to showing all products
     return product;
@@ -103,8 +109,14 @@ export default function Shop() {
               : `${categoryName || subCategoryName}`}
           </div>
           <div className="mb-8 grid w-full grid-flow-row items-center gap-3 md:grid-cols-1 lg:grid-flow-col">
-            <h1 className="row-start-1 lg:row-auto">
-              {filteredProducts.length} Product found
+            <h1 className="row-start-1 flex items-center gap-2 lg:row-auto">
+              {
+                filteredProducts.filter(
+                  (prod: any) =>
+                    user?.isWholesaler || prod.productType !== "wholesale",
+                ).length
+              }
+              <span>Product found</span>
             </h1>
             <Select
             // onValueChange={(value) => setStatus(value)} // Update status on selection

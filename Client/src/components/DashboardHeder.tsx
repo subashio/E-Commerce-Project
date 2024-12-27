@@ -14,11 +14,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 export default function DashboardHeader() {
   const [isSheetOpen, isSetSheetOpen] = React.useState<boolean>(false);
   const location = useLocation();
   const { handleLogout } = useUser();
+  const user = useSelector((state: RootState) => state.user.currentUser);
   return (
     <section className="relative w-full">
       <div className="flex w-full items-center justify-between py-3 xl:justify-end xl:border-b">
@@ -78,14 +81,16 @@ export default function DashboardHeader() {
         <DropdownMenu>
           <DropdownMenuTrigger>
             <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+              <AvatarImage src={user?.avatar} alt="@shadcn" />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="px-2.5">
-            <DropdownMenuLabel className="text-md">
-              Shopme Admin
-              <p className="text-xs">subashotherp11@gmail.com</p>
+            <DropdownMenuLabel className="text-md font-semibold text-secondary/90">
+              {user?.name} <span className="text-xs text-primary">Admin</span>
+              <p className="text-xs font-semibold text-secondary/90">
+                subashotherp11@gmail.com
+              </p>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem className="mt-2">

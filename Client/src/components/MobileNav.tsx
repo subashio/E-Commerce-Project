@@ -20,13 +20,13 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 export default function MobileNav({ button }: { button: ReactNode }) {
   const [isSheetOpen, setIsSheetOpen] = React.useState<boolean>(false);
-  const user = useSelector((state: RootState) => state.user);
+  const user = useSelector((state: RootState) => state.user.currentUser);
   const { handleLogout } = useUser();
   const category = useSelector(
     (state: RootState) => state.product?.category || [],
   );
-  const isLoggedIn = user._id;
-  const isAdmin = user.role === "ADMIN";
+  const isLoggedIn = user?._id;
+  const isAdmin = user?.role === "ADMIN";
 
   return (
     <Sheet open={isSheetOpen} onOpenChange={(isOpen) => setIsSheetOpen(isOpen)}>
@@ -51,6 +51,9 @@ export default function MobileNav({ button }: { button: ReactNode }) {
                 <div className="-mt-1">
                   <p className="flex items-center gap-2 text-sm font-semibold">
                     {user.name}
+                    {user.role === "ADMIN" && (
+                      <span className="text-xs text-primary">Admin</span>
+                    )}
                   </p>
                   <p className="text-xs">{user.email}</p>
                 </div>

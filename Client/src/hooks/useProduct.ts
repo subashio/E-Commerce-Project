@@ -2,6 +2,7 @@ import {
   categorySchema,
   ProductSchema,
   subCategorySchema,
+  variantSchema,
 } from "@/constants/schema";
 import { SummaryApi } from "@/constants/SummaryApi";
 import Axios from "@/lib/Axios";
@@ -142,6 +143,45 @@ export function useProduct() {
     }
   };
 
+  const handleVariant = async (
+    data: z.infer<typeof variantSchema>,
+    initialData: any,
+    id: string | undefined,
+  ) => {
+    let response;
+    try {
+      if (initialData) {
+        response = await Axios({
+          ...SummaryApi.update_variant,
+          data: {
+            _id: id,
+            ...data,
+          },
+        });
+      } else {
+        response = await Axios({
+          ...SummaryApi.add_variant,
+          data: data,
+        });
+      }
+      if (response && response.data) {
+        navigate("/dashboard-page/variant");
+        window.location.reload();
+        toast({
+          title:
+            initialData?.role === "add" ? "Variant Added" : "Variant Updated",
+          description: "The variant has been successfully saved.",
+        });
+      }
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to save the variant. Please try again.",
+      });
+    }
+  };
+
   const createViewiedProducts = async (id: any) => {
     const response = await Axios({
       ...SummaryApi.create_viewed_products,
@@ -188,6 +228,7 @@ export function useProduct() {
     handleCategory,
     handleSubCategory,
     createViewiedProducts,
+    handleVariant,
     createWishlist,
     deleteWishlist,
   };

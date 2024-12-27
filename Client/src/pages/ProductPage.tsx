@@ -75,10 +75,15 @@ export default function ProductPage() {
     return product._id === id;
   });
 
+  const user = useSelector((state: RootState) => state.user.currentUser);
   if (!selectedProduct) {
     return <div>Loading...</div>; // Or a loading state if the product is not available
   }
-  const [price, setPrice] = React.useState(selectedProduct?.price);
+  const [price, setPrice] = React.useState(
+    user?.isWholesaler
+      ? selectedProduct?.wholesalePrice
+      : selectedProduct?.price,
+  );
 
   const discountPercentage = selectedProduct?.salePrice
     ? calculateDiscountPercentage(selectedProduct.salePrice, price ?? 0)
@@ -120,19 +125,28 @@ export default function ProductPage() {
   };
 
   const handleIncreaseQty = async () => {
-    if (isAvailableCart) {
-      try {
-        await updateCartItem(cartItemDetails._id, quantity + 1);
-        toast({
-          variant: "default",
-          title: "Quantity Increased!✅",
-        });
-      } catch (error) {
-        console.error(error);
-        handleToast();
+    const maxQuantity = selectedProduct?.maxQuantity || 10; // Assuming maxQuantity is a property of selectedProduct
+
+    if (quantity < maxQuantity) {
+      if (isAvailableCart) {
+        try {
+          await updateCartItem(cartItemDetails._id, quantity + 1);
+          toast({
+            variant: "default",
+            title: "Quantity Increased!✅",
+          });
+        } catch (error) {
+          console.error(error);
+          handleToast();
+        }
+      } else {
+        handleAddToCart(selectedProduct._id);
       }
     } else {
-      handleAddToCart(selectedProduct._id);
+      toast({
+        variant: "default",
+        title: `Maximum quantity of ${maxQuantity} reached.`,
+      });
     }
   };
 
@@ -151,9 +165,9 @@ export default function ProductPage() {
     }
   };
 
-  const updatePrice = (newQuantity: number) => {
-    if (newQuantity >= selectedProduct?.minQuantity) {
-      setPrice(selectedProduct?.wholesalePrice ?? selectedProduct?.price);
+  const updatePrice = () => {
+    if (user?.isWholesaler) {
+      setPrice(selectedProduct?.wholesalePrice);
     } else {
       setPrice(selectedProduct?.price);
     }
@@ -173,7 +187,7 @@ export default function ProductPage() {
       setQuantity(productInCart.quantity);
       setIsAvailableCart(true);
       setCartItemsDetails(productInCart);
-      updatePrice(productInCart.quantity);
+      updatePrice();
     } else {
       setQuantity(0);
       setIsAvailableCart(false);
@@ -279,12 +293,6 @@ export default function ProductPage() {
                 )}
               </span>
             )}
-            {selectedProduct?.minQuantity && (
-              <p className="text-xs font-semibold text-amber-500">
-                Buy up to {selectedProduct.minQuantity} for wholesale
-                availability.
-              </p>
-            )}
           </div>
 
           <div className="flex flex-wrap items-center gap-3 py-4">
@@ -296,10 +304,11 @@ export default function ProductPage() {
                 >
                   -
                 </button>
+
                 <p className="border px-2 py-1 text-sm font-medium">
-                  {/* {isLoading ? <Loader className="animate-spin p-1.5" /> : quantity} */}{" "}
                   {quantity}
                 </p>
+
                 <button
                   onClick={() => handleIncreaseQty()}
                   className="rounded-r-md border-b border-r border-t px-3 py-1"

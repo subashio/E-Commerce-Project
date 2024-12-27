@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { PersistPartial } from "redux-persist/es/persistReducer";
 
-interface userSlice {
+interface users {
   _id?: string;
   name?: string;
   email?: string;
@@ -14,21 +14,18 @@ interface userSlice {
   shopping_cart?: Array<Object>;
   orderHistory?: Array<Object>;
   role?: string;
+  isWholesaler?: boolean;
+  isApprovedWholsale?: boolean;
+}
+
+interface userSlice {
+  users: Array<users>;
+  currentUser: users | null; // Logged-in user
 }
 
 const initialState: userSlice = {
-  _id: "",
-  name: "",
-  email: "",
-  avatar: "",
-  mobile: "",
-  verify_email: "",
-  last_login_date: "",
-  status: "",
-  address_details: [],
-  shopping_cart: [],
-  orderHistory: [],
-  role: "",
+  users: [],
+  currentUser: null,
 };
 
 export const userSlice = createSlice({
@@ -36,16 +33,19 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     setUserDetails: (state, action) => {
-      Object.assign(state, action.payload); // Dynamically update all fields in state
+      state.currentUser = action.payload; // Dynamically update all fields in state
+    },
+    setAllUsers: (state, action) => {
+      state.users = action.payload; // Set the list of users
     },
     logout: (state) => {
-      Object.assign(state, initialState); //reseting the state to the initial state
+      state.currentUser = null; // Reset logged-in user
     },
   },
 });
 
 export type UserState = userSlice & PersistPartial;
 
-export const { setUserDetails, logout } = userSlice.actions;
+export const { setUserDetails, setAllUsers, logout } = userSlice.actions;
 
 export default userSlice.reducer;

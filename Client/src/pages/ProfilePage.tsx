@@ -31,7 +31,7 @@ const ProfileSchema = z.object({
 });
 
 export default function ProfilePage() {
-  const user = useSelector((state: RootState) => state?.user);
+  const user = useSelector((state: RootState) => state?.user.currentUser);
   const { toast } = useToast();
   const dispatch = useDispatch();
   const { fetchUserDetails } = useUser();
@@ -93,9 +93,9 @@ export default function ProfilePage() {
           description=" Make changes to your profile here. Click save when you're done."
           schema={ProfileSchema}
           defaultValues={{
-            name: user.name || "",
-            mobile: user.mobile || "",
-            email: user.email || "",
+            name: user?.name || "",
+            mobile: user?.mobile || "",
+            email: user?.email || "",
             password: "",
           }}
           fields={[

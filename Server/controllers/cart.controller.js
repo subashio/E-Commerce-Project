@@ -42,11 +42,7 @@ export async function addToCartController(req, res) {
 
     const updateCartUser = await userModel.updateOne(
       { _id: userId },
-      {
-        $push: {
-          shopping_cart: productId,
-        },
-      }
+      { $push: { shopping_cart: saveCart._id } }
     );
     return res.status(200).json({
       message: "Item added to  the cart successful",
@@ -135,6 +131,10 @@ export async function deleteCartController(req, res) {
       });
     }
 
+    const updateCartUser = await userModel.updateOne(
+      { _id: userId },
+      { $pull: { shopping_cart: _id } }
+    );
     const deleteCart = await cartModel.deleteOne({
       _id: _id,
       userId: userId,

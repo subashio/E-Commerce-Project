@@ -1,14 +1,18 @@
 import AddToCartButton from "@/components/AddToCartButton";
 import { Badge } from "@/components/ui/badge";
+import { buttonVariants } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { ToastAction } from "@/components/ui/toast";
+import { useToast } from "@/hooks/use-toast";
 import { useProduct } from "@/hooks/useProduct";
 import { Ellipsis, Trash2 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { cn } from "./utils";
 
 export const actions = (
   id: string,
@@ -81,6 +85,12 @@ export const categoryColumns = [
   { header: "Created At", key: "createdAt" },
 ];
 
+export const variantColumns = [
+  { header: "Variant Name", key: "variant_name" },
+  { header: "Brand Name", key: "brand_name" },
+  { header: "Material Type", key: "material_type" },
+];
+
 export const productColumns = [
   {
     header: "Image",
@@ -97,6 +107,39 @@ export const productColumns = [
   { header: "Category", key: "category" },
   { header: "Sub-Category", key: "subCategory" },
   { header: "Price", key: "price" },
+  {
+    header: "Status",
+    key: "status",
+    render: (value: boolean) => (
+      <Badge
+        className={`rounded-sm p-1 px-1.5 text-xs ${
+          value === true
+            ? "bg-green-500/50 text-green-900 hover:bg-green-500/50"
+            : "hover:bg-red-500/ 50 bg-red-500/50 text-red-950"
+        }`}
+      >
+        {value === true ? "Actice" : "Disable"}
+      </Badge>
+    ),
+  },
+  { header: "Created At", key: "createdAt" },
+];
+export const wholesaleproductColumns = [
+  {
+    header: "Image",
+    key: "image",
+    render: (value: string | undefined) => (
+      <img
+        src={value}
+        alt="product"
+        className="h-10 w-10 rounded-md object-cover"
+      />
+    ),
+  },
+  { header: "Product Name", key: "name" },
+  { header: "Category", key: "category" },
+  { header: "Sub-Category", key: "subCategory" },
+  { header: "Wholesale Price", key: "wholesalePrice" },
   {
     header: "Status",
     key: "status",
@@ -137,6 +180,7 @@ export const orderColumn = [
 
   { header: "Product Name", key: "name" },
   { header: "orderId", key: "orderId" },
+  { header: "Customer Name", key: "userName" },
   { header: "Items", key: "qty" },
 
   {
@@ -144,17 +188,23 @@ export const orderColumn = [
     key: "status",
     render: (value: boolean) => (
       <Badge
-        className={`rounded-sm p-1 px-1.5 text-xs ${
+        className={`rounded-lg p-1 text-xs ${
           value === true
-            ? "bg-green-500/50 text-green-900 hover:bg-green-500/50"
-            : "hover:bg-red-500/ 50 bg-red-500/50 text-red-950"
+            ? "bg-amber-100/50 text-amber-800 hover:bg-amber-200/50"
+            : "bg-green-500/50 text-green-900 hover:bg-green-500/50"
         }`}
       >
-        {value === true ? "Processing" : "Completed"}
+        {value === true ? "Pending" : "Success"}
       </Badge>
     ),
   },
   { header: "Price", key: "price" },
+];
+export const customerColumn = [
+  { header: "Customer Name", key: "name" },
+  { header: "Email", key: "email" },
+  { header: "Phone", key: "phone" },
+  // { header: "Address", key: "address" },
 ];
 
 export const wishlistColumn = [
@@ -185,3 +235,23 @@ export const wishlistColumn = [
     render: (_: unknown, row: { id: string }) => removeAction(row.id),
   },
 ];
+
+export const handleToast = () => {
+  const { toast } = useToast();
+  const navigate = useNavigate();
+
+  toast({
+    variant: "default",
+    title: "Login",
+    description: "login to add products to cart",
+    action: (
+      <ToastAction
+        className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
+        onClick={() => navigate("/login")}
+        altText="Goto schedule to undo"
+      >
+        Login
+      </ToastAction>
+    ),
+  });
+};

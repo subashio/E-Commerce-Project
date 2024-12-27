@@ -8,28 +8,43 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { RegisterSchema } from "@/constants/schema";
+import { RegisterSchema, WholesaleRegisterSchema } from "@/constants/schema";
 import { useUser } from "@/hooks/useUser";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader } from "lucide-react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { z } from "zod";
 
 export default function Register() {
   const { registerUser } = useUser();
-  const form = useForm<z.infer<typeof RegisterSchema>>({
-    resolver: zodResolver(RegisterSchema),
+  const [isWholesale, setIsWholesale] = React.useState(false);
+  const form = useForm<
+    z.infer<typeof RegisterSchema | typeof WholesaleRegisterSchema>
+  >({
+    resolver: zodResolver(
+      isWholesale ? WholesaleRegisterSchema : RegisterSchema,
+    ),
     defaultValues: {
       name: "",
       email: "",
       password: "",
       confirmPassword: "",
+      companyName: "",
+      officeAddress: "",
+      officePhone: "",
+      isWholesale: false,
     },
   });
   async function onSubmit(data: z.infer<typeof RegisterSchema>) {
     try {
-      await registerUser(data);
+      const payload = {
+        ...data,
+        isWholesale, // Include the wholesaler status
+      };
+      await registerUser(payload);
       form.reset();
       console.log("data submited:", data);
     } catch (error) {
@@ -40,7 +55,21 @@ export default function Register() {
     <div className="flex w-full items-center justify-center py-10">
       <div className="flex max-w-xl flex-col gap-10 rounded-xl px-8">
         <h1 className="mb-4 mt-10 text-center text-3xl font-bold dark:text-gray-200">
-          Create an Account
+          {isWholesale ? "Create a Wholesale Account" : "Create an Account"}
+          <span className="mt-4 flex w-full justify-center">
+            <button
+              type="button"
+              onClick={() => {
+                setIsWholesale(!isWholesale);
+                form.setValue("isWholesale", !isWholesale); // Update form state
+              }}
+              className="text-sm text-blue-500 hover:text-blue-600"
+            >
+              {isWholesale
+                ? "Switch to Regular Account"
+                : "Create a Wholesaler Account"}
+            </button>
+          </span>
         </h1>
 
         <Form {...form}>
@@ -135,6 +164,68 @@ export default function Register() {
                 )}
               />
             </div>
+            {isWholesale && (
+              <>
+                <div className="mb-4">
+                  <FormField
+                    control={form.control}
+                    name="companyName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Company Name</FormLabel>
+                        <FormControl>
+                          <Input
+                            className="w-full rounded-md border border-gray-300 px-4 py-6 shadow-sm focus:border-none focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
+                            placeholder="Enter Company Name"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="mb-4">
+                  <FormField
+                    control={form.control}
+                    name="officeAddress"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Office Address</FormLabel>
+                        <FormControl>
+                          <Input
+                            className="w-full rounded-md border border-gray-300 px-4 py-6 shadow-sm focus:border-none focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
+                            placeholder="Enter Office Address"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="mb-4">
+                  <FormField
+                    control={form.control}
+                    name="officePhone"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Office Phone</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            className="no-arrows w-full rounded-md border border-gray-300 px-4 py-6 text-sm shadow-sm focus:border-none focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
+                            placeholder="Enter Office Phone"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </>
+            )}
 
             <Button
               type="submit"
@@ -146,6 +237,7 @@ export default function Register() {
                 <Loader className="ml-2 h-6 w-6 animate-spin" />
               )}
             </Button>
+
             <div className="mt-4 flex w-full justify-center">
               <Link
                 to="/login"

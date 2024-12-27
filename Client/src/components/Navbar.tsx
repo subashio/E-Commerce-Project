@@ -29,7 +29,7 @@ import {
 } from "./ui/dropdown-menu";
 
 export default function Navbar() {
-  const user = useSelector((state: RootState) => state.user);
+  const user = useSelector((state: RootState) => state.user.currentUser);
   const cartList = useSelector(
     (state: RootState) => state.product?.cartList || [],
   );
@@ -38,7 +38,7 @@ export default function Navbar() {
   );
   const { handleLogout } = useUser();
   const isLoggedIn = user?._id;
-  const isAdmin = user.role == "ADMIN";
+  const isAdmin = user?.role == "ADMIN";
 
   const [hideOnScroll, setHideOnScroll] = React.useState(false);
 
@@ -137,7 +137,12 @@ export default function Navbar() {
                         </Avatar>
                         <div className="-mt-1">
                           <p className="flex items-center gap-2 text-sm font-semibold">
-                            {user.name}
+                            {user.name}{" "}
+                            {isAdmin && (
+                              <span className="text-xs text-primary">
+                                Admin
+                              </span>
+                            )}
                           </p>
                           <p className="text-xs">{user.email}</p>
                         </div>

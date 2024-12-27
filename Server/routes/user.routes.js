@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   ForgotPassword,
+  getAllUsersController,
   LoginController,
   LogoutController,
   RefreshToken,
@@ -14,6 +15,7 @@ import {
 } from "../controllers/users.controller.js";
 import auth from "../middleware/auth.js";
 import upload from "../middleware/multer.js";
+import { admin } from "../middleware/admin.js";
 
 const userRouter = Router();
 
@@ -28,5 +30,6 @@ userRouter.put("/verify-forgot-password-otp", VerifyForgotPassword);
 userRouter.put("/reset-password", ResetPassword);
 userRouter.post("/refresh-token", RefreshToken);
 userRouter.get("/user-details", auth, userDetails);
+userRouter.get("/all-user-details", auth, admin, getAllUsersController);
 
 export default userRouter;
