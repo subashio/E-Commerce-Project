@@ -52,36 +52,38 @@ export const useQuantity = (
       return;
     }
 
-    if (isAvailableCart) {
-      if (quantity >= stockLimit) {
-        toast({
-          variant: "default",
-          title: "Out of Stock ❌",
-        });
-        return;
-      }
+    if (quantity >= stockLimit) {
+      toast({
+        variant: "default",
+        title: "Out of Stock ❌",
+      });
+      return;
+    }
 
-      try {
+    try {
+      if (isAvailableCart) {
         await updateCartItem(cartItemDetails._id, quantity + 1);
-        setQuantity((prev) => prev + 1);
-        toast({
-          variant: "default",
-          title: "Quantity Increased!✅",
-        });
-      } catch (error) {
-        console.error(error);
-        toast({
-          variant: "destructive",
-          title: "Error updating cart",
-        });
       }
+      setQuantity((prev) => prev + 1);
+      toast({
+        variant: "default",
+        title: "Quantity Increased!✅",
+      });
+    } catch (error) {
+      console.error(error);
+      toast({
+        variant: "destructive",
+        title: "Error updating cart",
+      });
     }
   };
 
   const handleDecreaseQty = async () => {
-    if (isAvailableCart && quantity > 1) {
+    if (quantity > 1) {
       try {
-        await updateCartItem(cartItemDetails._id, quantity - 1);
+        if (isAvailableCart) {
+          await updateCartItem(cartItemDetails._id, quantity - 1);
+        }
         setQuantity((prev) => prev - 1);
         toast({
           variant: "default",
@@ -94,6 +96,11 @@ export const useQuantity = (
           title: "Error updating cart",
         });
       }
+    } else {
+      toast({
+        variant: "default",
+        title: "Minimum quantity reached.",
+      });
     }
   };
 
