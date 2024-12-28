@@ -9,7 +9,7 @@ export async function addToCartController(req, res) {
 
     if (!productId) {
       return res.status(400).json({
-        message: "Provide the reqied fields",
+        message: "Provide the required fields",
         success: false,
         error: true,
       });
@@ -22,13 +22,17 @@ export async function addToCartController(req, res) {
       });
     }
 
-    const checkCartItem = await cartModel.findOne({
-      userId: userId,
-      productId: productId,
-    });
+    // Ensure indexes on userId and productId for faster querying
+    const checkCartItem = await cartModel
+      .findOne({
+        userId: userId,
+        productId: productId,
+      })
+      .lean(); // Use lean for faster read
+
     if (checkCartItem) {
       return res.status(400).json({
-        message: "Item already exsist in the cart",
+        message: "Item already exists in the cart",
       });
     }
 
@@ -38,23 +42,27 @@ export async function addToCartController(req, res) {
       userId: userId,
     });
 
-    const saveCart = await cartItem.save();
+    // Use Promise.all to perform save and update concurrently
+    const [saveCart, updateCartUser] = await Promise.all([
+      cartItem.save(),
+      userModel.updateOne(
+        { _id: userId },
+        { $push: { shopping_cart: cartItem._id } }
+      ),
+    ]);
 
-    const updateCartUser = await userModel.updateOne(
-      { _id: userId },
-      { $push: { shopping_cart: saveCart._id } }
-    );
     return res.status(200).json({
-      message: "Item added to  the cart successful",
+      message: "Item added to the cart successfully",
       success: true,
       data: saveCart,
       error: false,
     });
   } catch (error) {
+    console.error("Error in addToCartController:", error);
     return res.status(500).json({
       message: error.message || error,
-      success: true,
-      error: false,
+      success: false,
+      error: true,
     });
   }
 }
@@ -63,14 +71,14 @@ export async function getCartItemController(req, res) {
   try {
     const userId = req.userId;
     const cartItem = await cartModel
-      .find({
-        userId: userId,
-      })
-      .populate("productId");
+      .find({ userId: userId })
+      .populate("productId")
+      .lean();
+
     return res.status(200).json({
       data: cartItem,
-      error: true,
-      success: false,
+      error: false,
+      success: true,
     });
   } catch (error) {
     return res.status(500).json({
@@ -93,13 +101,18 @@ export async function updateCartQuantityController(req, res) {
         success: false,
       });
     }
-    const updateCart = await cartModel.updateOne(
+
+    const updateCart = await cartModel.findOneAndUpdate(
       {
         _id: _id,
         userId: userId,
       },
       {
         quantity: qty,
+      },
+      {
+        new: true, // Return the updated document
+        lean: true, // Return a plain JavaScript object
       }
     );
 
@@ -131,14 +144,15 @@ export async function deleteCartController(req, res) {
       });
     }
 
-    const updateCartUser = await userModel.updateOne(
-      { _id: userId },
-      { $pull: { shopping_cart: _id } }
-    );
-    const deleteCart = await cartModel.deleteOne({
-      _id: _id,
-      userId: userId,
-    });
+    // Execute both operations concurrently
+    const [updateCartUser, deleteCart] = await Promise.all([
+      userModel.updateOne({ _id: userId }, { $pull: { shopping_cart: _id } }),
+      cartModel.deleteOne({
+        _id: _id,
+        userId: userId,
+      }),
+    ]);
+
     return res.status(200).json({
       message: "cart deleted successful",
       success: true,
@@ -146,7 +160,7 @@ export async function deleteCartController(req, res) {
       data: deleteCart,
     });
   } catch (error) {
-    return res.status(200).json({
+    return res.status(500).json({
       message: error.message || error,
       success: false,
       error: true,
