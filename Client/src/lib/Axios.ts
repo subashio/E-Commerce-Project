@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 const Axios = axios.create({
   baseURL: baseURL,
   withCredentials: true, // Ensure cookies are sent with every request
+  timeout: 5000, // Set a timeout of 5000ms (5 seconds)
 });
 
 //sending access token in the header
@@ -80,4 +81,24 @@ const refreshAccessToken = async (refreshToken: any) => {
     console.log(error);
   }
 };
+
+Axios.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  async (error) => {
+    if (error.code === "ECONNABORTED") {
+      // Handle timeout error
+      const { toast } = useToast();
+      toast({
+        variant: "destructive",
+        title: "Request Timeout",
+        description: "The request took too long to complete. Please try again.",
+      });
+    }
+    // ... existing error handling logic ...
+    return Promise.reject(error);
+  },
+);
+
 export default Axios;

@@ -86,8 +86,8 @@ export default function CheckoutPage() {
   const calculateSubtotal = () =>
     cartData.reduce((acc, item) => acc + item.price * item.qty, 0).toFixed(2);
 
-  const taxRate = 0.18; // 18% VAT
-  const shippingFee = 0; // Assuming free shipping for now
+  const taxRate = 0; // 2% VAT
+  const shippingFee = 50; // Assuming free shipping for now
   let subtotal = parseFloat(calculateSubtotal());
   const tax = parseFloat((subtotal * taxRate).toFixed(2));
   let grandTotal = (subtotal + tax + shippingFee).toFixed(2);

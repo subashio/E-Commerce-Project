@@ -27,7 +27,7 @@ import {
 import { Input } from "./ui/input";
 
 export default function AddProfileImage() {
-  const user = useSelector((state: RootState) => state.user);
+  const user = useSelector((state: RootState) => state.user.currentUser);
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
 
   const { uploadUserProfile } = useUser();
@@ -65,7 +65,7 @@ export default function AddProfileImage() {
       <DialogTrigger>
         <div className="group relative h-28 w-28 rounded-full border">
           <img
-            src={user.avatar || "/default-avatar.png"}
+            src={user?.avatar || "/default-avatar.png"}
             alt="avatar"
             className="h-28 w-28 rounded-full object-contain object-center"
           />

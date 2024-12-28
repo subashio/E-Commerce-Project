@@ -165,18 +165,18 @@ export async function LoginController(request, response) {
         success: false,
       });
     }
-
-    if (user.status !== "Active") {
-      return response.status(400).json({
-        message: "Contact to Admin",
+    if (user.status == "Inactive" || user.status == "suspended") {
+      return response.status(409).json({
+        message: "Contact to Admin to activate your account",
         error: true,
         success: false,
       });
     }
 
     if (user.isApprovedWholsale === false && user.isWholesaler === true) {
-      return response.status(400).json({
-        message: "Wholesaler not approved",
+      return response.status(403).json({
+        message:
+          "Wholesaler not approved. Approval process takes 2 to 3 days. Please wait.",
         success: false,
         error: true,
       });
@@ -185,7 +185,7 @@ export async function LoginController(request, response) {
     const checkPassword = await bcrypt.compare(password, user.password);
 
     if (!checkPassword) {
-      return response.status(400).json({
+      return response.status(404).json({
         message: "Check your password",
         error: true,
         success: false,

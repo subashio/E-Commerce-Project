@@ -79,7 +79,7 @@ export default function DialogForm<T extends ZodType<any>>({
       <DialogTrigger asChild>{button}</DialogTrigger>
       <DialogContent
         onClick={(e) => e.stopPropagation()}
-        className={`max-w-lg rounded-md ${dialogClassName}`}
+        className={`max-w-2xl rounded-md ${dialogClassName}`}
       >
         <DialogHeader>
           <DialogTitle className="flex justify-start">{title}</DialogTitle>
@@ -94,28 +94,30 @@ export default function DialogForm<T extends ZodType<any>>({
             )}
             className="space-y-6"
           >
-            {fields.map((field) => (
-              <FormField
-                key={field.name}
-                control={form.control}
-                name={field.name as any}
-                render={({ field: inputField }) => (
-                  <FormItem>
-                    <FormLabel>{field.label}</FormLabel>
-                    <FormControl>
-                      <Input
-                        className="no-arrows text-sm"
-                        placeholder={field.placeholder || ""}
-                        type={field.type || "text"}
-                        {...field.inputProps}
-                        {...inputField}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            ))}
+            <div className="grid grid-cols-2 gap-4">
+              {fields.map((field) => (
+                <FormField
+                  key={field.name}
+                  control={form.control}
+                  name={field.name as any}
+                  render={({ field: inputField }) => (
+                    <FormItem>
+                      <FormLabel>{field.label}</FormLabel>
+                      <FormControl>
+                        <Input
+                          className="no-arrows text-sm"
+                          placeholder={field.placeholder || ""}
+                          type={field.type || "text"}
+                          {...field.inputProps}
+                          {...inputField}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              ))}
+            </div>
 
             <Button
               disabled={form.formState.isSubmitting}

@@ -12,13 +12,19 @@ import { Input } from "@/components/ui/input";
 import { loginSchema } from "@/constants/schema";
 import { useUser } from "@/hooks/useUser";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader } from "lucide-react";
+import { AlertCircle, Loader } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { z } from "zod";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { RootState } from "@/store/store";
+import { useSelector } from "react-redux";
 
 export default function Login() {
   const { loginUser } = useUser();
+  const errorMessage = useSelector(
+    (state: RootState) => state.user.error || [],
+  );
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -45,6 +51,18 @@ export default function Login() {
           onSubmit={form.handleSubmit(onSubmit)}
           className="w-[350px] pb-24 md:w-[300px] lg:w-[500px]"
         >
+          {errorMessage.length > 0 && (
+            <Alert
+              className="mb-6 rounded-lg bg-destructive/10 p-3.5"
+              variant="destructive"
+            >
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle className="text-sm">Error</AlertTitle>
+              <AlertDescription className="text-xs">
+                {errorMessage}
+              </AlertDescription>
+            </Alert>
+          )}
           <div className="mb-4">
             <FormField
               control={form.control}

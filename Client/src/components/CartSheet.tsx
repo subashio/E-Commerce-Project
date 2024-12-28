@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { RootState } from "@/store/store";
 import { Loader, ShoppingBag } from "lucide-react";
 import React, { ReactNode } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button, buttonVariants } from "./ui/button";
 
@@ -20,9 +20,10 @@ import {
   CardTitle,
 } from "./ui/card";
 import { ScrollArea } from "./ui/scroll-area";
+import { toggleSheetOpen } from "@/store/orderSlice";
 
 export default function CartSheet({ button }: { button: ReactNode }) {
-  const [isSheetOpen, isSetSheetOpen] = React.useState(false);
+  // const [isSheetOpen, isSetSheetOpen] = React.useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
   const { updateCartItem, deleteCartItem } = useCart();
@@ -31,7 +32,10 @@ export default function CartSheet({ button }: { button: ReactNode }) {
   const user = useSelector((state: RootState) => state.user.currentUser);
   const isLoggedIn = user?._id;
   const location = useLocation();
-
+  const isSheetOpen = useSelector(
+    (state: RootState) => state.order.isSheetOpen,
+  );
+  const dispatch = useDispatch();
   // Loading state for fetching cart items
   const [isFetchingCart, setIsFetchingCart] = React.useState(false);
 
@@ -75,17 +79,21 @@ export default function CartSheet({ button }: { button: ReactNode }) {
 
     // Find the item in the cart list
     const item = cartList.find((item) => item._id === itemId);
-    // Extract maxQuantity from the productId object, default to 1 if not available
+    // Extract stock and maxQuantity from the productId object
+    const stock =
+      typeof item?.productId === "object" ? item.productId.stock || 1 : 1;
     const maxQuantity =
-      typeof item?.productId === "object" ? item.productId.maxQuantity || 1 : 1;
+      typeof item?.productId === "object"
+        ? item.productId.maxQuantity || stock
+        : stock;
 
     const currentQuantity = itemQuantities[itemId] || 0;
 
-    // Return early if currentQuantity is already at maxQuantity
+    // Return early if currentQuantity is already at maxQuantity limit
     if (currentQuantity >= maxQuantity) {
       toast({
         variant: "default",
-        title: "Maximum quantity reached",
+        title: "Maximum quantity limit reached",
       });
       return;
     }
@@ -152,7 +160,11 @@ export default function CartSheet({ button }: { button: ReactNode }) {
   return (
     <Sheet
       open={isSheetOpen}
-      onOpenChange={isLoggedIn ? (isOpen) => isSetSheetOpen(isOpen) : undefined}
+      onOpenChange={
+        isLoggedIn
+          ? (open: boolean) => dispatch(toggleSheetOpen(open))
+          : undefined
+      }
     >
       <SheetTrigger onClick={handleToast}>{button}</SheetTrigger>
       <SheetContent className="w-full p-0">
@@ -192,7 +204,7 @@ export default function CartSheet({ button }: { button: ReactNode }) {
               <CardFooter className="mt-2 flex w-full flex-col items-center justify-between gap-3 p-0 sm:flex-row">
                 <Link
                   to={isLoggedIn ? "/checkout" : "/login"}
-                  onClick={() => isSetSheetOpen(false)}
+                  onClick={() => dispatch(toggleSheetOpen(false))}
                   className={cn(
                     "w-full sm:w-auto",
                     buttonVariants({ variant: "default" }),
@@ -203,7 +215,7 @@ export default function CartSheet({ button }: { button: ReactNode }) {
 
                 <Button
                   variant="outline"
-                  onClick={() => isSetSheetOpen(false)}
+                  onClick={() => dispatch(toggleSheetOpen(false))}
                   className="w-full rounded-lg sm:w-auto"
                 >
                   Continue Shopping
@@ -218,7 +230,7 @@ export default function CartSheet({ button }: { button: ReactNode }) {
               <p className="text-center text-lg">Your cart is empty.</p>
               <Link
                 to="/shop"
-                onClick={() => isSetSheetOpen(false)}
+                onClick={() => dispatch(toggleSheetOpen(false))}
                 className={cn(
                   buttonVariants({ variant: "default" }),
                   "w-full sm:w-auto",

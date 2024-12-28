@@ -4,9 +4,10 @@ import { useToast } from "@/hooks/use-toast";
 import { useCart } from "@/hooks/useCart";
 import Axios from "@/lib/Axios";
 import { cn } from "@/lib/utils";
+import { toggleSheetOpen } from "@/store/orderSlice";
 import { RootState } from "@/store/store";
 import React from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Button } from "./ui/button";
 
 interface ProductCartProps {
@@ -23,13 +24,16 @@ export default function AddToCartButton({ id, className }: ProductCartProps) {
   const [cartItemDetails, setCartItemsDetails] = React.useState<any>(null);
   const [qty, setQty] = React.useState<number>(0);
 
+  const dispatch = useDispatch();
+
   const AddtoCart = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
 
     if (isAvailableCart) {
       const maxQuantity = cartItemDetails.productId.maxQuantity || Infinity;
-      if (qty + 1 <= maxQuantity) {
+      const stockLimit = cartItemDetails.productId.stock || Infinity;
+      if (qty + 1 <= maxQuantity && qty + 1 <= stockLimit) {
         try {
           await updateCartItem(cartItemDetails._id, qty + 1);
           toast({
@@ -43,7 +47,7 @@ export default function AddToCartButton({ id, className }: ProductCartProps) {
       } else {
         toast({
           variant: "default",
-          title: "Maximum quantity reached!❌",
+          title: "Maximum quantity or stock limit reached!❌",
         });
       }
     } else {
@@ -98,7 +102,10 @@ export default function AddToCartButton({ id, className }: ProductCartProps) {
     <div>
       <Button
         className={cn("h-8 w-full gap-1 rounded-lg p-2 capitalize", className)}
-        onClick={AddtoCart}
+        onClick={(e: React.MouseEvent) => {
+          AddtoCart(e);
+          dispatch(toggleSheetOpen(true));
+        }}
       >
         {/* <Plus /> */}
         Add to Cart

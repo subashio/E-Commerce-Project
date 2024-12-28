@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { PersistPartial } from "redux-persist/es/persistReducer";
 
 interface users {
@@ -21,31 +21,44 @@ interface users {
 interface userSlice {
   users: Array<users>;
   currentUser: users | null; // Logged-in user
+  error: string | null;
+  warning: string | null;
 }
 
 const initialState: userSlice = {
   users: [],
   currentUser: null,
+  error: null,
+  warning: null,
 };
 
 export const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    setUserDetails: (state, action) => {
+    setUserDetails: (state, action: PayloadAction<users>) => {
       state.currentUser = action.payload; // Dynamically update all fields in state
     },
-    setAllUsers: (state, action) => {
+    setAllUsers: (state, action: PayloadAction<users[]>) => {
       state.users = action.payload; // Set the list of users
     },
     logout: (state) => {
       state.currentUser = null; // Reset logged-in user
+      state.error = null;
+      state.warning = null;
+    },
+    setError: (state, action: PayloadAction<string>) => {
+      state.error = action.payload; // Set the error message
+    },
+    setWarning: (state, action: PayloadAction<string>) => {
+      state.warning = action.payload; // Set the warning message
     },
   },
 });
 
 export type UserState = userSlice & PersistPartial;
 
-export const { setUserDetails, setAllUsers, logout } = userSlice.actions;
+export const { setUserDetails, setAllUsers, logout, setError, setWarning } =
+  userSlice.actions;
 
 export default userSlice.reducer;

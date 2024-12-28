@@ -36,11 +36,13 @@ interface orders {
 interface orderProps {
   order: Array<orders>;
   allOrders: Array<orders>;
+  isSheetOpen: boolean | undefined;
 }
 
 const initialState: orderProps = {
   order: [],
   allOrders: [],
+  isSheetOpen: false,
 };
 
 export const orderSlice = createSlice({
@@ -53,9 +55,12 @@ export const orderSlice = createSlice({
     setallOrders: (state, action: PayloadAction<Array<orders>>) => {
       state.allOrders = [...action.payload];
     },
+    toggleSheetOpen: (state, action: PayloadAction<boolean | undefined>) => {
+      state.isSheetOpen = action.payload || !state.isSheetOpen;
+    },
   },
 });
 
-export const { setOrder, setallOrders } = orderSlice.actions;
+export const { setOrder, setallOrders, toggleSheetOpen } = orderSlice.actions;
 
 export default orderSlice.reducer;

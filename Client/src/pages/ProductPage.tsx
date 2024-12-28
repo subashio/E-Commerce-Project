@@ -34,11 +34,12 @@ import { useToast } from "@/hooks/use-toast";
 import { useCart } from "@/hooks/useCart";
 import { useProduct } from "@/hooks/useProduct";
 import Axios from "@/lib/Axios";
+import { toggleSheetOpen } from "@/store/orderSlice";
 import { RootState } from "@/store/store";
 import Autoplay from "embla-carousel-autoplay";
 import { ChevronDown } from "lucide-react";
 import React from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 
 export default function ProductPage() {
@@ -54,6 +55,7 @@ export default function ProductPage() {
   const { handleToast, fetchCartItem } = useGlobleContext();
   const [isAvailableCart, setIsAvailableCart] = React.useState(false);
   const [cartItemDetails, setCartItemsDetails] = React.useState<any>(null);
+  const dispatch = useDispatch();
 
   const categoryLookup = (categoryId: string | undefined) => {
     return category.find((cat) => cat._id === categoryId)?.name;
@@ -125,10 +127,19 @@ export default function ProductPage() {
   };
 
   const handleIncreaseQty = async () => {
-    const maxQuantity = selectedProduct?.maxQuantity || 10; // Assuming maxQuantity is a property of selectedProduct
+    const maxQuantity = selectedProduct?.maxQuantity;
 
-    if (quantity < maxQuantity) {
+    if (maxQuantity == null || quantity < maxQuantity) {
       if (isAvailableCart) {
+        const stockLimit = selectedProduct?.stock; // Assuming stockLimit is a property of selectedProduct
+        if (quantity >= stockLimit) {
+          toast({
+            variant: "default",
+            title: "Out of Stock ❌",
+          });
+          return;
+        }
+
         try {
           await updateCartItem(cartItemDetails._id, quantity + 1);
           toast({
@@ -142,7 +153,7 @@ export default function ProductPage() {
       } else {
         handleAddToCart(selectedProduct._id);
       }
-    } else {
+    } else if (maxQuantity !== null) {
       toast({
         variant: "default",
         title: `Maximum quantity of ${maxQuantity} reached.`,
@@ -322,7 +333,10 @@ export default function ProductPage() {
               {selectedProduct && (
                 <Button
                   className="h-9 w-[200px] gap-1 rounded-lg p-2 capitalize"
-                  onClick={() => handleAddToCart(selectedProduct._id)}
+                  onClick={() => {
+                    handleAddToCart(selectedProduct._id);
+                    dispatch(toggleSheetOpen(true));
+                  }}
                 >
                   Add to Cart
                 </Button>

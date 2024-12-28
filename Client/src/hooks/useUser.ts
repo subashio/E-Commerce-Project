@@ -3,7 +3,7 @@ import { SummaryApi } from "@/constants/SummaryApi";
 import Axios from "@/lib/Axios";
 import { resetState } from "@/store/ProductSlice";
 import { persist } from "@/store/store";
-import { logout, setUserDetails } from "@/store/userSlice";
+import { logout, setError, setUserDetails } from "@/store/userSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
@@ -86,30 +86,30 @@ export function useUser() {
       if (error.response) {
         const statusCode = error.response.status;
 
-        if (statusCode === 400) {
+        if (statusCode === 403) {
           // Render specific error for wholesalers not approved
-          toast({
-            variant: "destructive",
-            title: "Wholesaler not approved",
-            description:
-              "Your wholesaler account is pending approval. Please contact support.",
-          });
+          dispatch(
+            setError(
+              "Wholesaler not approved. Approval process takes 2 to 3 days. Please wait.",
+            ),
+          );
           return; // Stop further execution
         }
       }
       if (error.response.status === 401) {
-        toast({
-          variant: "destructive",
-          title: "Login",
-          description: "User not Register",
-        });
+        dispatch(setError("User not Register"));
         return;
       }
-      toast({
-        variant: "destructive",
-        title: "Something went Wrong",
-        description: "We couldn't able to sign. Please try again.",
-      });
+      if (error.response.status === 404) {
+        dispatch(setError("Incorrect Password"));
+        return;
+      }
+      if (error.response.status === 409) {
+        dispatch(setError("Contact to Admin to activate your account"));
+        return;
+      }
+      dispatch(setError("Something went Wrong"));
+      return;
     }
   };
 
