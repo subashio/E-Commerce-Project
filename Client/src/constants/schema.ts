@@ -26,6 +26,8 @@ export const ProductSchema = z.object({
 
   maxQuantity: z.number().nullable().optional(),
 
+  minQuantity: z.number().nullable().optional(),
+
   description: z
     .union([
       z.string().min(10, {

@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 export async function addToCartController(req, res) {
   try {
     const userId = req.userId; //auth middleware
-    const { productId, quantity } = req.body;
+    const { productId, quantity, variantQty, variantTotal } = req.body;
 
     if (!productId) {
       return res.status(400).json({
@@ -39,6 +39,8 @@ export async function addToCartController(req, res) {
     const cartItem = new cartModel({
       quantity: quantity,
       productId: productId,
+      variantQty: variantQty ? variantQty : [],
+      variantTotal: variantTotal ? variantTotal : null,
       userId: userId,
     });
 
@@ -92,11 +94,11 @@ export async function getCartItemController(req, res) {
 export async function updateCartQuantityController(req, res) {
   try {
     const userId = req.userId;
-    const { _id, qty } = req.body;
+    const { _id, qty, variantQty, variantTotal } = req.body;
 
     if (!_id || !qty) {
       return res.status(400).json({
-        message: "provide the required fields",
+        message: "provide the required fields id and qty",
         error: true,
         success: false,
       });
@@ -109,6 +111,8 @@ export async function updateCartQuantityController(req, res) {
       },
       {
         quantity: qty,
+        variantQty: variantQty ? variantQty : [],
+        variantTotal: variantTotal ? variantTotal : null,
       },
       {
         new: true, // Return the updated document
@@ -123,6 +127,7 @@ export async function updateCartQuantityController(req, res) {
       data: updateCart,
     });
   } catch (error) {
+    console.error("Error in updateCartQuantityController:", error);
     return res.status(500).json({
       message: error.message || error,
       success: false,

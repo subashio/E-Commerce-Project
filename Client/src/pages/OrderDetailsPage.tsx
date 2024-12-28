@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { orderColumn } from "@/lib/Actions";
+import { createLookup } from "@/lib/lookUpMap";
 import { RootState } from "@/store/store";
 import React from "react";
 import { useSelector } from "react-redux";
@@ -10,11 +11,18 @@ import { useSelector } from "react-redux";
 export default function OrderDetailsPage() {
   const [search, setSearch] = React.useState("");
   const orders = useSelector((state: RootState) => state.order.order);
+  const user = useSelector((state: RootState) => state.user.users || []);
 
+  const userLookup = React.useMemo(
+    () => createLookup(user, "_id", "name"),
+    [user],
+  );
   const orderData = orders
-    .filter((item) => item.product_details?.status !== false) // Exclude orders with status false
     .map((item) => {
       const product = item.product_details;
+      const userId =
+        typeof item.userId === "object" ? item.userId._id : item.userId;
+
       return {
         image: product?.image[0] || "/placeholder.png",
         name: product?.name || "Unknown Product",
@@ -22,6 +30,7 @@ export default function OrderDetailsPage() {
         orderId: item.orderId,
         status: product.status,
         price: product?.price || 0,
+        userName: userLookup.get(userId?.toString() || "") || "Unknown User",
       };
     })
     .filter((order) => {

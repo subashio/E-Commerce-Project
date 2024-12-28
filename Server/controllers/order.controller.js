@@ -27,6 +27,8 @@ export async function CashOnDeliveryOrderController(req, res) {
           status: el.productId.status,
           price: el.productId.price,
           quantity: el.quantity,
+          variantQty: el.variantQty || [],
+          variantTotal: el.variantTotal || null,
         },
         paymentId: "",
         payment_status: "CASH ON DELIVERY",
@@ -40,7 +42,7 @@ export async function CashOnDeliveryOrderController(req, res) {
     const removeCartItems = await cartModel.deleteMany({ userId: userId });
     const updateUserCart = await userModel.updateOne(
       { _id: userId },
-      { $set: { shopping_cart: [] } }
+      { $set: { shopping_cart: null } }
     );
     const updateUserOrder = await userModel.updateOne(
       { _id: userId },

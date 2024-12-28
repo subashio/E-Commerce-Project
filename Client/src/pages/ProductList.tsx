@@ -209,6 +209,7 @@ export default function ProductList() {
                   salePrice: selectedProduct.salePrice,
                   brandName: selectedProduct.brandName,
                   maxQuantity: selectedProduct.maxQuantity,
+                  minQuantity: selectedProduct.minQuantity,
                   description: selectedProduct.description,
                   role: "edit",
                   variantId: selectedProduct?.variantId,

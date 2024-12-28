@@ -19,6 +19,7 @@ interface Products {
   categoryId: string;
   sub_categoryId: string;
   maxQuantity: number;
+  minQuantity: number;
   stock: number;
   status: boolean;
   price: number;
@@ -39,7 +40,9 @@ interface Cart {
   _id: string;
   productId: string | Products;
   quantity: number;
+  variantQty: Array<object>;
   userId: string;
+  variantTotal: number;
 }
 
 interface productSlice {
@@ -50,6 +53,7 @@ interface productSlice {
   cartList: Array<Cart>;
   viewedProduct: Array<Products>;
   wishlist: Array<Products>;
+  variantSheet: boolean;
 }
 
 const initialState: productSlice = {
@@ -60,6 +64,7 @@ const initialState: productSlice = {
   cartList: [],
   viewedProduct: [],
   wishlist: [],
+  variantSheet: false,
 };
 
 export const productSlice = createSlice({
@@ -75,17 +80,20 @@ export const productSlice = createSlice({
     setProduct: (state, action: PayloadAction<Array<Products>>) => {
       state.product = [...action.payload];
     },
-    setCart: (state, action) => {
+    setCart: (state, action: PayloadAction<Array<Cart>>) => {
       state.cartList = [...action.payload];
     },
-    setViewedProduct: (state, action) => {
+    setViewedProduct: (state, action: PayloadAction<Array<Products>>) => {
       state.viewedProduct = action.payload;
     },
-    setWishlist: (state, action) => {
+    setWishlist: (state, action: PayloadAction<Array<Products>>) => {
       state.wishlist = action.payload;
     },
-    setVariant: (state, action) => {
+    setVariant: (state, action: PayloadAction<Array<Variant>>) => {
       state.variant = action.payload;
+    },
+    setVariantSheet: (state, action: PayloadAction<boolean>) => {
+      state.variantSheet = action.payload;
     },
     resetState: (state) => {
       state.cartList = [];
@@ -104,6 +112,7 @@ export const {
   setWishlist,
   resetState,
   setVariant,
+  setVariantSheet,
 } = productSlice.actions;
 
 export default productSlice.reducer;

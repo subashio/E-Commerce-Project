@@ -10,6 +10,7 @@ export async function createProductController(req, res) {
       sub_categoryId,
       brandName,
       maxQuantity,
+      minQuantity,
       wholesalePrice,
       isWholesale,
       variantId,
@@ -63,6 +64,7 @@ export async function createProductController(req, res) {
             variantId,
             brandName,
             maxQuantity,
+            minQuantity,
             wholesalePrice,
             salePrice,
             stock,
@@ -104,7 +106,10 @@ export async function createProductController(req, res) {
 
 export async function getProductsDetails(req, res) {
   try {
-    const getProduct = await productModel.find().sort({ createdAt: -1 });
+    const getProduct = await productModel
+      .find()
+      .populate("variantId")
+      .sort({ createdAt: -1 });
 
     return res.json({
       message: "Product details",

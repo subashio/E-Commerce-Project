@@ -200,8 +200,9 @@ export const orderColumn = [
   },
   { header: "Price", key: "price" },
 ];
+
 export const customerColumn = [
-  { header: "Customer Name", key: "name" },
+  { header: "Customer Name", key: "userName" },
   { header: "Email", key: "email" },
   { header: "Phone", key: "phone" },
   // { header: "Address", key: "address" },

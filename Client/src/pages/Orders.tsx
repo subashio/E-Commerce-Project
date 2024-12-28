@@ -11,6 +11,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 
 export default function Orders() {
+  console.log("Orders component initialized");
   const [search, setSearch] = React.useState("");
   const orders = useSelector((state: RootState) => state.order.allOrders);
   const user = useSelector((state: RootState) => state.user.users || []);
@@ -19,9 +20,12 @@ export default function Orders() {
     () => createLookup(user, "_id", "name"),
     [user],
   );
+
   const orderData = orders
     .map((item) => {
       const product = item.product_details;
+      const userId =
+        typeof item.userId === "object" ? item.userId._id : undefined;
 
       return {
         image: product?.image[0] || "/placeholder.png",
@@ -30,7 +34,7 @@ export default function Orders() {
         orderId: item.orderId,
         status: product.status,
         price: product?.price || 0,
-        userName: userLookup.get(item.userId?._id || ""),
+        userName: userLookup.get(userId || "") || "Unknown User",
       };
     })
     .filter((order) => {

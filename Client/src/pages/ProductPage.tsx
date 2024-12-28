@@ -27,10 +27,12 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import VariantCartSheet from "@/components/VariantCartSheet";
 import { footerSvg } from "@/constants/details";
 import { useProduct } from "@/hooks/useProduct";
 import { useQuantity } from "@/hooks/useQuantity";
 import { toggleSheetOpen } from "@/store/orderSlice";
+import { setVariantSheet } from "@/store/ProductSlice";
 import { RootState } from "@/store/store";
 import Autoplay from "embla-carousel-autoplay";
 import { ChevronDown } from "lucide-react";
@@ -38,13 +40,18 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 
+interface Variant {
+  _id: string;
+  material_type: string[];
+  brand_name: string[];
+}
+
 export default function ProductPage() {
   const product = useSelector((state: RootState) => state.product.product);
   const { id } = useParams();
   const category = useSelector((state: RootState) => state.product.category);
   const { createViewiedProducts } = useProduct();
   const [hovering, setHovering] = React.useState(false);
-
   const cartList = useSelector((state: RootState) => state.product.cartList);
   const [isAvailableCart, setIsAvailableCart] = React.useState(false);
   const [cartItemDetails, setCartItemsDetails] = React.useState<any>(null);
@@ -145,7 +152,7 @@ export default function ProductPage() {
       setCartItemsDetails(productInCart);
       updatePrice();
     } else {
-      setQuantity(1);
+      setQuantity(selectedProduct?.minQuantity ?? 1);
       setIsAvailableCart(false);
       setCartItemsDetails(null);
     }
@@ -154,6 +161,24 @@ export default function ProductPage() {
   React.useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  const materialType =
+    typeof selectedProduct?.variantId === "object"
+      ? (selectedProduct.variantId as Variant)?.material_type
+      : undefined;
+
+  const brandName =
+    typeof selectedProduct?.variantId === "object"
+      ? (selectedProduct.variantId as Variant)?.brand_name
+      : undefined;
+
+  const [selectedMaterial, setSelectedMaterial] = React.useState<
+    string | undefined
+  >(undefined);
+
+  const [selectedBrand, setSelectedBrand] = React.useState<string | undefined>(
+    undefined,
+  );
   return (
     <section>
       <Breadcrumbs
@@ -178,7 +203,7 @@ export default function ProductPage() {
             }}
           >
             <div className="flex flex-row gap-2 lg:flex-col">
-              {selectedProduct?.image.map((image, index) => (
+              {selectedProduct?.image.map((image: string, index: number) => (
                 <div
                   key={index}
                   className={`h-20 w-20 cursor-pointer rounded-lg border p-2 ${
@@ -201,7 +226,7 @@ export default function ProductPage() {
             className="ml-auto"
             style={{ transform: `translateX(-${activeIndex * 100}%)` }}
           >
-            {selectedProduct?.image.map((image, index) => (
+            {selectedProduct?.image.map((image: string, index: number) => (
               <CarouselItem
                 key={index}
                 className="mx-auto !w-full cursor-zoom-in active:cursor-grabbing"
@@ -251,8 +276,59 @@ export default function ProductPage() {
             )}
           </div>
 
+          {selectedProduct?.variantId && (
+            <div className="mt-2 flex flex-col items-start gap-2">
+              <p className="text-sm font-semibold text-secondary/70">
+                Material Type
+              </p>
+              <div className="flex flex-wrap items-center gap-2">
+                {materialType?.map((item) => (
+                  <div
+                    key={item}
+                    className={`flex cursor-pointer items-center gap-2 rounded-md border px-2 py-1 text-sm font-medium ${
+                      selectedMaterial === item ? "bg-primary text-white" : ""
+                    }`}
+                    aria-label="Toggle bold"
+                    onClick={() =>
+                      setSelectedMaterial(
+                        selectedMaterial === item ? undefined : item,
+                      )
+                    }
+                  >
+                    <p>{item}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          {selectedProduct?.variantId && (
+            <div className="mt-2 flex flex-col items-start gap-2">
+              <p className="text-sm font-semibold text-secondary/70">
+                Brand Name
+              </p>
+              <div className="flex flex-wrap items-center gap-2">
+                {brandName?.map((item) => (
+                  <div
+                    key={item}
+                    className={`flex cursor-pointer items-center gap-2 rounded-md border px-2 py-1 text-sm font-medium ${
+                      selectedBrand === item ? "bg-primary text-white" : ""
+                    }`}
+                    aria-label="Toggle bold"
+                    onClick={() =>
+                      setSelectedBrand(
+                        selectedBrand === item ? undefined : item,
+                      )
+                    }
+                  >
+                    <p>{item}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="flex flex-wrap items-center gap-3 py-4">
-            {selectedProduct && (
+            {!selectedProduct.variantId && (
               <div className="flex">
                 <button
                   onClick={() => handleDecreaseQty()}
@@ -275,7 +351,7 @@ export default function ProductPage() {
             )}
 
             <div className="flex items-center gap-2">
-              {selectedProduct && (
+              {!selectedProduct.variantId && (
                 <Button
                   className="h-9 w-[200px] gap-1 rounded-lg p-2 capitalize"
                   onClick={() => {
@@ -285,6 +361,27 @@ export default function ProductPage() {
                 >
                   Add to Cart
                 </Button>
+              )}
+              {selectedProduct.variantId && (
+                <VariantCartSheet
+                  selectedBrand={selectedBrand}
+                  setSelectedBrand={setSelectedBrand}
+                  brandName={brandName}
+                  selectedProduct={selectedProduct}
+                  selectedMaterial={selectedMaterial}
+                  setSelectedMaterial={setSelectedMaterial}
+                  materialType={materialType}
+                  button={
+                    <Button
+                      className="h-9 w-[200px] gap-1 rounded-lg p-2 capitalize"
+                      onClick={() => {
+                        dispatch(setVariantSheet(true));
+                      }}
+                    >
+                      Add To Cart
+                    </Button>
+                  }
+                />
               )}
               <TooltipProvider>
                 <Tooltip>

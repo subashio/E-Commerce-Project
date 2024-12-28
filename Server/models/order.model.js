@@ -21,6 +21,8 @@ const orderSchema = new mongoose.Schema(
       price: Number,
       status: Boolean,
       quantity: Number,
+      variantQty: Array,
+      variantTotal: Number,
     },
     paymentId: {
       type: String,

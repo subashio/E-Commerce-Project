@@ -38,6 +38,7 @@ interface ProductProps {
     categoryId: string;
     sub_categoryId: string;
     maxQuantity: number | undefined;
+    minQuantity: number | undefined;
     status: boolean;
     stock: number | undefined;
     price: number | undefined;
@@ -69,12 +70,13 @@ export default function ProductForm({ initialData, id }: ProductProps) {
       ? {
           name: initialData.name,
           image: initialData.image,
-          maxQuantity: initialData.maxQuantity ?? undefined,
           description: initialData.description || undefined,
           status: initialData.status,
           categoryId: initialData.categoryId,
           sub_categoryId: initialData.sub_categoryId,
           wholesalePrice: initialData.wholesalePrice ?? undefined,
+          minQuantity: initialData.minQuantity ?? undefined,
+          maxQuantity: initialData.maxQuantity ?? undefined,
           salePrice: initialData.salePrice,
           isWholesale: true,
           stock: initialData.stock,
@@ -102,6 +104,7 @@ export default function ProductForm({ initialData, id }: ProductProps) {
     name: "",
     image: [] as string[],
     minQuantity: isWholesale ? 1 : undefined, // Set default minQuantity for wholesale
+    maxQuantity: isWholesale ? undefined : undefined, // Set default maxQuantity for wholesale
     description: "",
     status: false,
     isWholesale, // Set based on the parameter
@@ -499,6 +502,32 @@ export default function ProductForm({ initialData, id }: ProductProps) {
                               className="no-arrows"
                               type="number"
                               placeholder="Max Quantity"
+                              {...field}
+                              value={field.value?.toString() ?? ""} // Convert number to string or empty string
+                              onChange={(e) =>
+                                field.onChange(
+                                  e.target.valueAsNumber || undefined,
+                                )
+                              }
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
+                  {(isWholesale || initialData?.minQuantity) && (
+                    <FormField
+                      control={form.control}
+                      name="minQuantity"
+                      render={({ field }) => (
+                        <FormItem className="my-2">
+                          <FormLabel>Min Quantity</FormLabel>
+                          <FormControl>
+                            <Input
+                              className="no-arrows"
+                              type="number"
+                              placeholder="Min Quantity"
                               {...field}
                               value={field.value?.toString() ?? ""} // Convert number to string or empty string
                               onChange={(e) =>

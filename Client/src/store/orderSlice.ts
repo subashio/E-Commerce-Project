@@ -6,24 +6,26 @@ interface ProductDetails {
   price: number;
   quantity: number;
   status: boolean;
+  variantQty: Array<number>;
+  variantTotal: Array<number>;
 }
 export interface users {
-  _id?: string;
-  name?: string;
-  email?: string;
-  avatar?: string;
-  mobile?: string;
-  verify_email?: string;
-  last_login_date?: string;
-  status?: string;
-  address_details?: Array<Object>;
-  shopping_cart?: Array<Object>;
-  orderHistory?: Array<Object>;
-  role?: string;
+  _id: string;
+  name: string;
+  email: string;
+  avatar: string;
+  mobile: string;
+  verify_email: string;
+  last_login_date: string;
+  status: string;
+  address_details: Array<Object>;
+  shopping_cart: Array<Object>;
+  orderHistory: Array<Object>;
+  role: string;
 }
 interface orders {
   _id: string;
-  userId: users | undefined;
+  userId: string | users;
   orderId: string;
   productId: string;
   paymentId: string;

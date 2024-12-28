@@ -79,7 +79,9 @@ export const useQuantity = (
   };
 
   const handleDecreaseQty = async () => {
-    if (quantity > 1) {
+    const minQuantity = selectedProduct?.minQuantity || 1;
+
+    if (quantity > minQuantity) {
       try {
         if (isAvailableCart) {
           await updateCartItem(cartItemDetails._id, quantity - 1);
@@ -99,7 +101,7 @@ export const useQuantity = (
     } else {
       toast({
         variant: "default",
-        title: "Minimum quantity reached.",
+        title: `Minimum quantity of ${minQuantity} reached.`,
       });
     }
   };

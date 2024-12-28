@@ -55,6 +55,10 @@ const productSchema = new mongoose.Schema(
       type: Number,
       default: null,
     },
+    minQuantity: {
+      type: Number,
+      default: null,
+    },
     description: {
       type: String,
       default: "",

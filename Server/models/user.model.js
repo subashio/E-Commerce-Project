@@ -65,8 +65,9 @@ const userSchema = new mongoose.Schema(
       ref: "address",
     },
     shopping_cart: {
-      type: mongoose.Schema.ObjectId,
+      type: [mongoose.Schema.ObjectId],
       ref: "cart",
+      default: null,
     },
     order_history: {
       type: mongoose.Schema.ObjectId,

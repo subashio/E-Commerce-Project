@@ -65,9 +65,15 @@ export default function CartSheet({ button }: { button: ReactNode }) {
         if (!product) return total;
 
         const quantity = itemQuantities[item._id] || item.quantity;
-
+        const price = item.variantTotal
+          ? item.variantTotal
+          : product.wholesalePrice
+            ? product.wholesalePrice
+            : product.price;
         // Use product.price directly without considering salePrice
-        return total + quantity * product.price;
+        return (
+          total + (item.variantTotal ? item.variantTotal : quantity * price)
+        );
       }, 0),
     [cartList, itemQuantities],
   );
@@ -76,19 +82,18 @@ export default function CartSheet({ button }: { button: ReactNode }) {
     e.preventDefault();
     e.stopPropagation();
 
-    // Find the item in the cart list
     const item = cartList.find((item) => item._id === itemId);
-    // Extract stock and maxQuantity from the productId object
     const stock =
       typeof item?.productId === "object" ? item.productId.stock || 1 : 1;
     const maxQuantity =
       typeof item?.productId === "object"
         ? item.productId.maxQuantity || stock
         : stock;
+    const minQuantity =
+      typeof item?.productId === "object" ? item.productId.minQuantity || 1 : 1;
 
     const currentQuantity = itemQuantities[itemId] || 0;
 
-    // Return early if currentQuantity is already at maxQuantity limit
     if (currentQuantity >= maxQuantity) {
       toast({
         variant: "default",
@@ -97,7 +102,7 @@ export default function CartSheet({ button }: { button: ReactNode }) {
       return;
     }
 
-    const newQuantity = currentQuantity + 1;
+    const newQuantity = Math.max(minQuantity, currentQuantity + 1);
     setItemLoading(itemId, true);
     updateCartItem(itemId, newQuantity)
       .then(() => {
@@ -115,9 +120,16 @@ export default function CartSheet({ button }: { button: ReactNode }) {
   const decreaseQty = (e: React.MouseEvent, itemId: string) => {
     e.preventDefault();
     e.stopPropagation();
-    const newQuantity = Math.max(0, (itemQuantities[itemId] || 0) - 1);
+
+    const item = cartList.find((item) => item._id === itemId);
+    const minQuantity =
+      typeof item?.productId === "object" ? item.productId.minQuantity || 1 : 1;
+
+    const currentQuantity = itemQuantities[itemId] || 0;
+    const newQuantity = Math.max(minQuantity, currentQuantity - 1);
+
     setItemLoading(itemId, true);
-    (newQuantity === 0
+    (newQuantity < minQuantity
       ? deleteCartItem(itemId)
       : updateCartItem(itemId, newQuantity)
     )

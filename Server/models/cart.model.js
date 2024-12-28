@@ -10,6 +10,15 @@ const cartschema = new mongoose.Schema(
       type: Number,
       default: 1,
     },
+    variantQty: {
+      type: Array,
+      default: [{ materialType: "", brandName: "", quantity: 0 }],
+    },
+    variantTotal: {
+      type: Number,
+      default: null,
+    },
+
     userId: {
       type: mongoose.Schema.ObjectId,
       ref: "User",

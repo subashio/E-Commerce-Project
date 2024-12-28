@@ -8,13 +8,13 @@ export function useCart() {
   const dispatch = useDispatch();
   const { fetchCartItem } = useGlobleContext();
 
-  const addToCart = async (id: string | undefined) => {
-    const { fetchCartItem } = useGlobleContext();
+  const addToCart = async (id: string | undefined, qty: number) => {
     try {
       const response = await Axios({
         ...SummaryApi.add_cart,
         data: {
           productId: id,
+          qty: qty,
         },
       });
 

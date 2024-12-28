@@ -1,6 +1,8 @@
+import { setVariantSheet } from "@/store/ProductSlice";
 import { Loader, Trash2 } from "lucide-react";
 import React from "react";
-import { Badge } from "./ui/badge";
+import { useDispatch } from "react-redux";
+import { Button } from "./ui/button";
 
 const CartItem = React.memo(function CartItem({
   item,
@@ -23,60 +25,86 @@ const CartItem = React.memo(function CartItem({
     return <div key={item._id}>Product not found</div>;
   }
 
-  return (
-    <div
-      key={item._id}
-      className="flex h-auto w-full flex-wrap items-center gap-4 border-b py-4"
-    >
-      <div>
-        <img
-          alt={product?.name}
-          className="w-20 object-cover"
-          src={product?.image[0] || "/default_image.png"}
-        />
-      </div>
-      <div className="my-auto mr-auto flex h-full max-w-44 flex-col items-start justify-center gap-2 truncate text-sm font-semibold">
-        {product?.name}
-        <div className="font-bold">
-          ₹{product?.wholesalePrice || product?.price}
-          {product?.salePrice && (
-            <del className="ml-1 text-secondary/50 dark:text-secondary-foreground/70">
-              ₹{product?.salePrice}
-            </del>
-          )}
-          {product.discount && (
-            <Badge className="ml-2 bg-red-600 hover:bg-red-500">
-              {product.discount} %
-            </Badge>
-          )}
-        </div>
-      </div>
-      <div className="flex flex-col items-start gap-1">
-        <div className="flex">
-          <button
-            onClick={(e) => decreaseQty(e, item._id)}
-            className="rounded-l-md border-b border-l border-t px-3 py-1"
-          >
-            -
-          </button>
+  const dispatch = useDispatch();
 
-          <p className="border px-2 py-1 text-sm font-medium">
-            {isLoading ? <Loader className="animate-spin p-1.5" /> : quantity}
-          </p>
-          <button
-            onClick={(e) => increaseQty(e, item._id)}
-            className="rounded-r-md border-b border-r border-t px-3 py-1"
-          >
-            +
-          </button>
+  return (
+    <div className="flex h-auto flex-col gap-2 border-b py-4">
+      <div
+        key={item._id}
+        className="flex h-auto w-full flex-wrap items-center gap-4"
+      >
+        <div>
+          <img
+            alt={product?.name}
+            className="w-20 object-cover"
+            src={product?.image[0] || "/default_image.png"}
+          />
         </div>
-        <button
-          onClick={(e) => handleDeleteCart(e, item._id)}
-          className="flex items-center gap-1 !p-0 text-xs text-secondary !no-underline dark:text-secondary-foreground"
-        >
-          <Trash2 className="w-3.5 text-destructive" /> Remove
-        </button>
+        <div className="my-auto mr-auto flex h-full max-w-44 flex-col items-start justify-center gap-2 truncate text-sm font-semibold">
+          {product?.name}
+          <div className="font-bold">
+            ₹{item.variantTotal || product?.wholesalePrice || product?.price}
+            {product?.salePrice && (
+              <del className="ml-1 text-secondary/50 dark:text-secondary-foreground/70">
+                ₹{product?.salePrice}
+              </del>
+            )}
+          </div>
+          {item.productId.variantId && (
+            <p className="text-xs font-semibold text-secondary/50 dark:text-secondary-foreground/70">
+              Total qty: {quantity}
+            </p>
+          )}
+        </div>
+
+        {!item.productId.variantId ? (
+          <div className="flex flex-col items-start gap-1">
+            <div className="flex">
+              <button
+                onClick={(e) => decreaseQty(e, item._id)}
+                className="rounded-l-md border-b border-l border-t px-3 py-1"
+              >
+                -
+              </button>
+
+              <p className="border px-2 py-1 text-sm font-medium">
+                {isLoading ? (
+                  <Loader className="animate-spin p-1.5" />
+                ) : (
+                  quantity
+                )}
+              </p>
+              <button
+                onClick={(e) => increaseQty(e, item._id)}
+                className="rounded-r-md border-b border-r border-t px-3 py-1"
+              >
+                +
+              </button>
+              <button
+                onClick={(e) => handleDeleteCart(e, item._id)}
+                className="ml-4 flex items-center gap-1 !p-0 text-xs text-secondary !no-underline dark:text-secondary-foreground"
+              >
+                <Trash2 className="text-destructive" />
+              </button>
+            </div>
+          </div>
+        ) : (
+          <button
+            onClick={(e) => handleDeleteCart(e, item._id)}
+            className="flex items-center gap-1 !p-0 text-xs text-secondary !no-underline dark:text-secondary-foreground"
+          >
+            <Trash2 className="text-destructive" />
+          </button>
+        )}
       </div>
+      {item.productId.variantId && (
+        <Button
+          variant="outline"
+          onClick={() => dispatch(setVariantSheet(true))}
+        >
+          Edit variant
+        </Button>
+      )}
     </div>
   );
 });

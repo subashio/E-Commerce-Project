@@ -21,33 +21,55 @@ export default function AddToCartButton({ id, className }: ProductCartProps) {
   const [isAvailableCart, setIsAvailableCart] = React.useState(false);
   const { fetchCartItem, handleToast } = useGlobleContext();
   const { updateCartItem } = useCart();
-  const [cartItemDetails, setCartItemsDetails] = React.useState<any>(null);
-  const [qty, setQty] = React.useState<number>(0);
+  const [cartItemDetails, setCartItemsDetails] = React.useState<any>(cartList);
+  const [qty, setQty] = React.useState<number>(1);
 
   const dispatch = useDispatch();
+
+  const product = useSelector((state: RootState) => state.product.product);
+
+  const selectedProduct = product.find((product: any) => {
+    return product._id === id;
+  });
 
   const AddtoCart = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
 
     if (isAvailableCart) {
-      const maxQuantity = cartItemDetails.productId.maxQuantity || Infinity;
-      const stockLimit = cartItemDetails.productId.stock || Infinity;
-      if (qty + 1 <= maxQuantity && qty + 1 <= stockLimit) {
-        try {
-          await updateCartItem(cartItemDetails._id, qty + 1);
-          toast({
-            variant: "default",
-            title: "Quantity Increased!✅",
-          });
-        } catch (error) {
-          console.error(error);
-          handleToast();
-        }
-      } else {
+      const maxQuantity = selectedProduct?.maxQuantity;
+      const stockLimit = selectedProduct?.stock;
+
+      if (maxQuantity != null && qty >= maxQuantity) {
         toast({
           variant: "default",
-          title: "Maximum quantity or stock limit reached!❌",
+          title: `Maximum quantity of ${maxQuantity} reached.`,
+        });
+        return;
+      }
+
+      if (stockLimit != null && qty >= stockLimit) {
+        toast({
+          variant: "default",
+          title: "Out of Stock ❌",
+        });
+        return;
+      }
+
+      try {
+        if (isAvailableCart) {
+          await updateCartItem(cartItemDetails._id, qty + 1);
+        }
+        setQty((prev) => prev + 1);
+        toast({
+          variant: "default",
+          title: "Quantity Increased!✅",
+        });
+      } catch (error) {
+        console.error(error);
+        toast({
+          variant: "destructive",
+          title: "Error updating cart",
         });
       }
     } else {
@@ -56,6 +78,7 @@ export default function AddToCartButton({ id, className }: ProductCartProps) {
           ...SummaryApi.add_cart,
           data: {
             productId: id,
+            quantity: qty,
           },
         });
 
@@ -76,23 +99,19 @@ export default function AddToCartButton({ id, className }: ProductCartProps) {
   React.useEffect(() => {
     const productInCart = cartList.find((item: any) => {
       if (typeof item.productId === "string") {
-        return item.productId === id;
+        return item.productId === selectedProduct?._id;
       } else if (item.productId && typeof item.productId === "object") {
-        return item.productId._id === id;
+        return item.productId._id === selectedProduct?._id;
       }
       return false;
     });
 
     if (productInCart) {
-      const maxQuantity =
-        typeof productInCart.productId === "object"
-          ? productInCart.productId.maxQuantity || 0
-          : 0;
-      setQty(Math.max(productInCart.quantity, maxQuantity));
+      setQty(productInCart.quantity);
       setIsAvailableCart(true);
       setCartItemsDetails(productInCart);
     } else {
-      setQty(0);
+      setQty(selectedProduct?.minQuantity ?? 1);
       setIsAvailableCart(false);
       setCartItemsDetails(null);
     }
@@ -107,7 +126,6 @@ export default function AddToCartButton({ id, className }: ProductCartProps) {
           dispatch(toggleSheetOpen(true));
         }}
       >
-        {/* <Plus /> */}
         Add to Cart
       </Button>
     </div>
