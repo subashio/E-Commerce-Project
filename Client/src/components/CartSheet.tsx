@@ -10,6 +10,7 @@ import { Button, buttonVariants } from "./ui/button";
 
 import { useGlobleContext } from "@/context/GlobleContextProvider";
 import { useCart } from "@/hooks/useCart";
+import { toggleSheetOpen } from "@/store/orderSlice";
 import CartItem from "./CartItem";
 import {
   Card,
@@ -20,7 +21,6 @@ import {
   CardTitle,
 } from "./ui/card";
 import { ScrollArea } from "./ui/scroll-area";
-import { toggleSheetOpen } from "@/store/orderSlice";
 
 export default function CartSheet({ button }: { button: ReactNode }) {
   // const [isSheetOpen, isSetSheetOpen] = React.useState(false);
@@ -39,7 +39,6 @@ export default function CartSheet({ button }: { button: ReactNode }) {
   // Loading state for fetching cart items
   const [isFetchingCart, setIsFetchingCart] = React.useState(false);
 
-  // Derived state for item quantities
   const itemQuantities = React.useMemo(
     () =>
       cartList.reduce(

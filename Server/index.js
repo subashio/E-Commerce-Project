@@ -16,13 +16,13 @@ import orderRouter from "./routes/order.routes.js";
 import viewedProductRouter from "./routes/viewedProducts.routes.js";
 import wishlistRouter from "./routes/wishlist.routes.js";
 import variantRouter from "./routes/variant.routes.js";
-dotenv.config();
-
+import { injectSpeedInsights } from "@vercel/speed-insights";
 dotenv.config();
 
 const app = express();
 const Port = process.env.PORT; // Fallback port in case process.env.PORT is undefined
 
+injectSpeedInsights();
 app.use(
   cors({
     origin: process.env.CLIENT_URL, // Default for development

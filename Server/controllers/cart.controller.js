@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 export async function addToCartController(req, res) {
   try {
     const userId = req.userId; //auth middleware
-    const { productId } = req.body;
+    const { productId, quantity } = req.body;
 
     if (!productId) {
       return res.status(400).json({
@@ -37,7 +37,7 @@ export async function addToCartController(req, res) {
     }
 
     const cartItem = new cartModel({
-      quantity: 1,
+      quantity: quantity,
       productId: productId,
       userId: userId,
     });

@@ -28,12 +28,8 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { footerSvg } from "@/constants/details";
-import { SummaryApi } from "@/constants/SummaryApi";
-import { useGlobleContext } from "@/context/GlobleContextProvider";
-import { useToast } from "@/hooks/use-toast";
-import { useCart } from "@/hooks/useCart";
 import { useProduct } from "@/hooks/useProduct";
-import Axios from "@/lib/Axios";
+import { useQuantity } from "@/hooks/useQuantity";
 import { toggleSheetOpen } from "@/store/orderSlice";
 import { RootState } from "@/store/store";
 import Autoplay from "embla-carousel-autoplay";
@@ -48,11 +44,8 @@ export default function ProductPage() {
   const category = useSelector((state: RootState) => state.product.category);
   const { createViewiedProducts } = useProduct();
   const [hovering, setHovering] = React.useState(false);
-  const [quantity, setQuantity] = React.useState(1);
-  const { updateCartItem } = useCart();
+
   const cartList = useSelector((state: RootState) => state.product.cartList);
-  const { toast } = useToast();
-  const { handleToast, fetchCartItem } = useGlobleContext();
   const [isAvailableCart, setIsAvailableCart] = React.useState(false);
   const [cartItemDetails, setCartItemsDetails] = React.useState<any>(null);
   const dispatch = useDispatch();
@@ -95,86 +88,38 @@ export default function ProductPage() {
     setActiveIndex(index);
   };
 
-  try {
-    createViewiedProducts(id);
-    console.log(id);
-  } catch (error) {
-    console.log("errror sending data");
-  }
+  React.useEffect(() => {
+    let isMounted = true; // To prevent state updates if the component is unmounted
 
-  const handleAddToCart = async (productId: string) => {
-    if (!isAvailableCart) {
+    const createViewed = async () => {
+      if (!id) return; // Check if id is valid
+
       try {
-        const response = await Axios({
-          ...SummaryApi.add_cart,
-          data: {
-            productId: productId,
-          },
-        });
-
-        if (response.data) {
-          fetchCartItem(); // Fetch the latest cart items
-          toast({
-            variant: "default",
-            title: "Product added to cart ✅",
-          });
-        }
+        await createViewiedProducts(id);
       } catch (error) {
-        console.error(error);
-        handleToast();
-      }
-    }
-  };
-
-  const handleIncreaseQty = async () => {
-    const maxQuantity = selectedProduct?.maxQuantity;
-
-    if (maxQuantity == null || quantity < maxQuantity) {
-      if (isAvailableCart) {
-        const stockLimit = selectedProduct?.stock; // Assuming stockLimit is a property of selectedProduct
-        if (quantity >= stockLimit) {
-          toast({
-            variant: "default",
-            title: "Out of Stock ❌",
-          });
-          return;
+        if (isMounted) {
+          console.log("error sending data");
         }
-
-        try {
-          await updateCartItem(cartItemDetails._id, quantity + 1);
-          toast({
-            variant: "default",
-            title: "Quantity Increased!✅",
-          });
-        } catch (error) {
-          console.error(error);
-          handleToast();
-        }
-      } else {
-        handleAddToCart(selectedProduct._id);
       }
-    } else if (maxQuantity !== null) {
-      toast({
-        variant: "default",
-        title: `Maximum quantity of ${maxQuantity} reached.`,
-      });
-    }
-  };
+    };
 
-  const handleDecreaseQty = async () => {
-    if (isAvailableCart) {
-      try {
-        await updateCartItem(cartItemDetails._id, quantity - 1);
-        toast({
-          variant: "default",
-          title: "Quantity Increased!✅",
-        });
-      } catch (error) {
-        console.error(error);
-        handleToast();
-      }
-    }
-  };
+    const debounceTimeout = setTimeout(() => {
+      createViewed();
+    }, 300); // Debounce the API call by 300ms
+
+    return () => {
+      isMounted = false;
+      clearTimeout(debounceTimeout); // Clear timeout on unmount
+    };
+  }, [id]);
+
+  const {
+    quantity,
+    handleIncreaseQty,
+    handleDecreaseQty,
+    handleAddToCart,
+    setQuantity,
+  } = useQuantity(selectedProduct, cartItemDetails, isAvailableCart);
 
   const updatePrice = () => {
     if (user?.isWholesaler) {
@@ -200,7 +145,7 @@ export default function ProductPage() {
       setCartItemsDetails(productInCart);
       updatePrice();
     } else {
-      setQuantity(0);
+      setQuantity(1);
       setIsAvailableCart(false);
       setCartItemsDetails(null);
     }
@@ -402,3 +347,80 @@ export default function ProductPage() {
     </section>
   );
 }
+
+// const handleAddToCart = async (productId: string) => {
+//   if (!isAvailableCart) {
+//     try {
+//       const response = await Axios({
+//         ...SummaryApi.add_cart,
+//         data: {
+//           productId: productId,
+//         },
+//       });
+
+//       if (response.data) {
+//         fetchCartItem(); // Fetch the latest cart items
+//         toast({
+//           variant: "default",
+//           title: "Product added to cart ✅",
+//         });
+//       }
+//     } catch (error) {
+//       console.error(error);
+//       handleToast();
+//     }
+//   }
+// };
+
+// const handleIncreaseQty = async () => {
+//   const maxQuantity = selectedProduct?.maxQuantity;
+//   const stockLimit = selectedProduct?.stock;
+
+//   if (maxQuantity != null && quantity >= maxQuantity) {
+//     toast({
+//       variant: "default",
+//       title: `Maximum quantity of ${maxQuantity} reached.`,
+//     });
+//     return;
+//   }
+
+//   if (isAvailableCart) {
+//     if (quantity >= stockLimit) {
+//       toast({
+//         variant: "default",
+//         title: "Out of Stock ❌",
+//       });
+//       return;
+//     }
+
+//     try {
+//       await updateCartItem(cartItemDetails._id, quantity + 1);
+//       setQuantity((prev) => prev + 1);
+//       toast({
+//         variant: "default",
+//         title: "Quantity Increased!✅",
+//       });
+//     } catch (error) {
+//       console.error(error);
+//       handleToast();
+//     }
+//   } else {
+//     handleAddToCart(selectedProduct._id);
+//   }
+// };
+
+// const handleDecreaseQty = async () => {
+//   if (isAvailableCart && quantity > 1) {
+//     try {
+//       await updateCartItem(cartItemDetails._id, quantity - 1);
+//       setQuantity((prev) => prev - 1);
+//       toast({
+//         variant: "default",
+//         title: "Quantity Decreased!✅",
+//       });
+//     } catch (error) {
+//       console.error(error);
+//       handleToast();
+//     }
+//   }
+// };
