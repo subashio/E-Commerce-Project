@@ -35,7 +35,7 @@ export default function CategoryDisplay({ name }: { name: string }) {
                   <Link to="/" className="flex flex-col">
                     <div className="flex h-14 w-14 items-center rounded-full border bg-white">
                       <img
-                        src="/vevo.svg"
+                        src="/ban.png"
                         alt="brand"
                         className="rounded-full"
                       />

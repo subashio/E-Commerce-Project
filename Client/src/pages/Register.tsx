@@ -10,7 +10,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { RegisterSchema, WholesaleRegisterSchema } from "@/constants/schema";
 import { useUser } from "@/hooks/useUser";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader } from "lucide-react";
 import React from "react";
@@ -35,6 +34,7 @@ export default function Register() {
       companyName: "",
       officeAddress: "",
       officePhone: "",
+      GSTIN: "",
       isWholesale: false,
     },
   });
@@ -132,6 +132,7 @@ export default function Register() {
                     </FormLabel>
                     <FormControl>
                       <Input
+                        type="password"
                         className="w-full rounded-md border border-gray-300 px-4 py-6 shadow-sm focus:border-none focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
                         placeholder="Enter your password"
                         {...field}
@@ -154,6 +155,7 @@ export default function Register() {
                     </FormLabel>
                     <FormControl>
                       <Input
+                        type="password"
                         className="w-full rounded-md border border-gray-300 px-4 py-6 shadow-sm focus:border-none focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
                         placeholder="Enter Confirm Password"
                         {...field}
@@ -177,6 +179,25 @@ export default function Register() {
                           <Input
                             className="w-full rounded-md border border-gray-300 px-4 py-6 shadow-sm focus:border-none focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
                             placeholder="Enter Company Name"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="mb-4">
+                  <FormField
+                    control={form.control}
+                    name="GSTIN"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>GSTIN/UIN of the Taxpayer</FormLabel>
+                        <FormControl>
+                          <Input
+                            className="w-full rounded-md border border-gray-300 px-4 py-6 shadow-sm focus:border-none focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
+                            placeholder="Enter GSTIN"
                             {...field}
                           />
                         </FormControl>

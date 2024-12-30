@@ -1,5 +1,6 @@
 import AddProfileImage from "@/components/AddProfileImage";
 import DialogForm from "@/components/DialogForm";
+import EditAddress from "@/components/EditAddress";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { SummaryApi } from "@/constants/SummaryApi";
@@ -8,7 +9,7 @@ import { useUser } from "@/hooks/useUser";
 import Axios from "@/lib/Axios";
 import { RootState } from "@/store/store";
 import { setUserDetails } from "@/store/userSlice";
-import { Pencil } from "lucide-react";
+import { Pencil, UserRoundPen } from "lucide-react";
 import { UseFormReturn } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { z } from "zod";
@@ -77,14 +78,108 @@ export default function ProfilePage() {
   }
   return (
     <section className="relative">
-      <div className="flex items-center justify-between pb-10 pt-10 md:pb-10 md:pt-0">
-        <h1 className="px-4 text-3xl font-semibold">My Profile</h1>
+      <div className="flex items-center justify-between pb-10 pt-4 md:pb-10 lg:pt-0">
+        <h1 className="px-4 text-3xl font-semibold xl:px-6">My Profile</h1>
+      </div>
+      {/* Profile Card */}
+      {!user?.isWholesaler ? (
+        <Card className="relative mx-2 mr-auto flex w-full flex-row items-center justify-between gap-4 border p-3 shadow-none xl:mx-6">
+          <div className="flex items-center justify-center gap-4">
+            {/* user image */}
+            <div className="group relative h-20 w-20 rounded-full border">
+              <img
+                src={user?.avatar || "/default-avatar.png"}
+                alt="avatar"
+                className="h-20 w-20 rounded-full object-contain object-center"
+              />
+              <UserRoundPen className="absolute right-2 top-2 hidden rounded-full bg-gray-950/80 p-1.5 text-white group-hover:block dark:bg-white dark:text-gray-950" />
+            </div>
+            <div className="">
+              <p className="text-md font-semibold">{user?.name}</p>
+              <p className="text-sm font-medium text-secondary/50">
+                {user?.isWholesaler ? "Wholesaler" : "Retailer"}
+              </p>
+              <p className="text-sm font-medium capitalize text-primary/50">
+                Role : {user?.role === "ADMIN" ? "admin" : "user"}
+              </p>
+            </div>
+          </div>
 
+          <AddProfileImage />
+        </Card>
+      ) : (
+        <Card className="relative mx-2 mr-auto flex w-auto flex-row items-center justify-between gap-4 border p-3 shadow-none xl:mx-6">
+          <div className="flex items-center gap-3">
+            <div className="group relative h-20 w-20 rounded-full border">
+              <img
+                src={user?.avatar || "/default-avatar.png"}
+                alt="avatar"
+                className="h-20 w-20 rounded-full object-contain object-center"
+              />
+              <UserRoundPen className="absolute right-2 top-2 hidden rounded-full bg-gray-950/80 p-1.5 text-white group-hover:block dark:bg-white dark:text-gray-950" />
+            </div>
+            <div className="flex flex-col gap-0.5">
+              <p className="text-md font-semibold">
+                {user?.name}{" "}
+                <span className="text-xs font-medium capitalize text-primary/50">
+                  {user?.role === "USER" ? "user" : "admin"}
+                </span>
+              </p>
+              <p className="text-xs font-medium text-secondary/50">
+                {user?.companyName}
+              </p>
+              <p className="text-xs font-medium text-secondary/50">
+                Type: {user?.isWholesaler ? "Wholesaler" : "Retailer"}
+              </p>
+            </div>
+          </div>
+          <AddProfileImage />
+        </Card>
+      )}
+      {/* Personal Information */}
+      <section className="mx-2 mr-auto mt-4 flex justify-between gap-4 rounded-md border p-4 py-6 xl:mx-6">
+        <Card className="border-none px-4 shadow-none">
+          <h2 className="mb-4 text-xl font-semibold">Personal Information</h2>
+          <div className="mb-4">
+            <p className="text-sm font-semibold text-secondary/50">Name</p>
+            <p className="text-sm font-medium text-secondary/70">
+              {user?.name}
+            </p>
+          </div>
+          <div className="mb-4">
+            <p className="text-sm font-semibold text-secondary/50">Email</p>
+            <p className="text-sm font-medium text-secondary/70">
+              {user?.email}
+            </p>
+          </div>
+          {user?.mobile && (
+            <div className="mb-4">
+              <h2 className="text-sm font-semibold text-secondary/50">
+                Mobile
+              </h2>
+              <p className="text-sm font-medium text-secondary/70">
+                {user?.mobile ? user?.mobile : user?.officePhone}
+              </p>
+            </div>
+          )}
+          {user?.officeAddress && (
+            <div className="mb-4">
+              <p className="text-sm font-semibold text-secondary/50">
+                Office Address
+              </p>
+              <p className="text-sm font-medium text-secondary/70">
+                {user?.officeAddress}
+              </p>
+            </div>
+          )}
+        </Card>
         <DialogForm
           button={
             <Button
               size="sm"
-              className="rounded-md border-2 border-transparent bg-primary font-bold tracking-wider text-white transition duration-200 hover:border-primary hover:bg-white hover:text-black"
+              variant="outline"
+              className=""
+              // className="rounded-md border-2 border-transparent bg-primary font-bold tracking-wider text-white transition duration-200 hover:border-primary hover:bg-white hover:text-black"
             >
               <Pencil /> Edit
             </Button>
@@ -111,6 +206,15 @@ export default function ProfilePage() {
               placeholder: "Enter your mobile",
               type: "number",
             },
+            ...(user?.isWholesaler === true
+              ? [
+                  {
+                    name: "companyName",
+                    label: "Company Name",
+                    placeholder: "Enter your company name",
+                  },
+                ]
+              : []),
             {
               name: "password",
               label: "Password",
@@ -120,83 +224,72 @@ export default function ProfilePage() {
           ]}
           onSubmit={handleSubmit}
         />
-      </div>
-      {/* Profile Card */}
-      <Card className="relative mr-auto flex w-auto flex-row items-center gap-4 border-none p-3 shadow-none">
-        <div className="flex items-center justify-center">
-          <AddProfileImage />
-        </div>
-        <div className=" ">
-          <h3 className="text-md font-medium">
-            <span className="text-xl font-semibold">{user?.name} </span>
-          </h3>
-          <h3 className="text-sm font-medium text-secondary/50">
-            {user?.status}
-          </h3>
-          <h3 className="text-sm font-medium text-primary/50">
-            Role : {user?.role}
-          </h3>
-        </div>
-      </Card>
-      {/* Personal Information */}
-      <section className="py-6">
-        <h2 className="mb-4 px-4 text-xl font-semibold">
-          Personal Information
-        </h2>
-        <Card className="border-none p-4 shadow-none">
-          <div className="mb-4">
-            <h3 className="font-semibold text-secondary/50">Name</h3>
-            <p className="font-medium text-secondary/70">{user?.name}</p>
-          </div>
-          <div className="mb-4">
-            <h3 className="font-semibold text-secondary/50">Email</h3>
-            <p className="font-medium text-secondary/70">{user?.email}</p>
-          </div>
-          <div>
-            <h3 className="font-semibold text-secondary/50">Mobile</h3>
-            <p className="font-medium text-secondary/70">{user?.mobile}</p>
-          </div>
-        </Card>
       </section>
       {/* Address Section */}
-      <section className="py-6">
-        <h2 className="mb-4 px-4 text-xl font-semibold">
-          {address.filter((item) => item.status == true).length > 0 &&
-            "Address"}
-        </h2>
-        <Card className="border-none p-4 shadow-none">
+      {address.length > 0 && (
+        <section className="mx-2 my-4 mr-auto flex justify-center border px-4 py-6 xl:mx-6">
+          <Card className="w-full rounded-lg border-none px-4 shadow-none">
+            <h2 className="mb-4 text-xl font-semibold">
+              {address.filter((item) => item.status == true).length > 0 &&
+                "Address"}
+            </h2>
+            {address
+              .filter((item) => item.status == true) // Show only active addresses
+              .map((item, index) => (
+                <div key={index} className="mb-4 grid gap-4 md:grid-cols-2">
+                  <div>
+                    <p className="font-semibold text-secondary/50">
+                      Address Line
+                    </p>
+                    <p className="text-sm font-medium text-secondary/70">
+                      {item.address_line}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-secondary/50">
+                      City
+                    </p>
+                    <p className="text-sm font-medium text-secondary/70">
+                      {item.city}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-secondary/50">
+                      State
+                    </p>
+                    <p className="text-sm font-medium text-secondary/70">
+                      {item.state} - {item.pincode}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-secondary/50">
+                      Country
+                    </p>
+                    <p className="text-sm font-medium text-secondary/70">
+                      {item.country}
+                    </p>
+                  </div>
+                </div>
+              ))}
+          </Card>
           {address
-            .filter((item) => item.status == true) // Show only active addresses
-            .map((item, index) => (
-              <div key={index} className="mb-4 grid gap-4 md:grid-cols-2">
-                <div>
-                  <h3 className="font-semibold text-secondary/50">
-                    Address Line
-                  </h3>
-                  <p className="font-medium text-secondary/70">
-                    {item.address_line}
-                  </p>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-secondary/50">City</h3>
-                  <p className="font-medium text-secondary/70">{item.city}</p>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-secondary/50">State</h3>
-                  <p className="font-medium text-secondary/70">
-                    {item.state} - {item.pincode}
-                  </p>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-secondary/50">Country</h3>
-                  <p className="font-medium text-secondary/70">
-                    {item.country}
-                  </p>
-                </div>
-              </div>
+            .filter((item) => item.status == true)
+            .map((item: any, index: any) => (
+              <EditAddress
+                key={index}
+                button={
+                  <Button
+                    variant="outline"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <Pencil /> Edit
+                  </Button>
+                }
+                data={item}
+              />
             ))}
-        </Card>
-      </section>
+        </section>
+      )}
     </section>
   );
 }

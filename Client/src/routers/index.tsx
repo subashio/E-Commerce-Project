@@ -29,6 +29,9 @@ import SuccessPage from "@/pages/SuccessPage";
 import VerfiyEmail from "@/pages/VerfiyEmail";
 import WishlistPage from "@/pages/WishlistPage";
 import { createBrowserRouter } from "react-router-dom";
+import WholesaleCustomer from "@/pages/WholesaleCustomer";
+import WholesaleUsers from "@/pages/WholesaleUsers";
+import SingleOrderPage from "@/pages/SingleOrderPage";
 
 const profileRoutes = [
   { path: "", element: <ProfilePage /> },
@@ -81,7 +84,16 @@ const dashboardRoutes = [
     ],
   },
   { path: "orders", element: <Orders /> },
-  { path: "customers", element: <Customers /> },
+  {
+    path: "customers",
+    element: <Customers />,
+  },
+  {
+    path: "wholesale-users",
+    element: <WholesaleUsers />,
+  },
+  { path: "approve-wholesale/:id", element: <WholesaleCustomer /> },
+  { path: "single-order/:id", element: <SingleOrderPage /> },
 ];
 
 const authRoutes = [

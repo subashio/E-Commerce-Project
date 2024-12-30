@@ -6,6 +6,7 @@ import {
   filterProduct,
   getProductsDetails,
   updateProductDetails,
+  updateProductStock,
 } from "../controllers/product.controller.js";
 import { admin } from "../middleware/admin.js";
 import auth from "../middleware/auth.js";
@@ -17,6 +18,7 @@ productRouter.get("/get", getProductsDetails);
 productRouter.get("/filter", filterProduct);
 productRouter.get("/filter/category", filterByCategoryController);
 productRouter.put("/update", auth, admin, updateProductDetails);
+productRouter.put("/update-stock", auth, updateProductStock);
 productRouter.delete("/delete", auth, admin, deleteProduct);
 
 export default productRouter;

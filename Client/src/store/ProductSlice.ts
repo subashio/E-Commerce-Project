@@ -5,6 +5,7 @@ interface Category {
   name: string;
   image: string;
   status: boolean;
+  product: Array<Products>;
 }
 interface SubCategoryProps {
   _id: string;
@@ -22,6 +23,7 @@ interface Products {
   minQuantity: number;
   stock: number;
   status: boolean;
+  specifications: Array<any>;
   price: number;
   brandName: string;
   salePrice: number;
@@ -54,6 +56,7 @@ interface productSlice {
   viewedProduct: Array<Products>;
   wishlist: Array<Products>;
   variantSheet: boolean;
+  dialogOpen: boolean;
 }
 
 const initialState: productSlice = {
@@ -65,6 +68,7 @@ const initialState: productSlice = {
   viewedProduct: [],
   wishlist: [],
   variantSheet: false,
+  dialogOpen: false,
 };
 
 export const productSlice = createSlice({
@@ -95,6 +99,9 @@ export const productSlice = createSlice({
     setVariantSheet: (state, action: PayloadAction<boolean>) => {
       state.variantSheet = action.payload;
     },
+    setDialogOpen: (state, action: PayloadAction<boolean>) => {
+      state.dialogOpen = action.payload;
+    },
     resetState: (state) => {
       state.cartList = [];
       state.viewedProduct = [];
@@ -113,6 +120,7 @@ export const {
   resetState,
   setVariant,
   setVariantSheet,
+  setDialogOpen,
 } = productSlice.actions;
 
 export default productSlice.reducer;

@@ -8,6 +8,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { resetPasswordSchema } from "@/constants/schema";
 import { SummaryApi } from "@/constants/SummaryApi";
 import { useToast } from "@/hooks/use-toast";
 import Axios from "@/lib/Axios";
@@ -17,30 +18,18 @@ import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
 import { z } from "zod";
 
-const FormSchema = z
-  .object({
-    password: z.string().max(8, { message: "This field has to be filled." }),
-    confirmPassword: z
-      .string()
-      .max(8, { message: "This field has to be filled." }),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ["confirm"],
-  });
-
 export default function ResetPassword() {
   const { toast } = useToast();
   const navigate = useNavigate();
   const location = useLocation();
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
+  const form = useForm<z.infer<typeof resetPasswordSchema>>({
+    resolver: zodResolver(resetPasswordSchema),
     defaultValues: {
       password: "",
       confirmPassword: "",
     },
   });
-  async function onSubmit(data: z.infer<typeof FormSchema>) {
+  async function onSubmit(data: z.infer<typeof resetPasswordSchema>) {
     try {
       const response = await Axios({
         ...SummaryApi.reset_password,

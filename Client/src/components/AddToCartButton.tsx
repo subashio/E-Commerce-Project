@@ -5,6 +5,7 @@ import { useCart } from "@/hooks/useCart";
 import Axios from "@/lib/Axios";
 import { cn } from "@/lib/utils";
 import { toggleSheetOpen } from "@/store/orderSlice";
+import { setVariantSheet } from "@/store/ProductSlice";
 import { RootState } from "@/store/store";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -117,17 +118,37 @@ export default function AddToCartButton({ id, className }: ProductCartProps) {
     }
   }, [id, cartList]);
 
+  const handleAddVariant = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    dispatch(setVariantSheet(true));
+  };
+
   return (
     <div>
-      <Button
-        className={cn("h-8 w-full gap-1 rounded-lg p-2 capitalize", className)}
-        onClick={(e: React.MouseEvent) => {
-          AddtoCart(e);
-          dispatch(toggleSheetOpen(true));
-        }}
-      >
-        Add to Cart
-      </Button>
+      {!selectedProduct?.variantId ? (
+        <Button
+          className={cn(
+            "h-8 w-full gap-1 rounded-lg p-2 capitalize",
+            className,
+          )}
+          onClick={(e: React.MouseEvent) => {
+            AddtoCart(e);
+            dispatch(toggleSheetOpen(true));
+          }}
+        >
+          Add to Cart
+        </Button>
+      ) : (
+        <Button
+          className={cn(
+            "h-8 w-full gap-1 rounded-lg p-2 capitalize",
+            className,
+          )}
+          onClick={handleAddVariant}
+        >
+          Add to Cart
+        </Button>
+      )}
     </div>
   );
 }

@@ -8,6 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ToastAction } from "@/components/ui/toast";
+import { statusStyles } from "@/constants/details";
 import { useToast } from "@/hooks/use-toast";
 import { useProduct } from "@/hooks/useProduct";
 import { Ellipsis, Trash2 } from "lucide-react";
@@ -29,12 +30,44 @@ export const actions = (
           Edit
         </Link>
       </DropdownMenuItem>
+
       <DropdownMenuItem onClick={() => handleDelete(id)}>
         Delete
       </DropdownMenuItem>
     </DropdownMenuContent>
   </DropdownMenu>
 );
+
+// export const wholsalerActions = (
+//   id: string,
+//   path: string,
+//   handleDelete: () => void,
+// ) => {
+//   const dispatch = useDispatch();
+//   return (
+//     <DropdownMenu>
+//       <DropdownMenuTrigger>
+//         <Ellipsis className="p-1" />
+//       </DropdownMenuTrigger>
+//       <DropdownMenuContent align="end">
+//         <DropdownMenuItem>
+//           <Link className="w-full" to={`/dashboard-page/${path}/${id}`}>
+//             Edit
+//           </Link>
+//         </DropdownMenuItem>
+//         {/* Wrap the delete action in AlertDialog */}
+//         <DropdownMenuItem>
+//           <button
+//             onClick={() => dispatch(setDialogOpen(true))}
+//             className="text-red-500"
+//           >
+//             Delete
+//           </button>
+//         </DropdownMenuItem>
+//       </DropdownMenuContent>
+//     </DropdownMenu>
+//   );
+// };
 export const addToAction = (id: string | undefined) => (
   <AddToCartButton className="w-[100px]" id={id} />
 );
@@ -186,26 +219,69 @@ export const orderColumn = [
   {
     header: "Status",
     key: "status",
-    render: (value: boolean) => (
+    render: (value: string) => (
       <Badge
         className={`rounded-lg p-1 text-xs ${
-          value === true
-            ? "bg-amber-100/50 text-amber-800 hover:bg-amber-200/50"
-            : "bg-green-500/50 text-green-900 hover:bg-green-500/50"
+          statusStyles[value || ""] ||
+          "bg-gray-100/50 text-gray-800 hover:bg-gray-200/50"
         }`}
       >
-        {value === true ? "Pending" : "Success"}
+        {value || "Unknown"}
       </Badge>
     ),
   },
   { header: "Price", key: "price" },
 ];
 
-export const customerColumn = [
-  { header: "Customer Name", key: "userName" },
+export const retailCustomerColumn = [
+  { header: "Customer Name", key: "name" },
   { header: "Email", key: "email" },
   { header: "Phone", key: "phone" },
   // { header: "Address", key: "address" },
+];
+export const wholesaleCustomerColumn = [
+  { header: "Customer Name", key: "name" },
+  { header: "Company Name", key: "companyName" },
+  { header: "Email", key: "email" },
+  {
+    header: "Status",
+    key: "isApprovedWholsale",
+    render: (value: boolean) => (
+      <Badge
+        className={`rounded-sm p-1 px-1.5 text-xs ${
+          value
+            ? "bg-green-500/50 text-green-900 hover:bg-green-500/50"
+            : "hover:bg-red-500/ 50 bg-red-500/50 text-red-950"
+        }`}
+      >
+        {value ? "Approved" : "Pending"}
+      </Badge>
+    ),
+  },
+  { header: "Phone", key: "phone" },
+];
+export const wholesaleUserColumn = [
+  { header: "Customer Name", key: "name" },
+  { header: "Email", key: "email" },
+  { header: "Phone", key: "phone" },
+  { header: "Company Name", key: "companyName" },
+  { header: "Office Address", key: "officeAddress" },
+  { header: "GSTIN", key: "GSTIN" },
+  {
+    header: "Status",
+    key: "isApprovedWholsale",
+    render: (value: boolean) => (
+      <Badge
+        className={`rounded-sm p-1 px-1.5 text-xs ${
+          value
+            ? "bg-green-500/50 text-green-900 hover:bg-green-500/50"
+            : "hover:bg-red-500/ 50 bg-red-500/50 text-red-950"
+        }`}
+      >
+        {value ? "Approved" : "Pending"}
+      </Badge>
+    ),
+  },
 ];
 
 export const wishlistColumn = [
@@ -230,6 +306,7 @@ export const wishlistColumn = [
     render: (_: unknown, row: { id: string | undefined }) =>
       addToAction(row.id),
   },
+
   {
     header: "Remove",
     key: "remove",

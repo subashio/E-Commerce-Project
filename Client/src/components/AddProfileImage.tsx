@@ -9,11 +9,9 @@ import {
 
 import { imageSchema } from "@/constants/schema";
 import { useUser } from "@/hooks/useUser";
-import { RootState } from "@/store/store";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader, UserRoundPen } from "lucide-react";
+import { Loader, Pencil } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { useSelector } from "react-redux";
 import { z } from "zod";
 import { Button } from "./ui/button";
 import {
@@ -27,7 +25,6 @@ import {
 import { Input } from "./ui/input";
 
 export default function AddProfileImage() {
-  const user = useSelector((state: RootState) => state.user.currentUser);
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
 
   const { uploadUserProfile } = useUser();
@@ -63,14 +60,9 @@ export default function AddProfileImage() {
       }}
     >
       <DialogTrigger>
-        <div className="group relative h-28 w-28 rounded-full border">
-          <img
-            src={user?.avatar || "/default-avatar.png"}
-            alt="avatar"
-            className="h-28 w-28 rounded-full object-contain object-center"
-          />
-          <UserRoundPen className="absolute right-2 top-2 hidden rounded-full bg-gray-950/80 p-1.5 text-white group-hover:block dark:bg-white dark:text-gray-950" />
-        </div>
+        <Button variant="outline">
+          <Pencil /> Edit
+        </Button>
       </DialogTrigger>
       <DialogContent className="max-w-lg rounded-md">
         <DialogHeader>

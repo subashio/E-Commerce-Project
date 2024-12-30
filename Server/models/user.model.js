@@ -33,10 +33,6 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    officePhone: {
-      type: Number,
-      default: null,
-    },
     avatar: {
       type: String,
       default: "",
@@ -51,6 +47,10 @@ const userSchema = new mongoose.Schema(
     verify_email: {
       type: Boolean,
       default: false,
+    },
+    GSTIN: {
+      type: String,
+      default: "",
     },
     last_login_date: {
       type: Date,
@@ -67,7 +67,7 @@ const userSchema = new mongoose.Schema(
     shopping_cart: {
       type: [mongoose.Schema.ObjectId],
       ref: "cart",
-      default: null,
+      default: [],
     },
     order_history: {
       type: mongoose.Schema.ObjectId,

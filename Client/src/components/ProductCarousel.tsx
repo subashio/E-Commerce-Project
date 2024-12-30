@@ -14,11 +14,15 @@ import MaxWidthWrapper from "./MaxWidthWrapper";
 import ProductCard from "./ProductCard";
 
 export default function ProductCarousel({
+  key,
   title,
   viewProduct,
+  productDataCategory,
 }: {
   title: string;
+  key?: any;
   viewProduct?: any[] | undefined;
+  productDataCategory?: any[] | undefined;
 }) {
   const [api, setApi] = React.useState<CarouselApi>();
   const product = useSelector(
@@ -47,11 +51,16 @@ export default function ProductCarousel({
   };
 
   const products = React.useMemo(() => {
-    const source = Array.isArray(viewProduct) ? viewProduct : product || [];
+    // Prioritize productDataCategory if provided
+    const source = Array.isArray(productDataCategory)
+      ? productDataCategory
+      : Array.isArray(viewProduct)
+        ? viewProduct
+        : product || [];
 
     return source
-      .filter((product: any) => product !== null && product !== undefined) // Filter out null or undefined entries
-      .filter((product: any) => {
+      .filter((product: Products) => product !== null && product !== undefined) // Filter out null or undefined entries
+      .filter((product: Products) => {
         // Check if the user is a wholesaler and filter accordingly
         if (user?.isWholesaler) {
           return product.productType === "wholesale";
@@ -60,17 +69,17 @@ export default function ProductCarousel({
         }
       })
       .map((product: any) => {
-        const discount = calculateDiscountPercentage(
-          product.salePrice,
-          product.price,
-        );
+        const price = user?.isWholesaler
+          ? product.wholesalePrice || product.price
+          : product.price;
+        const discount = calculateDiscountPercentage(product.salePrice, price);
 
         return {
           _id: product._id,
           name: product.name || "Unknown Product",
           discount: discount > 0 ? `${discount}%` : null,
           to: "/",
-          image: product.image?.[0] || "default.jpg",
+          image: product.image[0] || "default.jpg",
           category:
             categoryLookup.get(product.categoryId) || "Unknown Category",
           price: product.price || 0,
@@ -79,7 +88,7 @@ export default function ProductCarousel({
           status: product.status ?? false,
         };
       });
-  }, [product, categoryLookup, viewProduct]);
+  }, [product, categoryLookup, viewProduct, productDataCategory]);
 
   const handleRightClick = () => {
     if (api?.canScrollNext()) {
@@ -137,11 +146,11 @@ export default function ProductCarousel({
               <ProductCard
                 discount={item.discount}
                 _id={item._id}
-                key={index}
+                key={index || key}
                 category={item.category}
                 name={item.name}
                 image={item.image}
-                price={user?.isWholesaler ? item.wholesalePrice : item.price}
+                price={item.price ? item.price : item.wholesalePrice}
                 salePrice={item.salePrice}
                 className="flex-shrink-0 basis-[70%] sm:basis-1/2 md:basis-1/3 lg:basis-[24%] xl:basis-[19%]"
               />

@@ -49,9 +49,17 @@ export async function addToCartController(req, res) {
       cartItem.save(),
       userModel.updateOne(
         { _id: userId },
-        { $push: { shopping_cart: cartItem._id } }
+        { $push: { shopping_cart: [cartItem._id] } }
       ),
     ]);
+
+    // const [saveCart, updateCartUser] = await Promise.all([
+    //   cartItem.save(),
+    //   userModel.updateOne(
+    //     { _id: userId },
+    //     { $push: { shopping_cart: cartItem._id } } // Directly push the ObjectId
+    //   ),
+    // ]);
 
     return res.status(200).json({
       message: "Item added to the cart successfully",

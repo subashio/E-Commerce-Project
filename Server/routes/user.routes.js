@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  deleteUserController,
   ForgotPassword,
   getAllUsersController,
   LoginController,
@@ -31,5 +32,6 @@ userRouter.put("/reset-password", ResetPassword);
 userRouter.post("/refresh-token", RefreshToken);
 userRouter.get("/user-details", auth, userDetails);
 userRouter.get("/all-user-details", auth, admin, getAllUsersController);
+userRouter.delete("/delete", auth, deleteUserController);
 
 export default userRouter;

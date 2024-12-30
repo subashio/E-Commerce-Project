@@ -20,6 +20,7 @@ export async function registerController(req, res) {
       officeAddress,
       companyName,
       officePhone,
+      GSTIN,
     } = req.body;
     if (!name || !email || !password) {
       return res.status(400).json({
@@ -29,7 +30,7 @@ export async function registerController(req, res) {
       });
     }
     if (isWholesale === true) {
-      if (!companyName || !officeAddress || !officePhone) {
+      if (!companyName || !officeAddress || !officePhone || !GSTIN) {
         return res.status(400).json({
           message:
             "Provide company name, office address, and office phone for wholesale users",
@@ -53,11 +54,6 @@ export async function registerController(req, res) {
     const salt = await bcrypt.genSalt(10);
     const passwordHashed = await bcrypt.hash(password, salt);
 
-    // const payload = {
-    //   name,
-    //   email,
-    //   password: passwordHashed,
-    // };
     const payload =
       isWholesale === true
         ? {
@@ -68,7 +64,8 @@ export async function registerController(req, res) {
             isApprovedWholsale: false,
             companyName,
             officeAddress,
-            officePhone,
+            mobile: officePhone,
+            GSTIN: GSTIN,
           }
         : {
             name,
@@ -166,13 +163,19 @@ export async function LoginController(request, response) {
       });
     }
     if (user.status == "Inactive" || user.status == "suspended") {
-      return response.status(409).json({
+      return response.status(423).json({
         message: "Contact to Admin to activate your account",
         error: true,
         success: false,
       });
     }
-
+    if (user.verify_email === false) {
+      return response.status(409).json({
+        message: "Verify your email first",
+        error: true,
+        success: false,
+      });
+    }
     if (user.isApprovedWholsale === false && user.isWholesaler === true) {
       return response.status(403).json({
         message:
@@ -545,13 +548,30 @@ export async function uploadAvatar(req, res) {
 export async function updatedUserDetails(req, res) {
   try {
     const userId = req.userId; // auth middleware
-    const { email, name, mobile, password } = req.body;
+    const { email, name, mobile, password, isApprovedWholsale, id } = req.body;
 
     let hasPassword = "";
 
     if (password) {
       const salt = await bcrypt.genSalt(10);
       hasPassword = await bcrypt.hash(password, salt);
+    }
+
+    // Check if the provided id exists in the user model
+    if (id) {
+      const userToUpdate = await userModel.findById(id);
+      if (userToUpdate) {
+        await userModel.updateOne(
+          { _id: id },
+          { isApprovedWholsale: isApprovedWholsale }
+        );
+      } else {
+        return res.status(404).json({
+          message: "User with provided id not found",
+          success: false,
+          error: true,
+        });
+      }
     }
 
     const updateUser = await userModel.updateOne(
@@ -561,6 +581,7 @@ export async function updatedUserDetails(req, res) {
         ...(email && { email: email }),
         ...(mobile && { mobile: mobile }),
         ...(password && { password: hasPassword }),
+        ...(isApprovedWholsale && { isApprovedWholsale: isApprovedWholsale }),
       }
     );
 
@@ -595,6 +616,35 @@ export async function getAllUsersController(req, res) {
       data: allUsers,
       error: false,
       success: true,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message || error,
+      success: false,
+      error: true,
+    });
+  }
+}
+
+export async function deleteUserController(req, res) {
+  try {
+    const { _id } = req.body;
+
+    if (!_id) {
+      return response.status(400).json({
+        message: "provide user _id",
+        error: true,
+        success: false,
+      });
+    }
+
+    const deleteUser = await userModel.deleteOne({ _id: _id });
+
+    return res.status(200).json({
+      message: "User Deleted from the database",
+      success: true,
+      error: false,
+      data: deleteUser,
     });
   } catch (error) {
     return res.status(500).json({

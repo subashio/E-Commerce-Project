@@ -1,6 +1,6 @@
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
-import { AlignRight, MapPin, ShoppingBag, User } from "lucide-react";
+import { AlignLeft, MapPin, ShoppingBag, User } from "lucide-react";
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 
@@ -21,26 +21,27 @@ const links = [
     logo: <MapPin className="h-5 w-5" />,
   },
 ];
-export default function Header() {
+export default function ProfileHeader() {
   const [isSheetOpen, isSetSheetOpen] = React.useState<boolean>(false);
   const location = useLocation();
 
   return (
-    <section className="relative mt-2 w-full">
-      <div className="flex w-full items-center justify-between md:hidden">
-        <h1 className="px-4 text-xl font-semibold">Account Setting</h1>
+    <section className="relative mt-4 w-full rounded-lg bg-secondary/5 py-4 lg:my-0 lg:bg-transparent lg:py-0">
+      <div className="flex w-full items-center justify-between lg:hidden">
         <Sheet
           open={isSheetOpen}
           onOpenChange={(isOpen) => isSetSheetOpen(isOpen)}
         >
           <SheetTrigger asChild>
-            <AlignRight className="mr-4 h-7 w-7 cursor-pointer" />
+            <div className="group relative flex items-center gap-2">
+              <AlignLeft className="ml-4 h-5 w-5 cursor-pointer" />
+            </div>
           </SheetTrigger>
-          <SheetContent side="left" className="flex !w-full flex-col p-0">
-            <nav className="mt-3 grid gap-2 px-10 text-lg font-medium">
-              <h1 className="mb-4 border-b py-4 text-xl font-semibold">
+          <SheetContent side="left" className="flex flex-col p-0">
+            <nav className="mt-3 grid gap-2 px-4 text-lg font-medium">
+              <p className="text-md mb-4 border-b py-4 font-semibold">
                 Account Settings
-              </h1>
+              </p>
               {links.map((item, index) => (
                 <Link
                   key={index}
@@ -60,6 +61,7 @@ export default function Header() {
             </nav>
           </SheetContent>
         </Sheet>
+        <h1 className="mr-4 px-2 text-lg font-semibold">Account Settings</h1>
       </div>
     </section>
   );

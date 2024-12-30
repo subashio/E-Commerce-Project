@@ -10,12 +10,16 @@ interface users {
   verify_email?: string;
   last_login_date?: string;
   status?: string;
-  address_details?: Array<Object>;
-  shopping_cart?: Array<Object>;
-  orderHistory?: Array<Object>;
+  address_details?: Array<any>;
+  shopping_cart?: Array<any>;
+  orderHistory?: Array<any>;
   role?: string;
   isWholesaler?: boolean;
   isApprovedWholsale?: boolean;
+  companyName?: string;
+  officeAddress?: string;
+  officePhone?: string;
+  GSTIN?: string;
 }
 
 interface userSlice {

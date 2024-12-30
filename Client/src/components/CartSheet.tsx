@@ -23,7 +23,6 @@ import {
 import { ScrollArea } from "./ui/scroll-area";
 
 export default function CartSheet({ button }: { button: ReactNode }) {
-  // const [isSheetOpen, isSetSheetOpen] = React.useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
   const { updateCartItem, deleteCartItem } = useCart();

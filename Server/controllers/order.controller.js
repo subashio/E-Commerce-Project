@@ -5,9 +5,9 @@ import userModel from "../models/user.model.js";
 export async function CashOnDeliveryOrderController(req, res) {
   try {
     const userId = req.userId; //auth middleware
-    const { list_items, totalAmt, addressId, subTotalAmt } = req.body;
+    const { list_items, totalAmt, address, subTotalAmt } = req.body;
 
-    if (!addressId) {
+    if (!address) {
       return res.status(404).json({
         message: "Provide Delivery address",
         success: false,
@@ -19,20 +19,22 @@ export async function CashOnDeliveryOrderController(req, res) {
       return {
         userId: userId,
         // orderId: `ORD-${new mongoose.Types.ObjectId()}`,
-        orderId: `ORD-${Math.floor(100000 + Math.random() * 900000)}`, // Generate 6-digit Order ID
+        orderId: `GG#${Math.floor(1000 + Math.random() * 9000)}`, // Generates a random 4-digit number
         productId: el.productId._id,
         product_details: {
           name: el.productId.name,
           image: el.productId.image,
           status: el.productId.status,
-          price: el.productId.price,
+          price: el.productId.price
+            ? el.productId.price
+            : el.productId.wholesalePrice,
           quantity: el.quantity,
           variantQty: el.variantQty || [],
           variantTotal: el.variantTotal || null,
         },
         paymentId: "",
         payment_status: "CASH ON DELIVERY",
-        delivery_address: addressId,
+        delivery_address: address || {},
         subTotalAmt: subTotalAmt,
         totalAmt: totalAmt,
       };
@@ -42,7 +44,7 @@ export async function CashOnDeliveryOrderController(req, res) {
     const removeCartItems = await cartModel.deleteMany({ userId: userId });
     const updateUserCart = await userModel.updateOne(
       { _id: userId },
-      { $set: { shopping_cart: null } }
+      { $set: { shopping_cart: [] } }
     );
     const updateUserOrder = await userModel.updateOne(
       { _id: userId },
@@ -70,6 +72,7 @@ export const pricewithDiscount = (price, dis = 1) => {
   return actualPrice;
 };
 
+//for future update
 export async function paymentController(req, res) {
   try {
     const userId = req.userId; // auth middleware
@@ -167,6 +170,39 @@ export async function getAllOrdersController(req, res) {
       message: error.message || error,
       error: true,
       success: false,
+    });
+  }
+}
+
+export async function updateOrderStatus(req, res) {
+  try {
+    const { _id, order_status } = req.body;
+
+    const updateOrder = await orderModel.updateOne(
+      { _id: _id },
+      {
+        ...(order_status && { order_status: order_status }),
+      }
+    );
+    if (!updateOrder) {
+      return res.status(404).json({
+        message: "Order not found",
+        success: false,
+        error: true,
+      });
+    }
+
+    return res.status(200).json({
+      message: "order status updated succesful",
+      data: updateOrder,
+      success: true,
+      error: false,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message || error,
+      success: false,
+      error: true,
     });
   }
 }

@@ -5,14 +5,17 @@ declare global {
     image: string[];
     categoryId: string;
     sub_categoryId: string;
-    brandName: string;
+    maxQuantity: number;
+    minQuantity: number;
     stock: number;
     status: boolean;
     price: number;
+    brandName: string;
     salePrice: number;
-    wholsalePrice: number;
-    maxQuantity: number;
-    description: string;
+    wholesalePrice: number;
+    description: string | TrustedHTML | undefined;
+    productType: string;
+    variantId: string;
   }
   interface LinksProps {
     name: string;
@@ -25,6 +28,7 @@ declare global {
     image: string;
     category: any;
     discount?: string | null;
+
     price: number;
     salePrice: number;
     className?: string;

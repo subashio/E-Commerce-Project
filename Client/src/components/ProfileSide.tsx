@@ -2,10 +2,10 @@ import { cn } from "@/lib/utils";
 import { links } from "@/pages/data/links";
 import { Link, useLocation } from "react-router-dom";
 
-export default function Side() {
+export default function ProfileSide() {
   const location = useLocation();
   return (
-    <aside className="hidden max-h-screen w-full flex-col gap-2 md:flex">
+    <aside className="hidden max-h-screen w-full flex-col gap-2 lg:flex">
       <div className="my-10 flex-1">
         <nav className="group grid items-start gap-2 px-2 text-sm font-medium lg:px-4">
           {links.map((item, index) => (

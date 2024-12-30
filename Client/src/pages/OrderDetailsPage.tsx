@@ -28,8 +28,8 @@ export default function OrderDetailsPage() {
         name: product?.name || "Unknown Product",
         qty: product.quantity,
         orderId: item.orderId,
-        status: product.status,
-        price: product?.price || 0,
+        status: item.order_status,
+        price: item.totalAmt || 0,
         userName: userLookup.get(userId?.toString() || "") || "Unknown User",
       };
     })
@@ -42,7 +42,7 @@ export default function OrderDetailsPage() {
     });
 
   return (
-    <div className="px-4 pb-10 pt-10 md:pb-10 md:pt-0">
+    <div className="px-4 pb-10 pt-10 md:pb-10 md:pt-0 xl:px-6">
       <h1 className="text-3xl font-semibold">My Orders</h1>
       <Card className="my-10">
         <CardHeader className="w-full items-center justify-between gap-2 sm:flex-row">

@@ -67,8 +67,8 @@ export default function EditAddress({
   return (
     <DialogForm
       button={button}
-      title="New Address"
-      description=" Add a new Address here. Click save when you're done."
+      title="Edit Address"
+      description=" Edit your Address here. Click save when you're done."
       schema={addressSchema}
       defaultValues={{
         _id: data._id || "",

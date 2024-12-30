@@ -153,7 +153,7 @@ export default function ProductList() {
     location.pathname == `/dashboard-page/products/edit-product/${selectedId}`;
   const renderActions = (id: string) =>
     actions(id, "products/edit-product", handleDeleteProduct);
-
+  console.log(selectedProduct?.variantId);
   return (
     <div className="relative mt-10 w-full">
       <div className="flex flex-wrap items-center justify-between gap-y-4 pb-10 pt-10 md:pb-10 md:pt-0">
@@ -212,6 +212,7 @@ export default function ProductList() {
                   minQuantity: selectedProduct.minQuantity,
                   description: selectedProduct.description,
                   role: "edit",
+                  specifications: selectedProduct.specifications,
                   variantId: selectedProduct?.variantId,
                   productType: selectedProduct.productType || "retail",
                 }
@@ -220,9 +221,19 @@ export default function ProductList() {
         />
       ) : (
         <Tabs defaultValue="retail" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="retail">Retail Products</TabsTrigger>
-            <TabsTrigger value="wholesale">Wholesale Products</TabsTrigger>
+          <TabsList className="m-0 grid h-10 w-full grid-cols-2 bg-primary/20 p-0">
+            <TabsTrigger
+              value="retail"
+              className="data-[state=active]:bg-primary/70 data-[state=active]:text-white"
+            >
+              Retail Products
+            </TabsTrigger>
+            <TabsTrigger
+              value="wholesale"
+              className="data-[state=active]:bg-primary/70 data-[state=active]:text-white"
+            >
+              Wholesale Products
+            </TabsTrigger>
           </TabsList>
           <TabsContent value="retail">
             <Card className="my-10">

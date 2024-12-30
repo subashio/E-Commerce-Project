@@ -15,6 +15,10 @@ export const SummaryApi = {
     url: "/api/user/login",
     method: "post",
   },
+  delete_user: {
+    url: "/api/user/delete",
+    method: "delete",
+  },
   logout: {
     url: "/api/user/logout",
     method: "get",
@@ -133,6 +137,10 @@ export const SummaryApi = {
     url: "/api/product/update",
     method: "put",
   },
+  update_product_stock: {
+    url: "/api/product/update-stock",
+    method: "put",
+  },
   delete_product: {
     url: "/api/product/delete",
     method: "delete",
@@ -160,6 +168,10 @@ export const SummaryApi = {
   order_CashOnDelivery: {
     url: "api/order/cash-on-delivery",
     method: "post",
+  },
+  order_update_status: {
+    url: "api/order/update-status",
+    method: "put",
   },
   get_orderDetails: {
     url: "api/order/order-list",

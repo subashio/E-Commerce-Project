@@ -99,7 +99,7 @@ function ShopPage({
   const products = activeProducts.map((product: any) => {
     const discount = calculateDiscountPercentage(
       product.salePrice,
-      product.price,
+      product.price ? product.price : product.wholesalePrice,
     );
     return {
       _id: product._id,
@@ -110,7 +110,7 @@ function ShopPage({
       category: categoryLookup.get(product.categoryId), // Look
       subCategory:
         subCategoryLookup.get(product.sub_categoryId) || "Unknown Subcategory",
-      price: product.price,
+      price: product.price ? product.price : product.wholesalePrice,
       salePrice: product.salePrice,
       status: product.status ?? false,
     };

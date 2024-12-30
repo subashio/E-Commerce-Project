@@ -40,7 +40,7 @@ const GenericTable = ({ columns, data, actions }: TableProps) => {
           <TableRow key={rowIndex}>
             {columns.map((col) => (
               <TableCell
-                className="max-w-44 overflow-hidden text-ellipsis border-none font-semibold text-secondary/70"
+                className="max-w-44 overflow-hidden truncate border-none font-semibold text-secondary/70"
                 key={col.key}
               >
                 {col.render ? col.render(row[col.key], row) : row[col.key]}

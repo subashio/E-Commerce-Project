@@ -3,6 +3,7 @@ import { Loader, Trash2 } from "lucide-react";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { Button } from "./ui/button";
+import { toggleSheetOpen } from "@/store/orderSlice";
 
 const CartItem = React.memo(function CartItem({
   item,
@@ -51,7 +52,7 @@ const CartItem = React.memo(function CartItem({
             )}
           </div>
           {item.productId.variantId && (
-            <p className="text-xs font-semibold text-secondary/50 dark:text-secondary-foreground/70">
+            <p className="text-xs font-semibold text-secondary/80 dark:text-secondary-foreground/70">
               Total qty: {quantity}
             </p>
           )}
@@ -100,7 +101,10 @@ const CartItem = React.memo(function CartItem({
       {item.productId.variantId && (
         <Button
           variant="outline"
-          onClick={() => dispatch(setVariantSheet(true))}
+          onClick={() => {
+            dispatch(setVariantSheet(true));
+            dispatch(toggleSheetOpen(false));
+          }}
         >
           Edit variant
         </Button>

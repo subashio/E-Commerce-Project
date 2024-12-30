@@ -3,8 +3,10 @@ import HeroSection from "@/components/HeroSection";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import ProductCarousel from "@/components/ProductCarousel";
 import { Badge } from "@/components/ui/badge";
+import { createLookup } from "@/lib/lookUpMap";
 import { RootState } from "@/store/store";
 import { MoveRight } from "lucide-react";
+import React from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
@@ -35,6 +37,83 @@ export default function Home() {
   const viewedProduct = useSelector(
     (state: RootState) => state.product?.viewedProduct || [],
   );
+  const product = useSelector(
+    (state: RootState) => state.product.product || [],
+  );
+  const user = useSelector((state: RootState) => state.user.currentUser);
+  const category = useSelector(
+    (state: RootState) => state.product.category || [],
+  );
+
+  const categoryLookup = React.useMemo(
+    () => createLookup(category, "_id", "name"),
+    [category],
+  );
+
+  const calculateDiscountPercentage = (
+    listPrice: number,
+    salePrice: number,
+  ): number => {
+    if (!listPrice || !salePrice || listPrice <= salePrice) return 0;
+    return Math.round(((listPrice - salePrice) / listPrice) * 100);
+  };
+
+  const products = React.useMemo(() => {
+    const categorizedProducts = product
+      .filter((product: any) => product !== null && product !== undefined) // Filter out null or undefined entries
+      .filter((product: any) => {
+        // Check if the user is a wholesaler and filter accordingly
+        if (user?.isWholesaler) {
+          return product.productType === "wholesale";
+        } else {
+          return product.productType !== "wholesale";
+        }
+      })
+      .filter((product: any) => {
+        // Filter products based on category
+        return categoryLookup.has(product.categoryId);
+      });
+
+    // Group products by category
+    const productsByCategory = categorizedProducts.reduce(
+      (acc: any, product: any) => {
+        const categoryId = product.categoryId;
+        if (!acc[categoryId]) {
+          acc[categoryId] = [];
+        }
+        acc[categoryId].push(product);
+        return acc;
+      },
+      {},
+    );
+
+    // Filter categories with at least one product
+    return Object.values(productsByCategory)
+      .filter((products: any) => products.length > 0)
+      .flat()
+      .map((product: any) => {
+        const discount = calculateDiscountPercentage(
+          product.salePrice,
+          product.price,
+        );
+
+        return {
+          _id: product._id,
+          name: product.name || "Unknown Product",
+          discount: discount > 0 ? `${discount}%` : null,
+          to: "/",
+          image: product.image || "default.jpg",
+          category:
+            categoryLookup.get(product.categoryId) || "Unknown Category",
+          price: product.price || 0,
+          salePrice: product.salePrice || 0,
+          wholesalePrice: product.wholesalePrice || 0,
+          status: product.status ?? false,
+          productType: product.productType,
+        };
+      });
+  }, [product, categoryLookup, user]);
+
   return (
     <section className="">
       <HeroSection />
@@ -43,6 +122,7 @@ export default function Home() {
         <ProductCarousel title="Recently Viewed" viewProduct={viewedProduct} />
       )}
       <CategoriesSection />
+      <ProductCarousel title="Best Sellers" />
 
       <MaxWidthWrapper className="my-20 grid w-full grid-cols-1 gap-10 md:grid-cols-2">
         {banner2.map((_item, _index) => (
@@ -54,7 +134,25 @@ export default function Home() {
           ></Link>
         ))}
       </MaxWidthWrapper>
-      <ProductCarousel title="Best Sellers" />
+      {/* <CategoryWiseProduct /> */}
+
+      {/* Group products by category and render each category once */}
+      {Object.entries(
+        products.reduce((acc: Record<string, any[]>, product) => {
+          if (!acc[product.category]) {
+            acc[product.category] = [];
+          }
+          acc[product.category].push(product);
+          return acc;
+        }, {}),
+      ).map(([category, products]) => (
+        <ProductCarousel
+          key={category}
+          title={category}
+          productDataCategory={products}
+        />
+      ))}
+
       <MaxWidthWrapper className="my-10 grid w-full grid-flow-row gap-10">
         {banners.map((_item, _index) => (
           <div

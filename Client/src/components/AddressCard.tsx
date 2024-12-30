@@ -24,10 +24,8 @@ export default function AddressCard() {
               onChange={() => handleAddressStatus(item._id)} // Update state on change
             />
             <div
-              className={`w-full rounded-md border bg-white p-5 text-gray-600 ring-2 ring-transparent transition-all hover:shadow dark:bg-gray-900 dark:text-gray-300 ${
-                item.status
-                  ? "text-green-600 !ring-green-500 ring-offset-2"
-                  : ""
+              className={`w-full rounded-md border p-5 ring-2 ring-transparent transition-all hover:shadow dark:bg-gray-900 dark:text-gray-300 ${
+                item.status ? "bg-primary/10 text-green-900" : ""
               }`}
             >
               <div className="flex flex-col gap-1">

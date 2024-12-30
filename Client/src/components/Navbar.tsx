@@ -12,7 +12,7 @@ import {
   User,
 } from "lucide-react";
 import React from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import CartSheet from "./CartSheet";
 import MaxWidthWrapper from "./MaxWidthWrapper";
@@ -27,8 +27,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import { toggleSheetOpen } from "@/store/orderSlice";
 
 export default function Navbar() {
+  const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.user.currentUser);
   const cartList = useSelector(
     (state: RootState) => state.product?.cartList || [],
@@ -207,7 +209,10 @@ export default function Navbar() {
               </Link>
               <CartSheet
                 button={
-                  <button className="relative flex items-center gap-4 text-primary">
+                  <button
+                    onClick={() => dispatch(toggleSheetOpen(true))}
+                    className="relative flex items-center gap-4 text-primary"
+                  >
                     <ShoppingCartIcon className="borer h-9 w-9 rounded-full bg-primary/20 p-2" />
                     <Badge
                       className="absolute -right-2 -top-1 p-0.5 px-1.5"

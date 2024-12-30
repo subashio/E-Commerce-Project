@@ -1,7 +1,6 @@
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
-
-import Header from "@/components/Header";
-import Side from "@/components/Side";
+import ProfileHeader from "@/components/ProfileHeader";
+import ProfileSide from "@/components/ProfileSide";
 import GlobleContextProvider from "@/context/GlobleContextProvider";
 import React from "react";
 import { Outlet } from "react-router-dom";
@@ -13,17 +12,13 @@ export default function Profile() {
   return (
     <GlobleContextProvider>
       <MaxWidthWrapper>
-        <div className="mt-10 grid w-full md:grid-cols-[260px_1fr] lg:grid-cols-[280px_1fr]">
-          <div className="hidden justify-center rounded-lg border-r md:flex md:min-h-screen">
-            <Side />
+        <div className="grid w-full lg:grid-cols-[280px_1fr]">
+          <div className="hidden justify-center rounded-lg border-r lg:flex lg:min-h-screen">
+            <ProfileSide />
           </div>
-          <div className="flex w-full flex-col">
-            <div className="flex h-20 items-center gap-4 overflow-hidden rounded-lg border-b md:hidden">
-              <Header />
-            </div>
-            <div className="md:mt-10">
-              <Outlet />
-            </div>
+          <div className="lg:mt-10">
+            <ProfileHeader />
+            <Outlet />
           </div>
         </div>
       </MaxWidthWrapper>

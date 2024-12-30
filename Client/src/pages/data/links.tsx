@@ -6,6 +6,7 @@ import {
   ShoppingBag,
   ShoppingCartIcon,
   User,
+  UserCheck,
   Users,
 } from "lucide-react";
 
@@ -62,5 +63,10 @@ export const dashboardLinks = [
     name: "Customers",
     to: "/dashboard-page/customers",
     logo: <Users className="h-4 w-4" />,
+  },
+  {
+    name: "Whosale_Users  ",
+    to: "/dashboard-page/wholesale-users",
+    logo: <UserCheck className="h-4 w-4" />,
   },
 ];

@@ -30,9 +30,14 @@ const orderSchema = new mongoose.Schema(
     payment_status: {
       type: String,
     },
+    order_status: {
+      type: String,
+      enum: ["Pending", "Shipped", "Success", "Cancel"],
+      default: "Pending",
+    },
     delivery_address: {
-      type: mongoose.Schema.ObjectId,
-      ref: "address",
+      type: Object,
+      default: {},
     },
     subTotalAmt: {
       type: Number,

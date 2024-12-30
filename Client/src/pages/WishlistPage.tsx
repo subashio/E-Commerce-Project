@@ -21,7 +21,8 @@ export default function WishlistPage() {
         id: product?._id,
         image: product?.image[0] || "/placeholder.png",
         name: product?.name || "Unknown Product",
-        price: product?.price || 0,
+        price: product?.price ? product.price : product.wholesalePrice || 0,
+        variantID: product.variantId,
       };
     })
     .filter((order) => {

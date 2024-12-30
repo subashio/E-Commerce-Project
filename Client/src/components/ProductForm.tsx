@@ -44,10 +44,11 @@ interface ProductProps {
     price: number | undefined;
     salePrice: number | undefined;
     wholesalePrice: number | undefined;
+    specifications: Array<any> | undefined;
     description: string | TrustedHTML | undefined;
     role: "edit" | "add";
     productType: string;
-    variantId: string | undefined;
+    variantId: string;
   };
   id?: string;
 }
@@ -73,16 +74,17 @@ export default function ProductForm({ initialData, id }: ProductProps) {
           description: initialData.description || undefined,
           status: initialData.status,
           categoryId: initialData.categoryId,
+          variantId: initialData?.variantId,
           sub_categoryId: initialData.sub_categoryId,
           wholesalePrice: initialData.wholesalePrice ?? undefined,
           minQuantity: initialData.minQuantity ?? undefined,
           maxQuantity: initialData.maxQuantity ?? undefined,
           salePrice: initialData.salePrice,
           isWholesale: true,
+          specifications: initialData.specifications,
           stock: initialData.stock,
           brandName: initialData.brandName ?? undefined,
           role: initialData.role,
-          variantId: initialData?.variantId || undefined,
         }
       : {
           name: initialData?.name,
@@ -94,6 +96,7 @@ export default function ProductForm({ initialData, id }: ProductProps) {
           wholesalePrice: initialData?.wholesalePrice ?? undefined,
           price: initialData?.price,
           salePrice: initialData?.salePrice,
+          specifications: initialData?.specifications,
           isWholesale: false,
           stock: initialData?.stock,
           brandName: initialData?.brandName ?? undefined,
@@ -110,6 +113,7 @@ export default function ProductForm({ initialData, id }: ProductProps) {
     isWholesale, // Set based on the parameter
     categoryId: "",
     sub_categoryId: "",
+    specifications: [],
     wholesalePrice: isWholesale ? undefined : undefined, // Ensure this is set for wholesale
     price: undefined as number | undefined, // Regular price for non-wholesale
     salePrice: isWholesale ? undefined : undefined,
@@ -375,6 +379,41 @@ export default function ProductForm({ initialData, id }: ProductProps) {
                 </FormItem>
               )}
             />
+            {/* Specifications Section */}
+            <Card className="my-4 flex flex-col p-4">
+              <FormLabel className="my-4 text-xl font-semibold text-secondary/70">
+                Specifications
+              </FormLabel>
+              {form.watch("specifications")?.map((_, index) => (
+                <div key={index} className="mb-4 flex space-x-4">
+                  <FormControl>
+                    <Input
+                      placeholder="Specification Name"
+                      {...form.register(`specifications.${index}.key`)}
+                    />
+                  </FormControl>
+                  <FormControl>
+                    <Input
+                      placeholder="Specification Value"
+                      {...form.register(`specifications.${index}.value`)}
+                    />
+                  </FormControl>
+                </div>
+              ))}
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() =>
+                  form.setValue("specifications", [
+                    ...(form.watch("specifications") || []),
+                    { key: "", value: "" },
+                  ])
+                }
+                className="mt-2"
+              >
+                Add Specification
+              </Button>
+            </Card>
             {/* gird */}
             <Card className="mb-6 grid gap-10 border-none md:grid-cols-2">
               {/* product price card */}

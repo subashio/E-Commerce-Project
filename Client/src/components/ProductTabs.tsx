@@ -1,15 +1,11 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-const list = [
-  { title: "Brand", des: "Samsung" },
-  { title: "Color", des: "Black" },
-  { title: "Stock", des: "30" },
-  { title: "Name", des: "Convex" },
-];
 export function ProductTabs({
   description,
+  specifications,
 }: {
   description: string | TrustedHTML | undefined;
+  specifications: Array<any>;
 }) {
   return (
     <Tabs defaultValue="details" className="w-full">
@@ -42,16 +38,16 @@ export function ProductTabs({
         ></div>
       </TabsContent>
       <TabsContent value="info" className="mb-10">
-        <h1>Details</h1>
+        <h1>Specifications</h1>
 
         <table className="mt-4 w-full">
-          {list.map((item, i) => (
+          {specifications.map((item, i) => (
             <tr
               key={i}
               className={i % 2 === 0 ? "bg-white" : "bg-secondary/10"}
             >
-              <td className="border p-2">{item.title}</td>
-              <td className="border p-2">{item.des}</td>
+              <td className="border p-2">{item.key}</td>
+              <td className="border p-2">{item.value}</td>
             </tr>
           ))}
         </table>

@@ -45,7 +45,7 @@ const paymentMethodList = [
 export default function CheckoutPage() {
   const navigate = useNavigate();
   const [paymentMethod, setPaymentMethod] = React.useState("cash");
-  const { fetchCartItem, fetchOrder } = useGlobleContext();
+  const { fetchCartItem, fetchOrder, fetchAllProduct } = useGlobleContext();
   const user = useSelector((state: RootState) => state.user.currentUser);
   const cart = useSelector((state: RootState) => state.product.cartList); // Assuming cart.items contains the cart data
   const isLoggedIn = user?._id;
@@ -79,7 +79,7 @@ export default function CheckoutPage() {
       image: product?.image[0] || "/placeholder.png", // Default image if not available
       product: product?.name || "Unknown Product",
       qty: item.quantity,
-      price: product?.price || 0,
+      price: product?.price ? product?.price : product?.wholesalePrice || 0,
     };
   });
 
@@ -95,8 +95,10 @@ export default function CheckoutPage() {
   // Find the address with status true
   const selectedAddress = address.find((address) => address.status === true);
 
-  const addressId = selectedAddress?._id;
+  const address_details = selectedAddress;
 
+  console.log("address", address_details);
+  console.log("address-deataisl", address);
   const handlePaymentMethodChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
@@ -104,7 +106,7 @@ export default function CheckoutPage() {
   };
   const handlePlaceOrder = async () => {
     // Validate both inputs
-    if (!paymentMethod || !addressId) {
+    if (!paymentMethod || !address_details) {
       toast({
         variant: "destructive",
         title: "Please select payment method or Delivery Address",
@@ -120,11 +122,33 @@ export default function CheckoutPage() {
           ...SummaryApi.order_CashOnDelivery,
           data: {
             list_items: cart,
-            addressId: addressId,
+            address: address_details,
             subTotalAmt: subtotal,
             totalAmt: grandTotal,
           },
         });
+
+        // Loop over cart items and update stock individually
+        for (let i = 0; i < cart.length; i++) {
+          const productId = cart[i].productId;
+          const quantity = cart[i].quantity;
+
+          // Send individual product and quantity to update stock
+          const stockResponse = await Axios({
+            ...SummaryApi.update_product_stock,
+            data: {
+              productId: productId,
+              quantity: quantity, // Single quantity value
+            },
+          });
+
+          if (stockResponse.data.success) {
+            fetchAllProduct();
+            console.log("Stock updated for product ID:", productId);
+          } else {
+            console.error("Failed to update stock for product ID:", productId);
+          }
+        }
 
         if (response.data.success) {
           fetchCartItem();

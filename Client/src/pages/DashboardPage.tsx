@@ -11,75 +11,77 @@ import {
   CardTitle,
 } from "../components/ui/card";
 import { ScrollArea, ScrollBar } from "../components/ui/scroll-area";
-const invoices = [
-  {
-    invoice: "INV001",
-    status: "Paid",
-    price: "$250.00",
-    product: "Milk",
-  },
-  {
-    invoice: "INV002",
-    status: "Pending",
-    price: "$150.00",
-    product: "PayPal",
-  },
-  {
-    invoice: "INV003",
-    status: "Unpaid",
-    price: "$350.00",
-    product: "Bank Transfer",
-  },
-  {
-    invoice: "INV004",
-    status: "Paid",
-    price: "$450.00",
-    product: "Credit Card",
-  },
-];
+import { RootState } from "@/store/store";
+import { useSelector } from "react-redux";
+import { createLookup } from "@/lib/lookUpMap";
+import React from "react";
 
-const columns = [
-  { header: "Invoice", key: "invoice" },
+const RecentOrdersColoum = [
+  { header: "Order ID", key: "orderId" },
   {
     header: "Status",
     key: "status",
-    render: (value: string) => (
+    render: (value: boolean) => (
       <Badge
-        className={`rounded-sm p-1 ${
-          value === "Active" ? "bg-green-200" : "bg-gray-300"
+        className={`rounded-lg p-1 text-xs ${
+          value === true
+            ? "bg-amber-100/50 text-amber-800 hover:bg-amber-200/50"
+            : "bg-green-500/50 text-green-900 hover:bg-green-500/50"
         }`}
       >
-        {value}
+        {value === true ? "Pending" : "Success"}
       </Badge>
     ),
   },
   { header: "Price", key: "price" },
-  { header: "Product", key: "product" },
+  { header: "Product", key: "name" },
 ];
 
-const cards = [
-  {
-    title: "Earnings",
-    number: "$93,438.78",
-    discription: "Monthly revenue",
-    icon: <DollarSign className="h-10 w-10 rounded-full bg-primary/20 p-2" />,
-  },
-  {
-    title: "Orders",
-    number: "93,438",
-    discription: "32+New Sales",
-    icon: (
-      <ShoppingCartIcon className="h-10 w-10 rounded-full bg-orange-500/20 p-2" />
-    ),
-  },
-  {
-    title: "Customer",
-    number: "53,438",
-    discription: "30+new in 2 days",
-    icon: <UsersIcon className="h-10 w-10 rounded-full bg-sky-500/20 p-2" />,
-  },
-];
 export default function DashboardPage() {
+  const orders = useSelector((state: RootState) => state.order.allOrders);
+  const user = useSelector((state: RootState) => state.user.users || []);
+  const userLookup = React.useMemo(
+    () => createLookup(user, "_id", "name"),
+    [user],
+  );
+
+  const orderData = orders.slice(0, 6).map((item) => {
+    const product = item.product_details;
+    const userId =
+      typeof item.userId === "object" ? item.userId._id : undefined;
+
+    return {
+      image: product?.image[0] || "/placeholder.png",
+      name: product?.name || "Unknown Product",
+      qty: product.quantity,
+      orderId: item.orderId,
+      status: product.status,
+      price: item.totalAmt || 0,
+      userName: userLookup.get(userId || "") || "Unknown User",
+    };
+  });
+  const cards = [
+    {
+      title: "Earnings",
+      number: `₹${orders.reduce((acc, item) => acc + item.totalAmt, 0)}`,
+      discription: "Monthly revenue",
+      icon: <DollarSign className="h-10 w-10 rounded-full bg-primary/20 p-2" />,
+    },
+    {
+      title: "Orders",
+      number: orders.length,
+      discription: `${orders.length} New Sales`,
+      icon: (
+        <ShoppingCartIcon className="h-10 w-10 rounded-full bg-orange-500/20 p-2" />
+      ),
+    },
+    {
+      title: "Customer",
+      number: orders.filter((item) => item.userId).length,
+      discription: "30+new in 2 days",
+      icon: <UsersIcon className="h-10 w-10 rounded-full bg-sky-500/20 p-2" />,
+    },
+  ];
   return (
     <section className="mt-10 px-5">
       <div
@@ -132,7 +134,10 @@ export default function DashboardPage() {
           <CardTitle className="text-secondary/70">Recent Order</CardTitle>
         </CardHeader>
         <CardContent className="p-0">
-          <GenericTable columns={columns} data={invoices} />
+          <ScrollArea className="min-w-full max-w-sm whitespace-nowrap sm:max-w-xl md:max-w-2xl lg:max-w-4xl xl:max-w-xl">
+            <GenericTable columns={RecentOrdersColoum} data={orderData} />
+            <ScrollBar orientation="horizontal" />
+          </ScrollArea>
         </CardContent>
       </Card>
     </section>

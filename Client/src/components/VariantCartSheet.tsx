@@ -14,6 +14,8 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { setVariantSheet } from "@/store/ProductSlice";
+import { toggleSheetOpen } from "@/store/orderSlice";
+import { ScrollArea } from "./ui/scroll-area";
 
 interface VariantCartSheetProps {
   button: ReactNode;
@@ -36,13 +38,11 @@ export default function VariantCartSheet({
   selectedMaterial,
   setSelectedMaterial,
 }: VariantCartSheetProps) {
-  // State to track quantities for each materialType and brandName
   const [quantities, setQuantities] = useState<{
     [materialType: string]: { [brandName: string]: number };
   }>({});
 
   const { toast } = useToast();
-  // State to track the subtotal price
   const [subtotal, setSubtotal] = useState<number>(0);
   const [updatedArray, setUpdatedArray] = useState<any[]>([]);
   const [isAvailableCart, setIsAvailableCart] = React.useState(false);
@@ -51,28 +51,57 @@ export default function VariantCartSheet({
     (state: RootState) => state.product.variantSheet,
   );
   const dispatch = useDispatch();
-  // Function to handle quantity change for each materialType and brandName
-  const handleQuantityChange = async (
+
+  const handleQuantityChange = (
     materialType: string,
     brandName: string,
     change: number,
+    minQuantity: number = selectedProduct?.minQuantity || 0,
+    maxQuantity: number = selectedProduct?.maxQuantity || 100,
+    stock: number = selectedProduct?.stock || 0,
   ) => {
     setQuantities((prevQuantities) => {
-      const currentQuantity = prevQuantities[materialType]?.[brandName] || 0;
-      const newQuantity = Math.max(0, currentQuantity + change);
+      const currentQuantities = { ...prevQuantities };
+      const currentQuantity = currentQuantities[materialType]?.[brandName] || 0;
+      let newQuantity = Math.min(
+        maxQuantity,
+        Math.max(minQuantity, currentQuantity + change),
+      );
 
+      // Calculate total quantity excluding the current item
+      let totalOtherQuantities = 0;
+      for (const material in currentQuantities) {
+        for (const brand in currentQuantities[material]) {
+          if (material !== materialType || brand !== brandName) {
+            totalOtherQuantities += currentQuantities[material][brand];
+          }
+        }
+      }
+
+      // Check if new total would exceed stock
+      if (totalOtherQuantities + newQuantity > stock) {
+        // Adjust new quantity to fit within stock limit
+        newQuantity = Math.max(0, stock - totalOtherQuantities);
+        toast({
+          variant: "destructive",
+          title: "Cannot exceed available stock",
+          description: `Total quantity adjusted to match stock limit of ${stock}`,
+        });
+      }
+
+      // Update the quantities
       const updatedQuantities = {
-        ...prevQuantities,
+        ...currentQuantities,
         [materialType]: {
-          ...(prevQuantities[materialType] || {}),
+          ...(currentQuantities[materialType] || {}),
           [brandName]: newQuantity,
         },
       };
 
-      // Set the selected brand to the current brand being modified
+      // Set the selected brand
       setSelectedBrand?.(brandName);
 
-      // Transform updatedQuantities to an array of objects
+      // Transform to array format
       const updatedQuantitiesArray = Object.entries(updatedQuantities).flatMap(
         ([material, brands]) =>
           Object.entries(brands).map(([brand, quantity]) => ({
@@ -82,18 +111,16 @@ export default function VariantCartSheet({
           })),
       );
 
-      // Make API call with the updated quantities array
       setUpdatedArray(updatedQuantitiesArray);
       return updatedQuantities;
     });
   };
 
-  // Function to check if material is selected
+  // Rest of the component remains the same...
   const isMaterialSelected = () => {
     return selectedMaterial !== undefined;
   };
 
-  // Function to calculate total quantity
   const calculateTotalQuantity = () => {
     let total = 0;
     for (const material in quantities) {
@@ -101,13 +128,11 @@ export default function VariantCartSheet({
         total += quantities[material][brand];
       }
     }
-
     return total;
   };
 
   const { fetchCartItem, handleToast } = useGlobleContext();
   const addToCart = async () => {
-    // Function to handle adding items to the cart
     if (!isMaterialSelected()) {
       alert("Please select a material type.");
       return;
@@ -165,7 +190,6 @@ export default function VariantCartSheet({
 
   const cartList = useSelector((state: RootState) => state.product.cartList);
 
-  // Function to calculate subtotal price
   const calculateSubtotal = () => {
     let total = 0;
     for (const material in quantities) {
@@ -178,7 +202,6 @@ export default function VariantCartSheet({
     setSubtotal(total);
   };
 
-  // Update subtotal whenever quantities change
   React.useEffect(() => {
     calculateSubtotal();
   }, [quantities]);
@@ -196,10 +219,8 @@ export default function VariantCartSheet({
     if (productInCart) {
       setIsAvailableCart(true);
       setUpdatedArray(productInCart.variantQty);
-
       setCartItemsDetails(productInCart);
 
-      // Update quantities from the database
       const newQuantities = productInCart.variantQty.reduce(
         (acc: any, variant: any) => {
           if (!acc[variant.materialType]) {
@@ -214,13 +235,16 @@ export default function VariantCartSheet({
     } else {
       setIsAvailableCart(false);
       setUpdatedArray([]);
-
       setCartItemsDetails(null);
       setQuantities({});
     }
   }, [selectedProduct?._id, cartList]);
+
   return (
-    <Sheet open={variantSheet} onOpenChange={setVariantSheet}>
+    <Sheet
+      open={variantSheet}
+      onOpenChange={(open: boolean) => dispatch(setVariantSheet(open))}
+    >
       <SheetTrigger asChild>{button}</SheetTrigger>
       <SheetContent className="flex w-full flex-col justify-between p-0">
         <div className="flex flex-col gap-2 p-4">
@@ -270,7 +294,7 @@ export default function VariantCartSheet({
                   Brand Name
                 </p>
 
-                <div className="mt-4 flex w-full flex-col gap-4">
+                <ScrollArea className="mt-4 flex h-[40vh] w-full flex-col gap-4">
                   {materialType?.map((material) => (
                     <>
                       {selectedMaterial === material && (
@@ -354,7 +378,7 @@ export default function VariantCartSheet({
                       )}
                     </>
                   ))}
-                </div>
+                </ScrollArea>
               </div>
             )}
           </div>
@@ -381,6 +405,7 @@ export default function VariantCartSheet({
             onClick={() => {
               addToCart();
               dispatch(setVariantSheet(false));
+              dispatch(toggleSheetOpen(true));
             }}
           >
             Add To Cart

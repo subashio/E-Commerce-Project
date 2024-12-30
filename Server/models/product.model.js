@@ -38,7 +38,10 @@ const productSchema = new mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       ref: "variant",
     },
-
+    specifications: {
+      type: Array,
+      default: [],
+    },
     price: {
       type: Number,
       default: null,

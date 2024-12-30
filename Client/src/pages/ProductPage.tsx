@@ -6,6 +6,7 @@ import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import ProductCarousel from "@/components/ProductCarousel";
 import { ProductTabs } from "@/components/ProductTabs";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Carousel,
@@ -247,8 +248,17 @@ export default function ProductPage() {
 
         <div className="py-4 text-start md:col-span-1">
           <div>
-            <p className="text-md capitalize text-primary">
-              {categoryLookup(selectedProduct?.categoryId)}
+            <p className="text-md flex items-center justify-between gap-2 capitalize text-primary">
+              {categoryLookup(selectedProduct?.categoryId)}{" "}
+              {selectedProduct.stock === 0 ? (
+                <Badge className="rounded-lg bg-red-100/50 p-1 text-xs text-red-800 hover:bg-red-200/50">
+                  Out of stock
+                </Badge>
+              ) : (
+                <Badge className="rounded-lg bg-green-100/50 p-1 text-xs text-green-800 hover:bg-green-200/50">
+                  stock
+                </Badge>
+              )}
             </p>
             <h1 className="py-2 text-2xl font-semibold capitalize">
               {selectedProduct?.name}
@@ -282,7 +292,7 @@ export default function ProductPage() {
                 Material Type
               </p>
               <div className="flex flex-wrap items-center gap-2">
-                {materialType?.map((item) => (
+                {materialType?.slice(0, 4).map((item) => (
                   <div
                     key={item}
                     className={`flex cursor-pointer items-center gap-2 rounded-md border px-2 py-1 text-sm font-medium ${
@@ -298,6 +308,14 @@ export default function ProductPage() {
                     <p>{item}</p>
                   </div>
                 ))}
+                {materialType?.length && materialType?.length > 4 && (
+                  <button
+                    className="text-sm font-medium text-primary"
+                    onClick={() => dispatch(setVariantSheet(true))}
+                  >
+                    See More
+                  </button>
+                )}
               </div>
             </div>
           )}
@@ -307,7 +325,7 @@ export default function ProductPage() {
                 Brand Name
               </p>
               <div className="flex flex-wrap items-center gap-2">
-                {brandName?.map((item) => (
+                {brandName?.slice(0, 5).map((item) => (
                   <div
                     key={item}
                     className={`flex cursor-pointer items-center gap-2 rounded-md border px-2 py-1 text-sm font-medium ${
@@ -323,6 +341,14 @@ export default function ProductPage() {
                     <p>{item}</p>
                   </div>
                 ))}
+                {brandName?.length && brandName?.length > 5 && (
+                  <button
+                    className="text-sm font-medium text-primary"
+                    onClick={() => dispatch(setVariantSheet(true))}
+                  >
+                    See More
+                  </button>
+                )}
               </div>
             </div>
           )}
@@ -437,87 +463,13 @@ export default function ProductPage() {
         </div>
       </MaxWidthWrapper>
       <MaxWidthWrapper className="lg:my-8">
-        <ProductTabs description={selectedProduct?.description} />
+        <ProductTabs
+          description={selectedProduct?.description}
+          specifications={selectedProduct.specifications}
+        />
       </MaxWidthWrapper>
       <ProductCarousel title="Similar Items" />
       <Footer />
     </section>
   );
 }
-
-// const handleAddToCart = async (productId: string) => {
-//   if (!isAvailableCart) {
-//     try {
-//       const response = await Axios({
-//         ...SummaryApi.add_cart,
-//         data: {
-//           productId: productId,
-//         },
-//       });
-
-//       if (response.data) {
-//         fetchCartItem(); // Fetch the latest cart items
-//         toast({
-//           variant: "default",
-//           title: "Product added to cart ✅",
-//         });
-//       }
-//     } catch (error) {
-//       console.error(error);
-//       handleToast();
-//     }
-//   }
-// };
-
-// const handleIncreaseQty = async () => {
-//   const maxQuantity = selectedProduct?.maxQuantity;
-//   const stockLimit = selectedProduct?.stock;
-
-//   if (maxQuantity != null && quantity >= maxQuantity) {
-//     toast({
-//       variant: "default",
-//       title: `Maximum quantity of ${maxQuantity} reached.`,
-//     });
-//     return;
-//   }
-
-//   if (isAvailableCart) {
-//     if (quantity >= stockLimit) {
-//       toast({
-//         variant: "default",
-//         title: "Out of Stock ❌",
-//       });
-//       return;
-//     }
-
-//     try {
-//       await updateCartItem(cartItemDetails._id, quantity + 1);
-//       setQuantity((prev) => prev + 1);
-//       toast({
-//         variant: "default",
-//         title: "Quantity Increased!✅",
-//       });
-//     } catch (error) {
-//       console.error(error);
-//       handleToast();
-//     }
-//   } else {
-//     handleAddToCart(selectedProduct._id);
-//   }
-// };
-
-// const handleDecreaseQty = async () => {
-//   if (isAvailableCart && quantity > 1) {
-//     try {
-//       await updateCartItem(cartItemDetails._id, quantity - 1);
-//       setQuantity((prev) => prev - 1);
-//       toast({
-//         variant: "default",
-//         title: "Quantity Decreased!✅",
-//       });
-//     } catch (error) {
-//       console.error(error);
-//       handleToast();
-//     }
-//   }
-// };

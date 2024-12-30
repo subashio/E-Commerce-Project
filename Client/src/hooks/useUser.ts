@@ -104,8 +104,12 @@ export function useUser() {
         dispatch(setError("Incorrect Password"));
         return;
       }
-      if (error.response.status === 409) {
+      if (error.response.status === 423) {
         dispatch(setError("Contact to Admin to activate your account"));
+        return;
+      }
+      if (error.response.status === 409) {
+        dispatch(setError("Verify your email first"));
         return;
       }
       dispatch(setError("Something went Wrong"));

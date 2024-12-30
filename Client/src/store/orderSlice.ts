@@ -6,22 +6,38 @@ interface ProductDetails {
   price: number;
   quantity: number;
   status: boolean;
-  variantQty: Array<number>;
+  variantQty: Array<any>;
   variantTotal: Array<number>;
 }
 export interface users {
-  _id: string;
-  name: string;
-  email: string;
-  avatar: string;
-  mobile: string;
-  verify_email: string;
-  last_login_date: string;
-  status: string;
-  address_details: Array<Object>;
-  shopping_cart: Array<Object>;
-  orderHistory: Array<Object>;
+  _id?: string;
+  name?: string;
+  email?: string;
+  avatar?: string;
+  mobile?: string;
+  verify_email?: string;
+  last_login_date?: string;
+  status?: string;
+  address_details?: Array<any>;
+  shopping_cart?: Array<any>;
+  orderHistory?: Array<any>;
   role: string;
+  isWholesaler?: boolean;
+  isApprovedWholsale?: boolean;
+  companyName?: string;
+  officeAddress?: string;
+  GSTIN?: string;
+}
+interface Address {
+  _id: string;
+  address_title: string;
+  address_line: string;
+  city: string;
+  state: string;
+  country: string;
+  mobile: string;
+  pincode: string;
+  status?: boolean;
 }
 interface orders {
   _id: string;
@@ -30,7 +46,8 @@ interface orders {
   productId: string;
   paymentId: string;
   payment_status: string;
-  delivery_address: string;
+  order_status: string;
+  delivery_address: Address;
   product_details: ProductDetails;
   subTotalAmt: number;
   totalAmt: number;

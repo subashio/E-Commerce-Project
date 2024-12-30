@@ -96,6 +96,7 @@ export default function Login() {
                   </FormLabel>
                   <FormControl>
                     <Input
+                      type="password"
                       className="w-full rounded-md border border-gray-300 px-4 py-6 shadow-sm focus:border-none focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
                       placeholder="Enter your password"
                       {...field}

@@ -18,12 +18,20 @@ export async function createProductController(req, res) {
       status,
       price,
       salePrice,
+      specifications,
       description,
     } = req.body;
 
     console.log("Request body:", req.body);
 
-    if (!name || !image[0] || !categoryId[0] || !sub_categoryId[0]) {
+    if (
+      !name ||
+      !image[0] ||
+      !categoryId[0] ||
+      !sub_categoryId[0] ||
+      !specifications ||
+      !description
+    ) {
       return res.status(400).json({
         message:
           "Enter required fields name, image, categoryId, sub_categoryId, isWholesale",
@@ -70,6 +78,7 @@ export async function createProductController(req, res) {
             stock,
             status,
             description,
+            specifications,
           }
         : {
             name,
@@ -83,6 +92,7 @@ export async function createProductController(req, res) {
             price,
             salePrice,
             description,
+            specifications,
           };
 
     const product = new productModel(payload);
@@ -128,7 +138,6 @@ export async function getProductsDetails(req, res) {
 
 export async function updateProductDetails(req, res) {
   try {
-    console.log("Request body:", req.body);
     const { _id } = req.body;
 
     const checkProduct = await productModel.findById(_id);
@@ -196,7 +205,14 @@ export async function filterProduct(req, res) {
     //create a filter
     const filter = {};
     if (search) {
-      filter.name = { $regex: search, $options: "i" };
+      const searchRegex = { $regex: search, $options: "i" };
+      filter.$or = [
+        { name: searchRegex }, // Search in the name
+        { description: searchRegex }, // Search in the description
+        { brand: searchRegex }, // Search in the brand
+        { category: searchRegex }, // Search in the category
+        { subCategory: searchRegex }, // Search in the sub-category
+      ];
     }
     // Add status filter (convert string to boolean)
     if (status !== undefined && status !== "all") {
@@ -236,6 +252,69 @@ export async function filterByCategoryController(req, res) {
       error: false,
       success: true,
       data: products,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message || error,
+      success: false,
+      error: true,
+    });
+  }
+}
+
+export async function updateProductStock(req, res) {
+  try {
+    const { productId, quantity } = req.body; // Include 'quantity' in the request body
+
+    if (!quantity || quantity <= 0) {
+      return res.status(400).json({
+        message: "Quantity must be greater than 0.",
+        success: false,
+        error: true,
+      });
+    }
+
+    // Fetch the product to check the current stock
+    const product = await productModel.findById(productId);
+
+    if (!product) {
+      return res.status(404).json({
+        message: "Product not found",
+        success: false,
+        error: true,
+      });
+    }
+
+    // Check if there's enough stock
+    if (product.stock < quantity) {
+      return res.status(400).json({
+        message: `Not enough stock. Available stock: ${product.stock}`,
+        success: false,
+        error: true,
+      });
+    }
+
+    // Update the stock after deducting the quantity
+    const updatedProduct = await productModel.updateOne(
+      { _id: productId },
+      {
+        $inc: { stock: -quantity }, // Decrease the stock by the order quantity
+      }
+    );
+
+    if (!updatedProduct) {
+      return res.status(500).json({
+        message: "Failed to update product stock",
+        success: false,
+        error: true,
+      });
+    }
+
+    return res.status(200).json({
+      message: "Order placed successfully, stock updated",
+      data: updatedProduct,
+      success: true,
+      error: false,
     });
   } catch (error) {
     return res.status(500).json({
