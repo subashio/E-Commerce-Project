@@ -38,7 +38,7 @@ const RecentOrdersColoum = [
 ];
 
 export default function DashboardPage() {
-  const orders = useSelector((state: RootState) => state.order.allOrders);
+  const orders = useSelector((state: RootState) => state.order.allOrders || []);
   const user = useSelector((state: RootState) => state.user.users || []);
   const userLookup = React.useMemo(
     () => createLookup(user, "_id", "name"),
