@@ -24,7 +24,7 @@ export default function Orders() {
     .map((item) => {
       const product = item.product_details;
       const userId =
-        typeof item.userId === "object" ? item.userId._id : undefined;
+        typeof item.userId === "object" ? item.userId?._id : undefined;
 
       return {
         id: item._id,
