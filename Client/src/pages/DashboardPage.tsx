@@ -48,7 +48,7 @@ export default function DashboardPage() {
   const orderData = orders.slice(0, 6).map((item) => {
     const product = item.product_details;
     const userId =
-      typeof item.userId === "object" ? item.userId._id : undefined;
+      typeof item.userId === "object" ? item.userId?._id : undefined;
 
     return {
       image: product?.image[0] || "/placeholder.png",
