@@ -64,13 +64,36 @@ export default function ShopSide({
     (sub) => sub.categoryId === selectedCategoryId,
   );
 
-  const categoryProducts = products.filter(
-    (product) =>
+  // const categoryProducts = products.filter(
+  //   (product) =>
+  //     product.categoryId === selectedCategoryId &&
+  //     (!selectedSubcategoryId ||
+  //       product.sub_categoryId === selectedSubcategoryId) &&
+  //     (product.productType === "wholesale") === user?.isWholesaler, // Ensures only wholesale or retail products are considered
+  // );
+
+  // ✅ Updated filtering logic to show retail filters for guests
+  const categoryProducts = products.filter((product) => {
+    const isWholesaleProduct = product.productType === "wholesale";
+    const isRetailProduct = product.productType === "retail";
+
+    if (user) {
+      return (
+        product.categoryId === selectedCategoryId &&
+        (!selectedSubcategoryId ||
+          product.sub_categoryId === selectedSubcategoryId) &&
+        (user.isWholesaler ? isWholesaleProduct : isRetailProduct)
+      );
+    }
+
+    // If user is not logged in, show only retail products
+    return (
       product.categoryId === selectedCategoryId &&
       (!selectedSubcategoryId ||
         product.sub_categoryId === selectedSubcategoryId) &&
-      (product.productType === "wholesale") === user?.isWholesaler, // Ensures only wholesale or retail products are considered
-  );
+      isRetailProduct
+    );
+  });
 
   const getDynamicFilters = () => {
     if (!selectedCategory || categoryProducts.length === 0) return {};

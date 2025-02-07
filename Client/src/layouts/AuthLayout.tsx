@@ -6,7 +6,7 @@ export default function AuthLayout() {
   const isRegisterPage = location.pathname === "/register";
   return (
     <div className="grid-col-1 grid h-[92vh] w-full items-center dark:bg-gray-950 md:grid-cols-2">
-      <header className="fixed top-0 h-16 w-full border-b">
+      <header className="fixed top-0 h-16 w-full border-b bg-white">
         <MaxWidthWrapper className="mx-auto flex w-full items-center justify-between">
           <Link to="/" className="col-span-1 py-4">
             <img src="/logo.png" className="w-44" alt="Globo-green logo" />
