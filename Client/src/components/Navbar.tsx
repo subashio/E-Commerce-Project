@@ -29,9 +29,7 @@ export default function Navbar() {
   const wishlist = useSelector(
     (state: RootState) => state.product?.wishlist || [],
   );
-  // const { handleLogout } = useUser();
-  // const isLoggedIn = user?._id;
-  // const isAdmin = user?.role == "ADMIN";
+  const [openItem, setOpenItem] = React.useState<string | undefined>("");
 
   const category = useSelector((state: RootState) => state.product.category);
   const [lastScrollY, setLastScrollY] = React.useState(0);
@@ -262,7 +260,13 @@ export default function Navbar() {
       >
         <MaxWidthWrapper className="flex items-center justify-between">
           <div className="flex w-full">
-            <Accordion type="single" className="relative w-[250px]" collapsible>
+            <Accordion
+              value={openItem || ""}
+              onValueChange={(value) => setOpenItem(value)}
+              type="single"
+              className="relative w-[250px]"
+              collapsible
+            >
               <AccordionItem className="!border-none" value="item-1">
                 <AccordionTrigger className="hover:no-underline">
                   <Button
@@ -281,6 +285,7 @@ export default function Navbar() {
                       <Link
                         key={_index}
                         to={`/shop/${encodeURIComponent(_item.name)}`}
+                        onClick={() => setOpenItem("")}
                         className={cn(
                           "!justify-start !rounded-2xl",
                           buttonVariants({ variant: "ghost" }),

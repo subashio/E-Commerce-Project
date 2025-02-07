@@ -223,9 +223,12 @@ export default function CategoryWiseProduct({
         >
           {title}
         </Link>
-        <button className="flex items-center justify-center rounded-lg bg-secondary/5 px-2 py-1 text-sm text-secondary">
+        <Link
+          to={`/shop/${encodeURIComponent(title)}`}
+          className="flex items-center justify-center rounded-lg bg-secondary/5 px-2 py-1 text-sm text-secondary"
+        >
           View All <ChevronRight className="ml-1 w-4" />
-        </button>
+        </Link>
       </div>
       <div className="w-full rounded-2xl bg-primary/5 p-4 lg:p-6">
         {/* Top Brands & Categories */}

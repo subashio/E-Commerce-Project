@@ -1,13 +1,13 @@
-import userModel from "../models/user.model.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 import sendEmail from "../config/sendEmail.js";
+import userModel from "../models/user.model.js";
+import cloudinaryImageUpload from "../utils/cloudinaryImageUpload.js";
 import emailVerificationTemplate from "../utils/emailVerificationTemplate.js";
+import forgotPasswordTemplate from "../utils/forgotPasswordTemplate.js";
+import generateOtp from "../utils/genarateOtp.js";
 import generateAccessToken from "../utils/generateAccessToken.js";
 import generateRefreshtoken from "../utils/generateRefreshtoken.js";
-import jwt from "jsonwebtoken";
-import generateOtp from "../utils/genarateOtp.js";
-import forgotPasswordTemplate from "../utils/forgotPasswordTemplate.js";
-import cloudinaryImageUpload from "../utils/cloudinaryImageUpload.js";
 
 //user registration
 export async function registerController(req, res) {

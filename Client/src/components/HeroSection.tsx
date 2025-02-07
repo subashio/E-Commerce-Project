@@ -88,8 +88,8 @@ export default function HeroSection() {
   return (
     <section className="">
       <motion.div
-        initial={{ opacity: 0, y: -150 }}
-        whileInView={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
         className={cn(
           "rounded-2xl pb-4 pt-36",
