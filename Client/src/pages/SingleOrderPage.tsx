@@ -38,6 +38,7 @@ import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import { z } from "zod";
+import InvoiceDownloader from "@/components/InvoiceDownloader";
 
 const orderStatusSchema = z.object({
   order_status: z.string().optional(),
@@ -111,8 +112,8 @@ export default function SingleOrderPage() {
             onSubmit={form.handleSubmit(handleSubmit)}
             className="space-y-6"
           >
-            <div className="flex justify-between">
-              <h1 className="flex items-center gap-2 text-2xl font-semibold">
+            <div className="flex flex-wrap justify-between gap-6">
+              <h1 className="mr-2 flex items-center gap-2 text-2xl font-semibold">
                 Order ID : {orderData?.orderId}
                 <Badge
                   className={`rounded-lg p-1 text-xs ${
@@ -123,16 +124,21 @@ export default function SingleOrderPage() {
                   {orderData?.order_status || "Unknown"}
                 </Badge>
               </h1>
-              <Button
-                disabled={form.formState.isSubmitting}
-                type="submit"
-                className="tracking-wide"
-              >
-                save
-                {form.formState.isSubmitting && (
-                  <Loader className="ml-2 h-4 w-4 animate-spin" />
+              <div className="flex gap-2">
+                <Button
+                  disabled={form.formState.isSubmitting}
+                  type="submit"
+                  className="tracking-wide"
+                >
+                  save
+                  {form.formState.isSubmitting && (
+                    <Loader className="ml-2 h-4 w-4 animate-spin" />
+                  )}
+                </Button>
+                {orderData && userId && (
+                  <InvoiceDownloader orderData={orderData} userId={userId} />
                 )}
-              </Button>
+              </div>
             </div>
 
             <FormField

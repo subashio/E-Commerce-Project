@@ -6,6 +6,7 @@ export async function createProductController(req, res) {
     const {
       name,
       image,
+      description,
       categoryId,
       sub_categoryId,
       brandName,
@@ -18,8 +19,9 @@ export async function createProductController(req, res) {
       status,
       price,
       salePrice,
+      filterOptions,
       specifications,
-      description,
+      searchTags,
     } = req.body;
 
     console.log("Request body:", req.body);
@@ -78,7 +80,9 @@ export async function createProductController(req, res) {
             stock,
             status,
             description,
+            filterOptions,
             specifications,
+            searchTags,
           }
         : {
             name,
@@ -90,9 +94,11 @@ export async function createProductController(req, res) {
             stock,
             status,
             price,
+            filterOptions,
             salePrice,
             description,
             specifications,
+            searchTags,
           };
 
     const product = new productModel(payload);

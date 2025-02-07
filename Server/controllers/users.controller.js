@@ -353,7 +353,7 @@ export async function ForgotPassword(req, res) {
 
     await sendEmail({
       sendTo: email,
-      subject: "Forgot passward from shopme",
+      subject: "Forgot passward from GloboGreen",
       html: forgotPasswordTemplate({
         name: user.name,
         otp: otp,

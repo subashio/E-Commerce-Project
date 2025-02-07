@@ -1,10 +1,11 @@
 "use client";
 import { footerSvg, Links } from "@/constants/details";
-import MaxWidthWrapper from "./MaxWidthWrapper";
+import { RootState } from "@/store/store";
+import { motion } from "framer-motion";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Logos from "./Logos";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
+import MaxWidthWrapper from "./MaxWidthWrapper";
 
 export default function Footer() {
   const category = useSelector((state: RootState) => state.product.category);
@@ -21,15 +22,21 @@ export default function Footer() {
                   Categories
                 </h1>
                 <ul className="text-xs text-gray-500 dark:text-gray-400">
-                  {category?.map((item: any) => (
-                    <li key={item._id} className="mb-4">
+                  {category?.map((item, index) => (
+                    <motion.li
+                      initial={{ opacity: 0, x: -20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.8, delay: index * 0.1 }}
+                      key={item._id}
+                      className="mb-4"
+                    >
                       <Link
                         to={item._id ? `/shop/${item._id}` : item._id}
                         className="hover:underline"
                       >
                         {item.name}
                       </Link>
-                    </li>
+                    </motion.li>
                   ))}
                 </ul>
               </nav>
@@ -39,12 +46,18 @@ export default function Footer() {
                   Company
                 </h1>
                 <ul className="text-xs text-gray-500 dark:text-gray-400">
-                  {Links.map((item) => (
-                    <li key={item.id} className="mb-4">
+                  {Links.map((item, index) => (
+                    <motion.li
+                      initial={{ opacity: 0, x: -20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.8, delay: index * 0.1 }}
+                      key={item.id}
+                      className="mb-4"
+                    >
                       <Link to={item.to} className="hover:underline">
                         {item.name}
                       </Link>
-                    </li>
+                    </motion.li>
                   ))}
                 </ul>
               </nav>
@@ -54,8 +67,13 @@ export default function Footer() {
                   Stay connected
                 </p>
                 <ul className="text-xs text-gray-500 dark:text-gray-400">
-                  {footerSvg.map((item) => (
-                    <li key={item.id}>
+                  {footerSvg.map((item, index) => (
+                    <motion.li
+                      initial={{ opacity: 0, x: -20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.8, delay: index * 0.1 }}
+                      key={item.id}
+                    >
                       <Link
                         to="#"
                         className="mt-2 flex items-center gap-2 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
@@ -63,7 +81,7 @@ export default function Footer() {
                         <Logos d={item.d} className="h-4 w-4 border-none" />
                         {item.name}
                       </Link>
-                    </li>
+                    </motion.li>
                   ))}
                 </ul>
               </div>
@@ -71,7 +89,12 @@ export default function Footer() {
                 <p className="mb-4 mt-2 text-sm font-semibold text-gray-900 dark:text-white">
                   App Available on
                 </p>
-                <div className="flex flex-wrap items-center gap-1">
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.8 }}
+                  className="flex flex-wrap items-center gap-1"
+                >
                   <a href="#" className="max-w-md">
                     <img
                       src="/play_store.png"
@@ -86,7 +109,7 @@ export default function Footer() {
                       className="h-10"
                     />
                   </a>
-                </div>
+                </motion.div>
               </div>
             </div>
           </div>

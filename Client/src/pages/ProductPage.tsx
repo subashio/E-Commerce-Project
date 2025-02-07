@@ -49,7 +49,7 @@ interface Variant {
 
 export default function ProductPage() {
   const product = useSelector((state: RootState) => state.product.product);
-  const { id } = useParams();
+  const { name } = useParams();
   const category = useSelector((state: RootState) => state.product.category);
   const { createViewiedProducts } = useProduct();
   const [hovering, setHovering] = React.useState(false);
@@ -73,10 +73,16 @@ export default function ProductPage() {
     if (!listPrice || !salePrice || listPrice <= salePrice) return 0;
     return Math.round(((listPrice - salePrice) / listPrice) * 100);
   };
+  // Decode category name from URL
+  const decodedProductName = name ? decodeURIComponent(name) : "";
 
-  const selectedProduct = product.find((product: any) => {
-    return product._id === id;
-  });
+  const selectedProduct = product.find(
+    (prod: any) => prod.name.toLowerCase() === decodedProductName.toLowerCase(),
+  );
+
+  if (!selectedProduct) {
+    return <div>Product not found</div>; // More informative error state
+  }
 
   const user = useSelector((state: RootState) => state.user.currentUser);
   if (!selectedProduct) {
@@ -100,10 +106,10 @@ export default function ProductPage() {
     let isMounted = true; // To prevent state updates if the component is unmounted
 
     const createViewed = async () => {
-      if (!id) return; // Check if id is valid
+      if (!selectedProduct._id) return; // Check if id is valid
 
       try {
-        await createViewiedProducts(id);
+        await createViewiedProducts(selectedProduct._id);
       } catch (error) {
         if (isMounted) {
           console.log("error sending data");
@@ -119,7 +125,7 @@ export default function ProductPage() {
       isMounted = false;
       clearTimeout(debounceTimeout); // Clear timeout on unmount
     };
-  }, [id]);
+  }, [selectedProduct._id]);
 
   const {
     quantity,
@@ -159,10 +165,6 @@ export default function ProductPage() {
     }
   }, [selectedProduct._id, cartList]);
 
-  React.useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
   const materialType =
     typeof selectedProduct?.variantId === "object"
       ? (selectedProduct.variantId as Variant)?.material_type
@@ -180,25 +182,28 @@ export default function ProductPage() {
   const [selectedBrand, setSelectedBrand] = React.useState<string | undefined>(
     undefined,
   );
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <section>
       <Breadcrumbs
-        className="mx-auto mt-6 w-full max-w-screen-2xl px-5 lg:px-10"
+        className="mx-auto my-10 mt-56 w-full max-w-screen-2xl"
         path="/shop"
         pathName="Shop /"
-        path2={`/shop/${selectedProduct?.categoryId}`}
+        path2={`/shop/${categoryLookup(selectedProduct?.categoryId)}`}
         pathName2={`${categoryLookup(selectedProduct?.categoryId)} /`}
         finalPathName={selectedProduct?.name}
       />
-      <MaxWidthWrapper className="mx-auto grid w-full grid-cols-1 gap-10 p-4 md:grid-cols-2 lg:grid-cols-3">
+      <MaxWidthWrapper className="mx-auto grid w-full grid-cols-1 gap-10 p-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
         <Carousel
           plugins={[plugin.current]}
           onMouseEnter={plugin.current.stop}
           onMouseLeave={plugin.current.reset}
-          className="group grid md:col-span-1 lg:col-span-2 lg:grid-cols-[100px_1fr]"
+          className="group grid md:col-span-1 lg:col-span-2 lg:grid-cols-[100px_1fr] xl:col-span-2 xl:grid-cols-[100px_1fr]"
         >
           <ScrollArea
-            className="row-start-2 my-2 whitespace-nowrap lg:row-auto"
+            className="row-start-2 my-2 whitespace-nowrap lg:row-start-1"
             style={{
               height: "calc(100% - 2px)", // Makes the height dynamic
             }}
@@ -210,7 +215,7 @@ export default function ProductPage() {
                   className={`h-20 w-20 cursor-pointer rounded-lg border p-2 ${
                     activeIndex === index ? "border-primary" : "border-gray-300"
                   }`}
-                  onClick={() => handleThumbnailClick(index)}
+                  onMouseEnter={() => handleThumbnailClick(index)} //
                 >
                   <img
                     src={image}
@@ -224,16 +229,17 @@ export default function ProductPage() {
           </ScrollArea>
 
           <CarouselContent
-            className="ml-auto"
+            className="!m-0"
             style={{ transform: `translateX(-${activeIndex * 100}%)` }}
           >
             {selectedProduct?.image.map((image: string, index: number) => (
               <CarouselItem
                 key={index}
-                className="mx-auto !w-full cursor-zoom-in active:cursor-grabbing"
+                className="!w-full flex-grow-0 basis-full cursor-zoom-in active:cursor-grabbing"
               >
                 <Lens hovering={hovering} setHovering={setHovering}>
                   <AspectRatio ratio={16 / 12} className="bg-gray-100">
+                    {/* <AspectRatio ratio={21 / 12} className="bg-gray-100"> */}
                     <img
                       src={image}
                       alt="Product image"
@@ -385,7 +391,7 @@ export default function ProductPage() {
                     dispatch(toggleSheetOpen(true));
                   }}
                 >
-                  Add to Cart
+                  Buy Now
                 </Button>
               )}
               {selectedProduct.variantId && (

@@ -33,6 +33,8 @@ export const ProductSchema = z.object({
       }),
     )
     .nonempty("At least one specification is required"),
+  filterOptions: z.array(z.string()),
+  searchTags: z.array(z.string()),
 
   sub_categoryId: z
     .string()

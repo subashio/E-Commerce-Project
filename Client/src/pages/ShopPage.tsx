@@ -8,13 +8,15 @@ import { useParams } from "react-router-dom";
 function ShopPage({
   PriceRange,
   userType,
+  filter,
 }: {
   PriceRange: [number, number];
   userType?: string;
+  filter?: any;
 }) {
   const { categoryId, subCategoryId } = useParams<{
     categoryId: string;
-    subCategoryId: string;
+    subCategoryId?: string;
   }>();
 
   const product = useSelector(
@@ -52,16 +54,33 @@ function ShopPage({
     [subCategory],
   );
 
+  // Decode names from the URL
+  const decodedCategoryName = categoryId ? decodeURIComponent(categoryId) : "";
+  const decodedSubCategoryName = subCategoryId
+    ? decodeURIComponent(subCategoryId)
+    : "";
+
+  const selectedCategory = category.find(
+    (cat) => cat.name.toLowerCase() === decodedCategoryName.toLowerCase(),
+  );
+  const selectedCategoryId = selectedCategory?._id;
+
+  const selectedSubCategory = subCategory.find(
+    (sub) => sub.name.toLowerCase() === decodedSubCategoryName.toLowerCase(),
+  );
+  const selectedSubCategoryId = selectedSubCategory?._id;
+
   const filteredProducts = React.useMemo(() => {
     let filtered = product;
-
-    if (categoryId) {
-      filtered = filtered.filter((prod: any) => prod.categoryId === categoryId);
+    if (selectedCategoryId) {
+      filtered = filtered.filter(
+        (prod) => prod.categoryId === selectedCategoryId,
+      );
     }
 
-    if (subCategoryId) {
+    if (selectedSubCategoryId) {
       filtered = filtered.filter(
-        (prod: any) => prod.sub_categoryId === subCategoryId,
+        (prod) => prod.sub_categoryId === selectedSubCategoryId,
       );
     }
 
@@ -80,8 +99,36 @@ function ShopPage({
         (prod: any) => prod.productType !== "wholesale",
       );
     }
+
+    // Log filters before applying them
+    if (filter && Object.keys(filter).length > 0) {
+      filtered = filtered.filter((prod: any) => {
+        return Object.keys(filter).every((filterKey) => {
+          const filterValues = filter[filterKey];
+
+          if (!filterValues || filterValues.length === 0) return true; // No filter applied
+
+          if (!prod.filterOptions || !Array.isArray(prod.filterOptions)) {
+            console.warn("Product missing filterOptions:", prod);
+            return false;
+          }
+
+          // Check if any keyword in `prod.filterOptions` matches the full "key:value" format
+          return filterValues.some((filterValue: string) =>
+            prod.filterOptions.includes(`${filterKey}:${filterValue}`),
+          );
+        });
+      });
+    }
     return filtered;
-  }, [categoryId, subCategoryId, product, PriceRange, userType]);
+  }, [
+    selectedCategoryId,
+    selectedSubCategoryId,
+    product,
+    PriceRange,
+    userType,
+    filter,
+  ]);
 
   const activeProducts = filteredProducts.filter(
     (prod: any) => prod.status === true,
@@ -90,9 +137,9 @@ function ShopPage({
   if (activeProducts.length === 0) {
     return (
       <p className="flex h-full w-full items-center justify-center">
-        {categoryId
-          ? `No products found in this category.`
-          : "No products found."}
+        {decodedSubCategoryName
+          ? `No products found in the "${decodedSubCategoryName}" subcategory.`
+          : `No products found in this category.`}
       </p>
     );
   }

@@ -6,11 +6,11 @@ import {
 import { createLookup } from "@/lib/lookUpMap";
 import { RootState } from "@/store/store";
 import Autoplay from "embla-carousel-autoplay";
+import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import React from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import MaxWidthWrapper from "./MaxWidthWrapper";
 import ProductCard from "./ProductCard";
 
 export default function ProductCarousel({
@@ -109,13 +109,18 @@ export default function ProductCarousel({
       });
     }
   }, [api]);
-
   return (
-    <MaxWidthWrapper className="my-10 flex flex-col gap-4">
-      <div className="flex w-full items-center justify-between">
+    // <div className="mt-10 flex flex-col bg-secondary/5 py-6">
+    <motion.div
+      initial={{ opacity: 0, y: 150 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8 }}
+      className="mt-10 rounded-2xl py-6"
+    >
+      <div className="mb-4 flex w-full items-center justify-between">
         <Link
           to="/shop"
-          className="flex items-center gap-3 px-2 py-2 text-xl font-medium md:text-3xl"
+          className="flex items-center gap-3 px-2 py-2 text-xl font-bold md:text-3xl"
         >
           {title}
         </Link>
@@ -127,7 +132,6 @@ export default function ProductCarousel({
           <ChevronRight
             onClick={handleRightClick}
             className="h-8 w-8 cursor-pointer rounded-full bg-accent p-1.5 transition-all duration-500 hover:bg-primary/60"
-            // className="h-10 w-10 cursor-pointer rounded-full bg-primary/20 p-2"
           />
         </div>
       </div>
@@ -135,11 +139,11 @@ export default function ProductCarousel({
       <Carousel
         setApi={setApi}
         plugins={[plugin.current]}
-        className="w-full p-2"
+        className="w-full rounded-2xl"
         onMouseEnter={plugin.current.stop}
         onMouseLeave={plugin.current.reset}
       >
-        <CarouselContent className="ml-1 flex snap-x snap-mandatory items-center gap-4">
+        <CarouselContent className="ml-2 flex snap-x snap-mandatory items-center gap-4">
           {products
             ?.filter((item) => item.status === true)
             .map((item, index) => (
@@ -152,11 +156,12 @@ export default function ProductCarousel({
                 image={item.image}
                 price={item.price ? item.price : item.wholesalePrice}
                 salePrice={item.salePrice}
-                className="flex-shrink-0 basis-[70%] sm:basis-1/2 md:basis-1/3 lg:basis-[24%] xl:basis-[19%]"
+                className={`flex-shrink-0 basis-[80%] sm:basis-1/2 md:basis-1/3 lg:basis-[24%] xl:basis-[19%]`}
               />
             ))}
         </CarouselContent>
       </Carousel>
-    </MaxWidthWrapper>
+    </motion.div>
+    // </div>
   );
 }

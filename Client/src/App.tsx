@@ -19,6 +19,7 @@ export default function () {
           <Outlet />
         </main>
         {location.pathname == "/" && <Footer />}
+        {/* <Footer /> */}
       </div>
     </GlobleContextProvider>
   );

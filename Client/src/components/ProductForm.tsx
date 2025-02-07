@@ -13,7 +13,7 @@ import { useProduct } from "@/hooks/useProduct";
 import uploadImage from "@/lib/uploadImage";
 import { RootState } from "@/store/store";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader } from "lucide-react";
+import { Loader, X } from "lucide-react";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
@@ -29,6 +29,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import { Label } from "./ui/label";
+import { Badge } from "./ui/badge";
 
 interface ProductProps {
   initialData?: {
@@ -45,6 +47,8 @@ interface ProductProps {
     salePrice: number | undefined;
     wholesalePrice: number | undefined;
     specifications: Array<any> | undefined;
+    filterOptions: Array<any> | undefined;
+    searchTags: Array<any> | undefined;
     description: string | TrustedHTML | undefined;
     role: "edit" | "add";
     productType: string;
@@ -82,6 +86,8 @@ export default function ProductForm({ initialData, id }: ProductProps) {
           salePrice: initialData.salePrice,
           isWholesale: true,
           specifications: initialData.specifications,
+          filterOptions: initialData.filterOptions,
+          searchTags: initialData.searchTags,
           stock: initialData.stock,
           brandName: initialData.brandName ?? undefined,
           role: initialData.role,
@@ -99,6 +105,8 @@ export default function ProductForm({ initialData, id }: ProductProps) {
           specifications: initialData?.specifications,
           isWholesale: false,
           stock: initialData?.stock,
+          filterOptions: initialData?.filterOptions,
+          searchTags: initialData?.searchTags,
           brandName: initialData?.brandName ?? undefined,
           role: initialData?.role,
         };
@@ -114,6 +122,8 @@ export default function ProductForm({ initialData, id }: ProductProps) {
     categoryId: "",
     sub_categoryId: "",
     specifications: [],
+    filterOptions: [],
+    searchTags: [],
     wholesalePrice: isWholesale ? undefined : undefined, // Ensure this is set for wholesale
     price: undefined as number | undefined, // Regular price for non-wholesale
     salePrice: isWholesale ? undefined : undefined,
@@ -128,6 +138,9 @@ export default function ProductForm({ initialData, id }: ProductProps) {
     resolver: zodResolver(ProductSchema),
     defaultValues: initialData ? editPayload : addPayload(isWholesale),
   });
+
+  const [newKeyword, setNewKeyword] = React.useState<string>("");
+  const [newSearchTag, setNewSearchTag] = React.useState<string>("");
 
   const categoryTypes = React.useMemo(
     () =>
@@ -235,7 +248,7 @@ export default function ProductForm({ initialData, id }: ProductProps) {
                 </span>
               )}
             </h1>
-            <Card className="my-4 grid gap-4 border-none lg:grid-cols-2">
+            <Card className="my-10 grid gap-4 border-none shadow-none lg:grid-cols-2">
               <FormField
                 control={form.control}
                 name="name"
@@ -348,6 +361,137 @@ export default function ProductForm({ initialData, id }: ProductProps) {
                   </FormItem>
                 )}
               />
+
+              <div className="mt-4 flex w-full flex-col gap-2">
+                <Label className="mb-2">Filter Options</Label>
+                <div className="flex w-full items-center gap-2">
+                  <Input
+                    type="text"
+                    value={newKeyword}
+                    onChange={(e) => setNewKeyword(e.target.value)}
+                    placeholder="Enter a keyword"
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        if (newKeyword.trim()) {
+                          form.setValue("filterOptions", [
+                            ...form.getValues("filterOptions"),
+                            newKeyword,
+                          ]);
+                          setNewKeyword("");
+                        }
+                      }
+                    }}
+                  />
+
+                  <Button
+                    onClick={() => {
+                      if (newKeyword.trim()) {
+                        form.setValue("filterOptions", [
+                          ...form.getValues("filterOptions"),
+                          newKeyword,
+                        ]);
+                        setNewKeyword("");
+                      }
+                    }}
+                    type="button"
+                    className="h-9 rounded-lg"
+                  >
+                    Add
+                  </Button>
+                </div>
+
+                <ul className="flex flex-wrap gap-1">
+                  {form.getValues("filterOptions").map((keyword, index) => (
+                    <li key={index} className="flex items-center">
+                      <Badge className="mr-2 flex items-center gap-2">
+                        {keyword}
+                        <X
+                          className="h-3 w-3 cursor-pointer"
+                          onClick={() => {
+                            form.setValue(
+                              "filterOptions",
+                              form
+                                .getValues("filterOptions")
+                                .filter((_, i) => i !== index),
+                              {
+                                shouldDirty: true,
+                                shouldTouch: true,
+                                shouldValidate: true,
+                              },
+                            );
+                          }}
+                        />
+                      </Badge>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="mt-4 flex w-full flex-col gap-2">
+                <Label className="mb-2">Search Tags</Label>
+                <div className="flex w-full items-center gap-2">
+                  <Input
+                    type="text"
+                    value={newSearchTag}
+                    onChange={(e) => setNewSearchTag(e.target.value)}
+                    placeholder="Enter a keyword"
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        if (newSearchTag.trim()) {
+                          form.setValue("searchTags", [
+                            ...form.getValues("searchTags"),
+                            newSearchTag,
+                          ]);
+                          setNewSearchTag("");
+                        }
+                      }
+                    }}
+                  />
+
+                  <Button
+                    onClick={() => {
+                      if (newSearchTag.trim()) {
+                        form.setValue("searchTags", [
+                          ...form.getValues("searchTags"),
+                          newSearchTag,
+                        ]);
+                        setNewSearchTag("");
+                      }
+                    }}
+                    type="button"
+                    className="h-9 rounded-lg"
+                  >
+                    Add
+                  </Button>
+                </div>
+
+                <ul className="flex flex-wrap gap-1">
+                  {form.getValues("searchTags").map((tag, index) => (
+                    <li key={index} className="flex items-center">
+                      <Badge className="mr-2 flex items-center gap-2">
+                        {tag}
+                        <X
+                          className="h-3 w-3 cursor-pointer"
+                          onClick={() => {
+                            form.setValue(
+                              "searchTags",
+                              form
+                                .getValues("searchTags")
+                                .filter((_, i) => i !== index),
+                              {
+                                shouldDirty: true,
+                                shouldTouch: true,
+                                shouldValidate: true,
+                              },
+                            );
+                          }}
+                        />
+                      </Badge>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </Card>
             <h1 className="mb-4 text-xl font-semibold text-secondary/70">
               Product Image

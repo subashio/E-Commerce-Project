@@ -42,6 +42,14 @@ const productSchema = new mongoose.Schema(
       type: Array,
       default: [],
     },
+    filterOptions: {
+      type: Array,
+      default: [],
+    },
+    searchTags: {
+      type: Array,
+      default: [],
+    },
     price: {
       type: Number,
       default: null,

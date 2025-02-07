@@ -3,7 +3,7 @@ import { Provider } from "react-redux";
 import { RouterProvider } from "react-router-dom";
 import { PersistGate } from "redux-persist/integration/react";
 import { Toaster } from "./components/ui/toaster";
-import "./index.css";
+import "./index.css?v=2";
 import router from "./routers";
 import { persist, store } from "./store/store";
 

@@ -24,6 +24,8 @@ interface Products {
   stock: number;
   status: boolean;
   specifications: Array<any>;
+  filterOptions: Array<any>;
+  searchTags: Array<any>;
   price: number;
   brandName: string;
   salePrice: number;

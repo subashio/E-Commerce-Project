@@ -137,7 +137,7 @@ export default function ProfilePage() {
         </Card>
       )}
       {/* Personal Information */}
-      <section className="mx-2 mr-auto mt-4 flex justify-between gap-4 rounded-md border p-4 py-6 xl:mx-6">
+      <section className="mx-2 mr-auto mt-4 flex w-full justify-between gap-4 rounded-md border p-4 py-6 xl:mx-6">
         <Card className="border-none px-4 shadow-none">
           <h2 className="mb-4 text-xl font-semibold">Personal Information</h2>
           <div className="mb-4">
@@ -227,7 +227,7 @@ export default function ProfilePage() {
       </section>
       {/* Address Section */}
       {address.length > 0 && (
-        <section className="mx-2 my-4 mr-auto flex justify-center border px-4 py-6 xl:mx-6">
+        <section className="mx-2 my-4 mr-auto flex w-full justify-center border px-4 py-6 xl:mx-6">
           <Card className="w-full rounded-lg border-none px-4 shadow-none">
             <h2 className="mb-4 text-xl font-semibold">
               {address.filter((item) => item.status == true).length > 0 &&

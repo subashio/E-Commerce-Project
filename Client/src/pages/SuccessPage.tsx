@@ -33,9 +33,8 @@ export default function SuccessPage() {
 
   return (
     <section
-      className={`h-[90vh] overflow-hidden ${bgColor} transition-colors duration-500`}
+      className={`mt-28 h-[90vh] overflow-hidden ${bgColor} transition-colors duration-500`}
     >
-      {/* <div className="-mt-10 flex h-[100vh] flex-col items-center justify-center"> */}
       <div
         className={`h-full gap-2 rounded-lg transition-colors duration-500 ${bgColor} flex flex-col items-center justify-center`}
       >

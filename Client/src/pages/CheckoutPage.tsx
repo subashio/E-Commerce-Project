@@ -164,9 +164,14 @@ export default function CheckoutPage() {
   };
   return (
     <section>
+      <Breadcrumbs
+        path="/shop"
+        pathName="shop"
+        className="mt-52 lg:mt-56"
+        finalPathName="Checkout"
+      />
       <MaxWidthWrapper className="my-8 flex flex-col gap-4">
-        <Breadcrumbs path="/shop" pathName="shop" finalPathName="Checkout" />
-        <div className="mt-4 flex flex-col gap-2">
+        <div className="flex flex-col gap-2">
           <h1 className="text-4xl font-bold">Checkout</h1>
           <p className="text-sm text-secondary/80 dark:text-secondary-foreground/70">
             {isLoggedIn && "Already have an account? Click here to"}{" "}

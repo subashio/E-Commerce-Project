@@ -38,36 +38,6 @@ export const actions = (
   </DropdownMenu>
 );
 
-// export const wholsalerActions = (
-//   id: string,
-//   path: string,
-//   handleDelete: () => void,
-// ) => {
-//   const dispatch = useDispatch();
-//   return (
-//     <DropdownMenu>
-//       <DropdownMenuTrigger>
-//         <Ellipsis className="p-1" />
-//       </DropdownMenuTrigger>
-//       <DropdownMenuContent align="end">
-//         <DropdownMenuItem>
-//           <Link className="w-full" to={`/dashboard-page/${path}/${id}`}>
-//             Edit
-//           </Link>
-//         </DropdownMenuItem>
-//         {/* Wrap the delete action in AlertDialog */}
-//         <DropdownMenuItem>
-//           <button
-//             onClick={() => dispatch(setDialogOpen(true))}
-//             className="text-red-500"
-//           >
-//             Delete
-//           </button>
-//         </DropdownMenuItem>
-//       </DropdownMenuContent>
-//     </DropdownMenu>
-//   );
-// };
 export const addToAction = (id: string | undefined) => (
   <AddToCartButton className="w-[100px]" id={id} />
 );

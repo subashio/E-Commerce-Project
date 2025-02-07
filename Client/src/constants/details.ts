@@ -54,3 +54,175 @@ export const statusStyles: Record<string, string> = {
   Success: "bg-green-100/50 text-green-800 hover:bg-green-200/50",
   Cancel: "bg-red-100/50 text-red-800 hover:bg-red-200/50",
 };
+
+export const brandsData: Record<string, Brand[]> = {
+  "Mobile Phones": [
+    { name: "Samsung", logo: "/logos/sam.png" },
+    { name: "Apple", logo: "/logos/apple.png" },
+    { name: "Xiaomi", logo: "/logos/mi.png" },
+    { name: "Vivo", logo: "logos/vivo.png" },
+    { name: "OnePlus", logo: "logos/oneplus.png" },
+    { name: "Realme", logo: "logos/realme.png" },
+    { name: "Oppo", logo: "logos/oppo.png" },
+    { name: "Oppo", logo: "logos/oppo.png" },
+    { name: "Oppo", logo: "logos/oppo.png" },
+    { name: "Oppo", logo: "logos/oppo.png" },
+  ],
+  "Mobile Accessories": [
+    { name: "JBL", logo: "/logos/jbl.png" },
+    { name: "Boat", logo: "/logos/boat.png" },
+    { name: "Xiaomi", logo: "/logos/mi.png" },
+    { name: "OnePlus", logo: "logos/oneplus.png" },
+    { name: "Realme", logo: "logos/realme.png" },
+  ],
+  "Computer & Peripherals": [
+    { name: "HP", logo: "/logos/hp.png" },
+    { name: "Dell", logo: "/logos/dell.png" },
+  ],
+  "Home Appliances": [
+    { name: "LG", logo: "/logos/lg.png" },
+    { name: "Samsung", logo: "/logos/samsung.png" },
+  ],
+  "Spares & Tools": [
+    { name: "Bosch", logo: "/logos/bosch.png" },
+    { name: "Makita", logo: "/logos/makita.png" },
+    { name: "Maxx pamma", logo: "/logos/makita.png" },
+  ],
+};
+export const LookingFor: Record<string, LookingFor[]> = {
+  "Mobile Phones": [
+    {
+      title: "Smart Phones Under 10000 ",
+      img: "/img/bud-1.png",
+      to: "#",
+      className:
+        "bg-gradient-to-bl from-[#8CB8B5]  text-[#7bb9eb]  to-[#DFF3F3]/10",
+    },
+    {
+      title: "Smart Phones Under 20000",
+      img: "/img/bud-2.png",
+      to: "#",
+      className:
+        "bg-gradient-to-bl from-[#c7c6d1] text-[#95A0C2] to-[#95A0C2]/5",
+    },
+    {
+      title: "Smart Phones Under 30000",
+      img: "/img/bud-3.png",
+      to: "#",
+      className:
+        "bg-gradient-to-bl from-[#4E4F53]/80 text-[#4E4F53] to-[#EAEBEF]/50",
+    },
+    {
+      title: "Smart Phones Over 50000",
+      img: "/img/bud-4.png",
+      to: "#",
+      className:
+        "bg-gradient-to-bl from-[#8E8680]/80 text-[#8E8680] to-[#E1DAD3]/10",
+    },
+  ],
+  "Mobile Accessories": [
+    {
+      title: "NeckBands ",
+      img: "/img/neckband.png",
+      to: "#",
+      className: " bg-gradient-to-bl from-[#707E06]/40 to-[#F5FFA6]/50",
+    },
+    {
+      title: "True Wireless Earbuds",
+      img: "/img/earbuds.png",
+      to: "#",
+      className:
+        "bg-gradient-to-bl from-[#c7c6d1] text-[#95A0C2] to-[#95A0C2]/5",
+    },
+    {
+      title: "Smart Phone Back Cover",
+      img: "/img/backcase.png",
+      to: "#",
+      className: "bg-gradient-to-bl from-[#7bb9eb] to-[#20659E]/10",
+    },
+    {
+      title: "Smart Phones Screen Guards",
+      img: "/img/temper.png",
+      to: "#",
+      className: "bg-gradient-to-bl from-[#09941D]/50 to-[#8AF098]/10",
+    },
+  ],
+  "Computer & Peripherals": [
+    {
+      title: "Samsung",
+      img: "/img/bud-1.png",
+      to: "#",
+      className: "bg-gradient-to-bl from-[#7bb9eb] to-[#20659E]/10",
+    },
+    {
+      title: "Samsung",
+      img: "/img/bud-1.png",
+      to: "#",
+      className: "bg-gradient-to-bl from-[#7bb9eb] to-[#20659E]/10",
+    },
+    {
+      title: "Samsung",
+      img: "/img/bud-1.png",
+      to: "#",
+      className: "bg-gradient-to-bl from-[#7bb9eb] to-[#20659E]/10",
+    },
+    {
+      title: "Samsung",
+      img: "/img/bud-1.png",
+      to: "#",
+      className: "bg-gradient-to-bl from-[#7bb9eb] to-[#20659E]/10",
+    },
+  ],
+  "Home Appliances": [
+    {
+      title: "Samsung",
+      img: "/img/bud-1.png",
+      to: "#",
+      className: "bg-gradient-to-bl from-[#7bb9eb] to-[#20659E]/10",
+    },
+    {
+      title: "Samsung",
+      img: "/img/bud-1.png",
+      to: "#",
+      className: "bg-gradient-to-bl from-[#7bb9eb] to-[#20659E]/10",
+    },
+    {
+      title: "Samsung",
+      img: "/img/bud-1.png",
+      to: "#",
+      className: "bg-gradient-to-bl from-[#7bb9eb] to-[#20659E]/10",
+    },
+    {
+      title: "Samsung",
+      img: "/img/bud-1.png",
+      to: "#",
+      className: "bg-gradient-to-bl from-[#7bb9eb] to-[#20659E]/10",
+    },
+  ],
+  "Spares & Tools": [
+    {
+      title: "Samsung",
+      img: "/img/bud-1.png",
+      to: "#",
+      className: "bg-gradient-to-bl from-[#7bb9eb] to-[#20659E]/10",
+    },
+    {
+      title: "Samsung",
+      img: "/img/bud-1.png",
+      to: "#",
+      className: "bg-gradient-to-bl from-[#7bb9eb] to-[#20659E]/10",
+    },
+    {
+      title: "Samsung",
+      img: "/img/bud-1.png",
+      to: "#",
+      className: "bg-gradient-to-bl from-[#7bb9eb] to-[#20659E]/10",
+    },
+    {
+      title: "Samsung",
+      img: "/img/bud-1.png",
+      to: "#",
+      className: "bg-gradient-to-bl from-[#7bb9eb] to-[#20659E]/10",
+    },
+  ],
+};

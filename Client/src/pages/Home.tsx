@@ -1,10 +1,12 @@
 import CategoriesSection from "@/components/CategoriesSection";
+import CategoryWiseProduct from "@/components/CategoryWiseProduct";
 import HeroSection from "@/components/HeroSection";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import ProductCarousel from "@/components/ProductCarousel";
 import { Badge } from "@/components/ui/badge";
 import { createLookup } from "@/lib/lookUpMap";
 import { RootState } from "@/store/store";
+import { motion } from "framer-motion";
 import { MoveRight } from "lucide-react";
 import React from "react";
 import { useSelector } from "react-redux";
@@ -115,26 +117,28 @@ export default function Home() {
   }, [product, categoryLookup, user]);
 
   return (
-    <section className="">
+    <MaxWidthWrapper className="">
       <HeroSection />
 
       {Array.isArray(viewedProduct) && viewedProduct.length > 0 && (
         <ProductCarousel title="Recently Viewed" viewProduct={viewedProduct} />
       )}
       <CategoriesSection />
-      <ProductCarousel title="Best Sellers" />
+      {/* <ProductCarousel title="Best Sellers" /> */}
 
-      <MaxWidthWrapper className="my-20 grid w-full grid-cols-1 gap-10 md:grid-cols-2">
+      <div className="grid w-full grid-cols-1 place-content-center gap-10 rounded-2xl py-12 md:grid-cols-2">
         {banner2.map((_item, _index) => (
-          <Link
-            to={_item.to}
+          <motion.a
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: _index * 0.1 }}
+            href={_item.to}
             key={_index}
-            className="flex h-[20vh] w-full flex-col items-center justify-center gap-3 rounded-lg bg-cover bg-left bg-no-repeat lg:h-[25vh]"
+            className="flex h-[20vh] w-full flex-col items-center justify-center gap-3 rounded-2xl bg-cover bg-left bg-no-repeat lg:h-[30vh]"
             style={{ backgroundImage: `url(${_item.image})` }}
-          ></Link>
+          ></motion.a>
         ))}
-      </MaxWidthWrapper>
-      {/* <CategoryWiseProduct /> */}
+      </div>
 
       {/* Group products by category and render each category once */}
       {Object.entries(
@@ -145,17 +149,25 @@ export default function Home() {
           acc[product.category].push(product);
           return acc;
         }, {}),
-      ).map(([category, products]) => (
-        <ProductCarousel
-          key={category}
-          title={category}
-          productDataCategory={products}
-        />
-      ))}
+      )
+        .sort(
+          ([_, productsA], [__, productsB]) =>
+            productsA[0]._id.localeCompare(productsB[0]._id), // Ascending order
+        )
+        .map(([category, products]) => (
+          <CategoryWiseProduct
+            key={category}
+            title={category}
+            productDataCategory={products}
+          />
+        ))}
 
       <MaxWidthWrapper className="my-10 grid w-full grid-flow-row gap-10">
         {banners.map((_item, _index) => (
-          <div
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
             key={_index}
             className="flex h-[24vh] w-full flex-col justify-center gap-3 rounded-lg bg-cover bg-center bg-no-repeat text-end lg:h-[44vh]"
             style={{ backgroundImage: `url(${_item.image})` }}
@@ -175,12 +187,12 @@ export default function Home() {
                 <MoveRight className="w-4 transition-transform duration-300 group-hover:translate-x-2" />
               </Link>
             </div>
-          </div>
+          </motion.div>
         ))}
       </MaxWidthWrapper>
 
       {/* <CategoryDisplay name="Mobiles" /> */}
       {/* <BestSellers /> */}
-    </section>
+    </MaxWidthWrapper>
   );
 }

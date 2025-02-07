@@ -32,6 +32,7 @@ import { createBrowserRouter } from "react-router-dom";
 import WholesaleCustomer from "@/pages/WholesaleCustomer";
 import WholesaleUsers from "@/pages/WholesaleUsers";
 import SingleOrderPage from "@/pages/SingleOrderPage";
+import ShopByBrand from "@/pages/ShopByBrand";
 
 const profileRoutes = [
   { path: "", element: <ProfilePage /> },
@@ -44,7 +45,7 @@ const shopRoutes = [
   { path: "", element: <ShopPage PriceRange={[0, 0]} /> },
   { path: ":categoryId", element: <ShopPage PriceRange={[0, 0]} /> },
   {
-    path: ":categoryId/:subCategoryId",
+    path: ":categoryId/:subCategoryId?/:brandName?",
     element: <ShopPage PriceRange={[0, 0]} />,
   },
 ];
@@ -114,7 +115,11 @@ const router = createBrowserRouter(
         { path: "checkout", element: <CheckoutPage /> },
         { path: "success", element: <SuccessPage /> },
         { path: "reset-password", element: <ResetPassword /> },
-        { path: "product/:id", element: <ProductPage /> },
+        { path: "product/:name", element: <ProductPage /> },
+        {
+          path: "/shopByBrand/:categoryName/:brandName?",
+          element: <ShopByBrand />,
+        },
         {
           path: "profile-page",
           element: <Profile />,

@@ -211,6 +211,8 @@ export default function ProductList() {
                   maxQuantity: selectedProduct.maxQuantity,
                   minQuantity: selectedProduct.minQuantity,
                   description: selectedProduct.description,
+                  filterOptions: selectedProduct.filterOptions,
+                  searchTags: selectedProduct.searchTags,
                   role: "edit",
                   specifications: selectedProduct.specifications,
                   variantId: selectedProduct?.variantId,

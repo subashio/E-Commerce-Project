@@ -112,7 +112,7 @@ export default function DashboardPage() {
       <ScrollArea className="min-w-full max-w-sm whitespace-nowrap sm:max-w-xl md:max-w-2xl lg:max-w-4xl xl:max-w-2xl">
         <div className="flex w-max space-x-4 p-4">
           {cards.map((_item, _index) => (
-            <Card className="mt-5 min-w-[400px] rounded-lg border-none shadow-md">
+            <Card className="c mt-5 rounded-lg border-none from-[#c7c6d1] shadow-md">
               <CardContent className="flex flex-col gap-10 p-6">
                 <CardTitle className="flex items-center justify-between">
                   {_item.title}

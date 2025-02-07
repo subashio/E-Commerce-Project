@@ -7,176 +7,277 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import { cn } from "@/lib/utils";
 import * as React from "react";
 import { Link } from "react-router-dom";
 
-const components: { title: string; href: string; description: string }[] = [
-  {
-    title: "Alert Dialog",
-    href: "/docs/primitives/alert-dialog",
-    description:
-      "A modal dialog that interrupts the user with important content and expects a response.",
-  },
-  {
-    title: "Hover Card",
-    href: "/docs/primitives/hover-card",
-    description:
-      "For sighted users to preview content available behind a link.",
-  },
-  {
-    title: "Progress",
-    href: "/docs/primitives/progress",
-    description:
-      "Displays an indicator showing the completion progress of a task, typically displayed as a progress bar.",
-  },
-  {
-    title: "Scroll-area",
-    href: "/docs/primitives/scroll-area",
-    description: "Visually or semantically separates content.",
-  },
-  {
-    title: "Tabs",
-    href: "/docs/primitives/tabs",
-    description:
-      "A set of layered sections of content—known as tab panels—that are displayed one at a time.",
-  },
-  {
-    title: "Tooltip",
-    href: "/docs/primitives/tooltip",
-    description:
-      "A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.",
-  },
-];
+import { brandsData } from "@/constants/details";
+import { useUser } from "@/hooks/useUser";
+import { RootState } from "@/store/store";
+import {
+  ChevronRight,
+  House,
+  LogOut,
+  MapPin,
+  ShoppingBag,
+  User,
+} from "lucide-react";
+import { useSelector } from "react-redux";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
+import { ScrollArea } from "./ui/scroll-area";
+
+// interface Category {
+//   id: number;
+//   name: string;
+// }
 
 export function Navmenu() {
-  // const category = useSelector(
-  //   (state: RootState) => state.product?.category || [],
-  // );
+  const user = useSelector((state: RootState) => state.user.currentUser);
+  const { handleLogout } = useUser();
+  const isLoggedIn = user?._id;
+  const isAdmin = user?.role == "ADMIN";
+  const category = useSelector((state: RootState) => state.product.category);
+
+  const [selectedCategory, setSelectedCategory] =
+    React.useState<string>("Mobile Phones");
   return (
-    <NavigationMenu>
-      <NavigationMenuList className="ml-5 gap-2">
-        {/* <NavigationMenuItem>
-          <NavigationMenuTrigger className="flex w-[250px] justify-between bg-transparent">
-            All Departments
-            <LayoutGrid className="relative top-[1px] ml-1 h-5 w-5 transition duration-200 group-data-[state=open]:rotate-180" />
-          </NavigationMenuTrigger>
-          <NavigationMenuContent>
-            <ul className="w-[250px] gap-y-3 p-2">
-              {category?.map((_item, _index) => (
-                <ListItem
-                  key={_index}
-                  title={_item.name}
-                  href={`/shop/${_item._id}`}
-                  // handleClick={() => handleClick(item.name, "Products")}
-                ></ListItem>
-              ))}
-            </ul>
-          </NavigationMenuContent>
-        </NavigationMenuItem> */}
-        <NavigationMenuItem>
-          <NavigationMenuTrigger className="flex w-[110px] justify-between bg-transparent">
-            Moblies
-          </NavigationMenuTrigger>
-          <NavigationMenuContent>
-            <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
-              <li className="row-span-3">
-                <NavigationMenuLink asChild>
-                  <a
-                    className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
-                    href="/"
+    <header className="relative z-20 flex w-full items-center justify-between">
+      <NavigationMenu className="">
+        <NavigationMenuList className="ml-4">
+          <NavigationMenuItem>
+            <NavigationMenuTrigger className="flex justify-between bg-transparent !text-primary-foreground hover:bg-secondary/50">
+              Shop By Brands
+            </NavigationMenuTrigger>
+
+            <NavigationMenuContent className="absolute left-0 flex !w-[700px] rounded-3xl bg-white p-4 shadow-lg">
+              {/* Categories (Left Side) */}
+              <div className="w-1/3 border-r pr-6">
+                <h3 className="mb-2 rounded-2xl px-3 py-2 text-sm font-semibold text-primary">
+                  Categories
+                </h3>
+                <ul className="mt-3 space-y-2">
+                  {category
+                    .slice() // Avoid mutating original state
+                    .sort((a, b) => b._id.localeCompare(a.name))
+                    .map((category) => (
+                      <li
+                        key={category._id}
+                        onMouseEnter={() => setSelectedCategory(category.name)} // Hover event
+                        className="flex cursor-pointer items-center justify-between rounded-md px-3 py-2 text-sm font-medium hover:bg-primary/10"
+                      >
+                        {category.name} <ChevronRight className="h-3 w-3" />
+                      </li>
+                    ))}
+                </ul>
+              </div>
+
+              {/* Brands (Right Side) */}
+              <ScrollArea className="max-h-[400px] w-2/3 overflow-y-auto pl-4">
+                <h3 className="mb-2 py-2 text-sm font-semibold text-primary">
+                  Brands
+                </h3>
+                <div className="mt-2 grid grid-cols-3 gap-3">
+                  {brandsData[selectedCategory]
+                    ?.slice(0, 9)
+                    .map((brand, index) => (
+                      <Link
+                        to={`/shopByBrand/${encodeURIComponent(selectedCategory)}/${encodeURIComponent(brand.name)}`}
+                        key={index}
+                        className="flex items-center gap-2 rounded-lg border p-3 shadow-sm hover:shadow-md hover:shadow-primary/10"
+                      >
+                        <img
+                          src={brand.logo}
+                          alt={brand.name}
+                          className="h-8 w-8 object-contain"
+                        />
+                        <span className="text-sm font-medium">
+                          {brand.name}
+                        </span>
+                      </Link>
+                    ))}
+                </div>
+
+                {/* View More Button */}
+                <div className="mt-4 text-center">
+                  <Link
+                    to={`/shopByBrand/${encodeURIComponent(selectedCategory)}`}
+                    className="inline-block rounded-md px-4 py-2 text-sm font-medium text-primary hover:bg-primary/10"
                   >
-                    {/* < className="h-6 w-6" /> */}
-                    <div className="mb-2 mt-4 text-lg font-medium">
-                      shadcn/ui
-                    </div>
-                    <p className="text-sm leading-tight text-muted-foreground">
-                      Beautifully designed components that you can copy and
-                      paste into your apps. Accessible. Customizable. Open
-                      Source.
-                    </p>
-                  </a>
-                </NavigationMenuLink>
-              </li>
-              <ListItem href="/docs" title="Introduction">
-                Re-usable components built using Radix UI and Tailwind CSS.
-              </ListItem>
-              <ListItem href="/docs/installation" title="Installation">
-                How to install dependencies and structure your app.
-              </ListItem>
-              <ListItem href="/docs/primitives/typography" title="Typography">
-                Styles for headings, paragraphs, lists...etc
-              </ListItem>
-            </ul>
-          </NavigationMenuContent>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <NavigationMenuTrigger className="flex w-[130px] justify-between bg-transparent">
-            Headphones
-          </NavigationMenuTrigger>
-          <NavigationMenuContent>
-            <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-              {components.map((component) => (
-                <ListItem
-                  key={component.title}
-                  title={component.title}
-                  href={component.href}
+                    View All Brands
+                  </Link>
+                </div>
+              </ScrollArea>
+            </NavigationMenuContent>
+          </NavigationMenuItem>
+
+          <NavigationMenuItem>
+            <Link to="/" className="bg-transparent">
+              <NavigationMenuLink
+                className={navigationMenuTriggerStyle({
+                  className:
+                    "bg-transparent transition-colors duration-300 hover:bg-secondary/50 hover:text-primary",
+                })}
+              >
+                Home
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
+          <NavigationMenuItem className="">
+            <Link to="/" className="bg-transparent">
+              <NavigationMenuLink
+                className={navigationMenuTriggerStyle({
+                  className:
+                    "bg-transparent transition-colors duration-300 hover:bg-primary/10 hover:text-primary",
+                })}
+              >
+                About Us
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <Link to="/">
+              <NavigationMenuLink
+                className={navigationMenuTriggerStyle({
+                  className: "bg-transparent",
+                })}
+              >
+                Contact us
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
+        </NavigationMenuList>
+      </NavigationMenu>
+      <DropdownMenu>
+        <DropdownMenuTrigger className="hidden lg:flex">
+          {isLoggedIn ? (
+            <div className="flex items-center justify-center gap-2.5 rounded-2xl p-2 text-primary-foreground hover:bg-secondary/50">
+              <Avatar className="h-8 w-8">
+                <AvatarImage src={user.avatar} alt="@shadcn" />
+                <AvatarFallback className="text-md">
+                  {user.name?.charAt(0)}
+                </AvatarFallback>
+              </Avatar>
+              <span className="text-sm font-semibold">Account</span>
+            </div>
+          ) : (
+            <Link
+              className="flex items-center gap-2.5 rounded-2xl p-2 text-primary-foreground hover:bg-secondary/50"
+              to={isLoggedIn ? "/profile-page" : "/login"}
+            >
+              <User className="borer h-9 w-9 rounded-full bg-secondary/50 p-2" />{" "}
+              <span className="text-md font-semibold">Account</span>
+            </Link>
+          )}
+        </DropdownMenuTrigger>
+        {isLoggedIn ? (
+          <DropdownMenuContent align="end" className="hidden px-2.5 lg:block">
+            <DropdownMenuItem className="">
+              <Link
+                to="/profile-page"
+                className="flex h-full w-full cursor-pointer items-center gap-2"
+              >
+                <Avatar className="h-9 w-9">
+                  <AvatarImage src={user.avatar} alt="@shadcn" />
+                  <AvatarFallback className="text-sm font-medium">
+                    {user.name?.charAt(0)}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="-mt-1">
+                  <p className="flex items-center gap-2 text-sm font-semibold">
+                    {user.name}{" "}
+                    {isAdmin && (
+                      <span className="text-xs text-primary">Admin</span>
+                    )}
+                  </p>
+                  <p className="text-xs">{user.email}</p>
+                </div>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            {isAdmin && (
+              <DropdownMenuItem className="mt-1">
+                <Link
+                  className="flex w-full items-center gap-2 hover:text-primary dark:hover:text-primary-foreground"
+                  to="/dashboard-page"
                 >
-                  {component.description}
-                </ListItem>
-              ))}
-            </ul>
-          </NavigationMenuContent>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <Link to="/docs" className="bg-transparent">
-            <NavigationMenuLink
-              className={navigationMenuTriggerStyle({
-                className: "bg-transparent",
-              })}
-            >
-              About
-            </NavigationMenuLink>
-          </Link>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <Link to="/docs">
-            <NavigationMenuLink
-              className={navigationMenuTriggerStyle({
-                className: "bg-transparent",
-              })}
-            >
-              Contact
-            </NavigationMenuLink>
-          </Link>
-        </NavigationMenuItem>
-      </NavigationMenuList>
-    </NavigationMenu>
+                  <House />
+                  Dasboard
+                </Link>
+              </DropdownMenuItem>
+            )}
+            <DropdownMenuItem className="">
+              <Link
+                className="flex w-full items-center gap-2 hover:text-primary dark:hover:text-primary-foreground"
+                to="/profile-page/order-details"
+              >
+                <ShoppingBag />
+                Orders
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem className="mb-3">
+              <Link
+                className="flex w-full items-center gap-2 hover:text-primary dark:hover:text-primary-foreground"
+                to="/profile-page"
+              >
+                <MapPin />
+                Address
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator className="text-secondary" />
+            <DropdownMenuItem>
+              {isLoggedIn && (
+                <Link
+                  to="/login"
+                  onClick={handleLogout}
+                  className="flex w-full items-start gap-2 py-1 text-primary"
+                >
+                  <LogOut /> Logout
+                </Link>
+              )}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        ) : undefined}
+      </DropdownMenu>
+    </header>
   );
 }
 
-const ListItem = React.forwardRef<
-  React.ElementRef<"a">,
-  React.ComponentPropsWithoutRef<"a">
->(({ className, title, children, ...props }, ref) => {
-  return (
-    <li>
-      <NavigationMenuLink asChild>
-        <a
-          ref={ref}
-          className={cn(
-            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
-            className,
-          )}
-          {...props}
-        >
-          <div className="text-sm font-medium leading-none">{title}</div>
-          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-            {children}
-          </p>
-        </a>
-      </NavigationMenuLink>
-    </li>
-  );
-});
-ListItem.displayName = "ListItem";
+// const ListItem = React.forwardRef<
+//   React.ElementRef<"a">,
+//   React.ComponentPropsWithoutRef<"a">
+// >(({ className, title, children, ...props }, ref) => {
+//   return (
+//     <li>
+//       <NavigationMenuLink className="" asChild>
+//         <a
+//           ref={ref}
+//           className={cn(
+//              block select-none space-y-1 rounded-md p-3 leading-none text-primary-foreground no-underline outline-none transition-colors hover:bg-secondary/50 focus:bg-accent focus:text-accent-foreground",
+//             className,
+//           )}
+//           {...props}
+//         >
+//           <div className= text-sm font-medium leading-none">{title}</div>
+//           <p className= line-clamp-2 text-sm leading-snug text-muted-foreground">
+//             {children}
+//           </p>
+//         </a>
+//       </NavigationMenuLink>
+//     </li>
+//   );
+// });
+// ListItem.displayName = "ListItem";
+
+// const categories: Category[] = [
+//   { id: 1, name: "Mobile Phones" },
+//   { id: 2, name: "Mobile Accessories" },
+//   { id: 3, name: "Computers & Peripherals" },
+//   { id: 4, name: "Spare & Tools" },
+//   { id: 5, name: "Home Appliances" },
+// ];

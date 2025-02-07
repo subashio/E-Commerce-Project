@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -60,63 +61,61 @@ export default function ForgotPassword() {
     }
   }
   return (
-    <div className="flex w-full items-center justify-center py-10 dark:bg-gray-950">
-      <div className="flex max-w-xl flex-col gap-10 rounded-xl bg-white px-8 shadow-[rgba(0,_0,_0,_0.4)_0px_30px_90px] dark:bg-gray-900">
-        <h1 className="mb-4 mt-10 text-center text-3xl font-bold dark:text-gray-200">
-          Forgot password
-        </h1>
+    <Card className="flex h-full w-full flex-col items-center justify-center gap-10 rounded-xl border-none bg-white px-8 shadow-[rgba(0,_0,_0,_0.4)_0px_30px_90px] dark:bg-gray-900">
+      <h1 className="mb-4 mt-10 text-center text-3xl font-bold dark:text-gray-200">
+        Forgot password
+      </h1>
 
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="w-[350px] pb-24 sm:w-[500px]"
-          >
-            <div className="mb-4">
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                      Email Address
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        className="w-full rounded-md border border-gray-300 px-4 py-6 shadow-sm focus:border-none focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
-                        placeholder="your@email.com"
-                        {...field}
-                      />
-                    </FormControl>
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="w-[350px] pb-24 md:w-[300px] lg:w-[500px]"
+        >
+          <div className="mb-4">
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Email Address
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      className="w-full rounded-md border border-gray-300 px-4 py-6 shadow-sm focus:border-none focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
+                      placeholder="your@email.com"
+                      {...field}
+                    />
+                  </FormControl>
 
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <Button
-              type="submit"
-              disabled={form.formState.isSubmitting}
-              className="w-full rounded-md border-2 border-transparent bg-primary px-8 py-6 font-bold text-white transition duration-200 hover:border-primary hover:bg-white hover:text-black"
-            >
-              Reset Password
-              {form.formState.isSubmitting && (
-                <Loader className="ml-2 h-6 w-6 animate-spin" />
+                  <FormMessage />
+                </FormItem>
               )}
-            </Button>
-            <div className="mt-4 flex w-full justify-center">
-              <Link
-                to="/login"
-                className="flex gap-1 text-sm text-blue-500 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-              >
-                <span className="text-foreground hover:no-underline">
-                  Remember your password?
-                </span>
-                Sign in
-              </Link>
-            </div>
-          </form>
-        </Form>
-      </div>
-    </div>
+            />
+          </div>
+          <Button
+            type="submit"
+            disabled={form.formState.isSubmitting}
+            className="w-full rounded-md border-2 border-transparent bg-primary px-8 py-6 font-bold text-white transition duration-200 hover:border-primary hover:bg-white hover:text-black"
+          >
+            Reset Password
+            {form.formState.isSubmitting && (
+              <Loader className="ml-2 h-6 w-6 animate-spin" />
+            )}
+          </Button>
+          <div className="mt-4 flex w-full justify-center">
+            <Link
+              to="/login"
+              className="flex gap-1 text-sm text-blue-500 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            >
+              <span className="text-foreground hover:no-underline">
+                Remember your password?
+              </span>
+              Sign in
+            </Link>
+          </div>
+        </form>
+      </Form>
+    </Card>
   );
 }

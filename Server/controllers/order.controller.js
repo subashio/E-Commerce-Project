@@ -1,6 +1,7 @@
 import cartModel from "../models/cart.model.js";
 import orderModel from "../models/order.model.js";
 import userModel from "../models/user.model.js";
+import { sendMail } from "../utils/sendMail.js";
 
 export async function CashOnDeliveryOrderController(req, res) {
   try {
@@ -50,6 +51,43 @@ export async function CashOnDeliveryOrderController(req, res) {
       { _id: userId },
       { $push: { order_history: generatedOrder._id } }
     );
+
+    const user = await userModel.findById(userId);
+
+    const generatedOrderData =
+      generatedOrder.length > 0 ? generatedOrder[0] : {};
+
+    const formattedAddress = generatedOrderData.delivery_address
+      ? `${generatedOrderData.delivery_address.address_line}, ${generatedOrderData.delivery_address.city}, ${generatedOrderData.delivery_address.state}, ${generatedOrderData.delivery_address.pincode}, ${generatedOrderData.delivery_address.country}`
+      : "Address not provided";
+
+    const orderWithUserData = {
+      orderId: generatedOrderData.orderId, // Ensure orderId is available
+      payment_status: generatedOrderData.payment_status,
+      delivery_address: formattedAddress,
+      subTotalAmt: generatedOrderData.subTotalAmt,
+      totalAmt: generatedOrderData.totalAmt,
+      user: {
+        name: user.name,
+        email: user.email,
+      },
+      cart: list_items.map((el) => ({
+        product: el.productId.name,
+        qty: el.quantity,
+        price: el.productId.price
+          ? el.productId.price
+          : el.productId.wholesalePrice,
+      })),
+    };
+
+    console.log("Order Data Sent to Email:", orderWithUserData);
+
+    try {
+      const mail = await sendMail(orderWithUserData); // Send the order with user data and cart
+      console.log("Mail Response:", mail);
+    } catch (mailError) {
+      console.error("Email Sending Error:", mailError);
+    }
 
     return res.json({
       message: "Order placed successfully",

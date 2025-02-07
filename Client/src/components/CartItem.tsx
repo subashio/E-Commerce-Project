@@ -1,9 +1,10 @@
 import { setVariantSheet } from "@/store/ProductSlice";
 import { Loader, Trash2 } from "lucide-react";
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Button } from "./ui/button";
 import { toggleSheetOpen } from "@/store/orderSlice";
+import { RootState } from "@/store/store";
 
 const CartItem = React.memo(function CartItem({
   item,
@@ -27,7 +28,8 @@ const CartItem = React.memo(function CartItem({
   }
 
   const dispatch = useDispatch();
-
+  const user = useSelector((state: RootState) => state.user.currentUser);
+  const userType = user?.isWholesaler;
   return (
     <div className="flex h-auto flex-col gap-2 border-b py-4">
       <div
@@ -58,7 +60,7 @@ const CartItem = React.memo(function CartItem({
           )}
         </div>
 
-        {!item.productId.variantId ? (
+        {!item.productId.variantId && userType === false ? (
           <div className="flex flex-col items-start gap-1">
             <div className="flex">
               <button
@@ -98,7 +100,7 @@ const CartItem = React.memo(function CartItem({
           </button>
         )}
       </div>
-      {item.productId.variantId && (
+      {item.productId.variantId && userType === true && (
         <Button
           variant="outline"
           onClick={() => {
