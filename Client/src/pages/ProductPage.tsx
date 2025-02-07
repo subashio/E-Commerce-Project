@@ -188,7 +188,7 @@ export default function ProductPage() {
   return (
     <section>
       <Breadcrumbs
-        className="mx-auto my-10 mt-56 w-full max-w-screen-2xl"
+        className="mx-auto my-10 mt-56 w-full px-2.5 lg:max-w-screen-2xl lg:px-10 xl:max-w-[1650px]"
         path="/shop"
         pathName="Shop /"
         path2={`/shop/${categoryLookup(selectedProduct?.categoryId)}`}

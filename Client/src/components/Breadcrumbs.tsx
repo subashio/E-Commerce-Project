@@ -6,7 +6,6 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "./ui/breadcrumb";
-import MaxWidthWrapper from "./MaxWidthWrapper";
 
 type DashboardBreadcrumbProps = {
   path: string;
@@ -25,39 +24,37 @@ export default function Breadcrumbs({
   className,
 }: DashboardBreadcrumbProps) {
   return (
-    <MaxWidthWrapper>
-      <Breadcrumb className={cn("text-md font-medium", className)}>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/" className="">
-              Home
-            </BreadcrumbLink>
-          </BreadcrumbItem>
+    <Breadcrumb className={cn("text-md font-medium", className)}>
+      <BreadcrumbList>
+        <BreadcrumbItem>
+          <BreadcrumbLink href="/" className="">
+            Home
+          </BreadcrumbLink>
+        </BreadcrumbItem>
 
+        <BreadcrumbItem>
+          <BreadcrumbLink href={path} className="">
+            <BreadcrumbSeparator>/ {pathName}</BreadcrumbSeparator>
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+        {path2 && (
           <BreadcrumbItem>
-            <BreadcrumbLink href={path} className="">
-              <BreadcrumbSeparator>/ {pathName}</BreadcrumbSeparator>
+            <BreadcrumbLink href={path2} className="">
+              <BreadcrumbSeparator> {pathName2}</BreadcrumbSeparator>
             </BreadcrumbLink>
           </BreadcrumbItem>
-          {path2 && (
-            <BreadcrumbItem>
-              <BreadcrumbLink href={path2} className="">
-                <BreadcrumbSeparator> {pathName2}</BreadcrumbSeparator>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-          )}
-          <>
-            <BreadcrumbItem>
-              <BreadcrumbLink>
-                <BreadcrumbSeparator className="max-w-44 truncate">
-                  {" "}
-                  {finalPathName}
-                </BreadcrumbSeparator>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-          </>
-        </BreadcrumbList>
-      </Breadcrumb>
-    </MaxWidthWrapper>
+        )}
+        <>
+          <BreadcrumbItem>
+            <BreadcrumbLink>
+              <BreadcrumbSeparator className="max-w-44 truncate">
+                {" "}
+                {finalPathName}
+              </BreadcrumbSeparator>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+        </>
+      </BreadcrumbList>
+    </Breadcrumb>
   );
 }

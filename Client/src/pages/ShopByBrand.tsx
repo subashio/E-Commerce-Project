@@ -87,7 +87,7 @@ export default function ShopByBrand() {
         {decodedBrand ? decodedCategory : "Search By BrandName"}
       </h2> */}
       <Breadcrumbs
-        className="my-6 -ml-2 w-full lg:-ml-10"
+        className="my-6 w-full"
         path={`/ShopByBrand/${decodedCategory}`}
         pathName={`${decodedCategory}`}
         finalPathName={`/ ${decodedBrand ? decodedBrand : "All Brands"}`}

@@ -43,6 +43,7 @@ export default function ShopHeader({
   const products = useSelector(
     (state: RootState) => state.product?.product || [],
   );
+  const user = useSelector((state: RootState) => state.user.currentUser);
   // Function to handle slider value change
   const handlePriceChange = (value: [number, number]) => {
     setLocalPriceRange(value);
@@ -70,13 +71,28 @@ export default function ShopHeader({
   const filteredSubCategories = subCategories.filter(
     (sub) => sub.categoryId === selectedCategoryId,
   );
-  // Filter products based on category and subcategory
-  const categoryProducts = products.filter(
-    (product) =>
+  // ✅ Updated filtering logic to show retail filters for guests
+  const categoryProducts = products.filter((product) => {
+    const isWholesaleProduct = product.productType === "wholesale";
+    const isRetailProduct = product.productType === "retail";
+
+    if (user) {
+      return (
+        product.categoryId === selectedCategoryId &&
+        (!selectedSubcategoryId ||
+          product.sub_categoryId === selectedSubcategoryId) &&
+        (user.isWholesaler ? isWholesaleProduct : isRetailProduct)
+      );
+    }
+
+    // If user is not logged in, show only retail products
+    return (
       product.categoryId === selectedCategoryId &&
       (!selectedSubcategoryId ||
-        product.sub_categoryId === selectedSubcategoryId),
-  );
+        product.sub_categoryId === selectedSubcategoryId) &&
+      isRetailProduct
+    );
+  });
 
   const getDynamicFilters = () => {
     if (!selectedCategory || categoryProducts.length === 0) return {};

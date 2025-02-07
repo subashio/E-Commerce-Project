@@ -40,6 +40,7 @@ export default function ShopSide({
     (state: RootState) => state.product?.product || [],
   );
   const user = useSelector((state: RootState) => state.user.currentUser);
+
   const handlePriceChange = (value: [number, number]) => {
     setLocalPriceRange(value);
     setPriceRange(value);
@@ -63,14 +64,6 @@ export default function ShopSide({
   const filteredSubCategories = subCategories.filter(
     (sub) => sub.categoryId === selectedCategoryId,
   );
-
-  // const categoryProducts = products.filter(
-  //   (product) =>
-  //     product.categoryId === selectedCategoryId &&
-  //     (!selectedSubcategoryId ||
-  //       product.sub_categoryId === selectedSubcategoryId) &&
-  //     (product.productType === "wholesale") === user?.isWholesaler, // Ensures only wholesale or retail products are considered
-  // );
 
   // ✅ Updated filtering logic to show retail filters for guests
   const categoryProducts = products.filter((product) => {

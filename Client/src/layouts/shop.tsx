@@ -263,7 +263,7 @@ export default function Shop() {
     <GlobleContextProvider>
       {/* ✅ Updated Breadcrumbs */}
       <Breadcrumbs
-        className="mx-auto my-10 mt-56"
+        className="mx-auto my-10 mt-56 w-full px-2.5 lg:max-w-screen-2xl lg:px-10 xl:max-w-[1650px]"
         path="/shop"
         pathName="Shop"
         path2={categoryId ? `/shop/${categoryId}` : undefined}
