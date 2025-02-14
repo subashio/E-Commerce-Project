@@ -52,7 +52,7 @@ export default function Register() {
     }
   }
   return (
-    <div className="flex w-full items-center justify-center py-10">
+    <div className="mt-10 flex w-full items-center justify-center py-10">
       <div className="flex max-w-xl flex-col gap-10 rounded-xl px-8">
         <h1 className="mb-4 mt-10 text-center text-3xl font-bold dark:text-gray-200">
           {isWholesale ? "Create a Wholesale Account" : "Create an Account"}
@@ -259,14 +259,14 @@ export default function Register() {
               )}
             </Button>
 
-            <div className="mt-4 flex w-full justify-center">
+            <div className="mt-4 flex w-full justify-center gap-1">
+              <p className="text-sm text-foreground hover:no-underline">
+                Already have an account!
+              </p>
               <Link
                 to="/login"
-                className="flex gap-1 text-sm text-blue-500 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                className="text-sm text-blue-500 hover:text-blue-600 focus:outline-none"
               >
-                <span className="text-foreground hover:no-underline">
-                  Already have an account!
-                </span>
                 Sign in
               </Link>
             </div>

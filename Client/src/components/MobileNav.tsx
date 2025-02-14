@@ -75,7 +75,7 @@ export default function MobileNav({ button }: { button: ReactNode }) {
               {category?.map((_item, _index) => (
                 <Link
                   key={_index}
-                  to={`/shop/${_item._id}`}
+                  to={`/shop/${_item.name}`}
                   onClick={() => setIsSheetOpen(false)}
                   className={cn(
                     "!justify-start",

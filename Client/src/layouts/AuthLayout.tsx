@@ -12,22 +12,38 @@ export default function AuthLayout() {
             <img src="/logo.png" className="w-44" alt="Globo-green logo" />
           </Link>
 
-          <Link
-            to={isRegisterPage ? "/register" : "/login"}
-            className="flex flex-wrap items-end gap-1 text-xs text-blue-500 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm"
-          >
-            <span className="text-foreground hover:no-underline">
-              {isRegisterPage
-                ? "Already have a Account?"
-                : "Don't have an account yet?"}
-            </span>
-            {isRegisterPage ? "Sign in" : "Sign up"}
-          </Link>
+          {/* {isRegisterPage ? (
+            <div className="flex gap-1">
+              <p className="text-sm text-foreground hover:no-underline">
+                Already have an account!
+              </p>
+              <Link
+                to="/login"
+                className="text-sm text-blue-500 hover:text-blue-600 focus:outline-none"
+              >
+                Sign in
+              </Link>
+            </div>
+          ) : (
+            <Link
+              to="/register"
+              className="flex gap-1 text-sm text-blue-500 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            >
+              <span className="text-foreground hover:no-underline">
+                Don't have an account yet?
+              </span>
+              Sign up
+            </Link>
+          )} */}
+
           {/* </div> */}
         </MaxWidthWrapper>
       </header>
       <div className="mt-32 flex h-full w-full justify-center bg-primary/50">
-        <img src={isRegisterPage ? "/signup.svg" : "/signin.svg"} alt="" />
+        <img
+          src={isRegisterPage ? "/signup.svg" : "/signin.svg"}
+          alt="auth image"
+        />
       </div>
       <Outlet />
     </div>

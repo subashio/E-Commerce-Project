@@ -125,14 +125,15 @@ export default function Login() {
               <Loader className="ml-2 h-6 w-6 animate-spin" />
             )}
           </Button>
-          <div className="mt-4 flex w-full justify-center">
+
+          <div className="mt-4 flex w-full justify-center gap-1">
+            <p className="text-sm text-foreground hover:no-underline">
+              Don't have an account yet?
+            </p>
             <Link
               to="/register"
-              className="flex gap-1 text-sm text-blue-500 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              className="text-sm text-blue-500 hover:text-blue-600 focus:outline-none"
             >
-              <span className="text-foreground hover:no-underline">
-                Don't have an account yet?
-              </span>
               Sign up
             </Link>
           </div>
