@@ -32,11 +32,6 @@ import {
 } from "./ui/dropdown-menu";
 import { ScrollArea } from "./ui/scroll-area";
 
-// interface Category {
-//   id: number;
-//   name: string;
-// }
-
 export function Navmenu() {
   const user = useSelector((state: RootState) => state.user.currentUser);
   const { handleLogout } = useUser();
@@ -55,7 +50,7 @@ export function Navmenu() {
               Shop By Brands
             </NavigationMenuTrigger>
 
-            <NavigationMenuContent className="absolute left-0 flex !w-[700px] rounded-3xl bg-white p-4 shadow-lg">
+            <NavigationMenuContent className="absolute left-0 flex !w-[700px] bg-background p-4 shadow-lg">
               {/* Categories (Left Side) */}
               <div className="w-1/3 border-r pr-6">
                 <h3 className="mb-2 rounded-2xl px-3 py-2 text-sm font-semibold text-primary">

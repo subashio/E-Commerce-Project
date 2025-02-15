@@ -277,7 +277,7 @@ export default function Navbar() {
                     <LayoutGrid />
                   </Button>
                 </AccordionTrigger>
-                <AccordionContent className="absolute top-full -mt-2 flex w-full flex-col rounded-2xl border bg-white text-foreground">
+                <AccordionContent className="absolute top-full -mt-2 flex w-full flex-col rounded-2xl border bg-white p-2 text-foreground">
                   {category
                     .slice() // Avoid mutating original state
                     .sort((a, b) => b._id.localeCompare(a.name))

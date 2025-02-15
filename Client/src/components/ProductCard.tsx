@@ -38,7 +38,7 @@ export default function ProductCard({
             className="mx-auto w-36 object-contain duration-300 group-hover:scale-105"
           />
           {discount && (
-            <p className="absolute bottom-3 left-3 rounded-md bg-primary/10 p-1 text-sm">
+            <p className="absolute bottom-3 left-3 rounded-md bg-primary/10 p-1 text-xs font-semibold text-primary">
               {discount}OFF
             </p>
           )}

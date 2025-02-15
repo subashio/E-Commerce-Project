@@ -204,9 +204,9 @@ export default function SearchInput() {
                       onClick={() =>
                         window.scrollTo({ top: 0, behavior: "smooth" })
                       }
-                      className="group flex flex-col gap-6 rounded-lg border"
+                      className="group flex flex-col gap-6 rounded-lg border border-primary/10"
                     >
-                      <div className="flex cursor-pointer items-center justify-start gap-4 p-2 text-sm hover:bg-primary/30">
+                      <div className="flex cursor-pointer items-center justify-start gap-4 p-2 text-sm hover:bg-primary/10">
                         <img
                           src={item.image}
                           className="w-20 object-center duration-300 group-hover:scale-105"
